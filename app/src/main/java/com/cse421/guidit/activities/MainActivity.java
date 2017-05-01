@@ -17,6 +17,13 @@ import com.cse421.guidit.fragments.BrowseFragment;
 import com.cse421.guidit.fragments.FeedFragment;
 import com.cse421.guidit.fragments.MyPageFragment;
 import com.cse421.guidit.fragments.SightFragment;
+import com.cse421.guidit.vo.FeedVo;
+import com.cse421.guidit.vo.FestivalVo;
+import com.cse421.guidit.vo.PlanVo;
+import com.cse421.guidit.vo.SightVo;
+import com.cse421.guidit.vo.UserVo;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
     // Adapter
     private MainPagerAdapter pagerAdapter;
 
+    // 각 탭별 정보
+    public PlanVo hotPlan;
+    public SightVo hotSight;
+    public ArrayList<FeedVo> feedList;
+    public ArrayList<PlanVo> myPlanList;
+
     public static Intent getIntent (Context context) {
         return new Intent(context, MainActivity.class);
     }
@@ -50,7 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        // set up fragments and view pager
+        // 서버 통신 전까지 프로그래스 바만 돌고있는다
+
+        // 통신 완료 후 탭별 정보 객체에 데이터가 들어오면
+        setViews();
+    }
+
+    private void setViews () {
         browseFragment = new BrowseFragment();
         sightFragment = new SightFragment();
         feedFragment = new FeedFragment();
@@ -91,6 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.my_page_fab)
     public void addPlan(View view) {
-        //// TODO: 2017. 5. 1. 여행계획 추가 버튼 
+        //// TODO: 2017. 5. 1. 여행계획 추가 버튼
     }
 }
