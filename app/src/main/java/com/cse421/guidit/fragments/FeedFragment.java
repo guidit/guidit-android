@@ -19,7 +19,7 @@ public class FeedFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_browse, container, false);
+        View view = inflater.inflate(R.layout.fragment_feed, container, false);
         ButterKnife.bind(this, view);
 
         return view;
