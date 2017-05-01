@@ -45,10 +45,11 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "id : " + id + ", password : " + password, Toast.LENGTH_SHORT).show();
 
         startActivity(MainActivity.getIntent(LoginActivity.this));
+        finish();
     }
 
-    @OnClick(R.id.signup_btn)
+    @OnClick(R.id.sign_up_btn)
     public void signUp(View view) {
-        //// TODO: 2017. 5. 1. 호경 회원가입 액티비티
+        startActivity(SignUpActivity.getIntent(LoginActivity.this));
     }
 }
