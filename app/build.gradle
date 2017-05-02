@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.cse421.guidit"
         minSdkVersion 16
@@ -36,7 +36,7 @@ dependencies {
     compile 'com.android.support:support-core-utils:24.2.1'
 
     //2. Connection
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp:3.7.0'
 
     //3. Utils
     //picasso: download images from url
