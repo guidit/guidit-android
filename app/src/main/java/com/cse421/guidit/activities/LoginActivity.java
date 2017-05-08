@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.callbacks.SimpleEventListener;
+import com.cse421.guidit.connections.LoginConnection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,14 +40,23 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.login_btn)
     public void login(View view) {
-        //// TODO: 2017. 5. 1. 호경 서버 통신 후 Main으로
-
         String id = inputId.getText().toString();
         String password = inputPassword.getText().toString();
-        Toast.makeText(this, "id : " + id + ", password : " + password, Toast.LENGTH_SHORT).show();
-
-        startActivity(MainActivity.getIntent(LoginActivity.this));
-        finish();
+    
+        LoginConnection connection = new LoginConnection();
+        connection.setListener(new SimpleEventListener() {
+            @Override
+            public void connectionSuccess() {
+                startActivity(MainActivity.getIntent(LoginActivity.this));
+                finish();
+            }
+    
+            @Override
+            public void connectionFailed() {
+                Toast.makeText(LoginActivity.this, "아이디와 비밀번호를 확인해주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(id, password);
     }
 
     @OnClick(R.id.sign_up_btn)

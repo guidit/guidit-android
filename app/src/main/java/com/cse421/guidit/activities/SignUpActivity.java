@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.cse421.guidit.Connection.SignUpConnection;
+import com.cse421.guidit.connections.SignUpConnection;
 import com.cse421.guidit.R;
 import com.cse421.guidit.callbacks.SimpleEventListener;
 import com.cse421.guidit.util.CircleTransform;

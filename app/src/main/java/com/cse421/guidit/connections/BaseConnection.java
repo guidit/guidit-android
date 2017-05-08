@@ -1,4 +1,4 @@
-package com.cse421.guidit.Connection;
+package com.cse421.guidit.connections;
 
 import android.os.AsyncTask;
 

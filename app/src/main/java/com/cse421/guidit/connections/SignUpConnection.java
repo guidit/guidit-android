@@ -1,7 +1,6 @@
-package com.cse421.guidit.Connection;
+package com.cse421.guidit.connections;
 
 import com.cse421.guidit.callbacks.SimpleEventListener;
-import com.cse421.guidit.vo.UserVo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +16,7 @@ import timber.log.Timber;
  * Created by hokyung on 2017. 5. 2..
  */
 
-public class LoginConnection extends BaseConnection {
+public class SignUpConnection extends BaseConnection {
     
     private SimpleEventListener listener;
     
@@ -25,22 +24,23 @@ public class LoginConnection extends BaseConnection {
         this.listener = listener;
     }
     
-    // params : id, password
+    // params : name, id, password
     @Override
     protected String doInBackground(String... params) {
     
         OkHttpClient client = new OkHttpClient();
-    
+        
         String result = "";
-    
+        
         String data =
-                "id=" + params[0]
-                + "&password=" + params[1];
+                "name=" + params[0]
+                + "&id=" + params[1]
+                + "&password=" + params[2];
     
         Timber.d(data);
     
         Request request = new Request.Builder()
-                .url(serverUrl + "/login?" + data)
+                .url(serverUrl + "/signup?" + data)
                 .build();
     
         try {
@@ -49,30 +49,29 @@ public class LoginConnection extends BaseConnection {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    
+        
         return result;
     }
     
     @Override
     protected void onPostExecute(String s) {
-        Timber.d("login on post " + s);
+        Timber.d("signup on post " + s);
     
-        JSONObject user;
-        UserVo userVo = UserVo.getInstance();
-    
+        JSONObject isSuccess;
+        
         try {
-            user = new JSONObject(s);
+            isSuccess = new JSONObject(s);
             
-            userVo.setId(user.getInt("id"));
-            userVo.setUser_id(user.getString("user_id"));
-            userVo.setName(user.getString("name"));
-            userVo.setProfile(user.getString("profile"));
+            if (isSuccess.getBoolean("isSuccess")) {
+                // 회원가입 성공
+                listener.connectionSuccess();
+            } else {
+                // 회원가입 실패
+                listener.connectionFailed();
+            }
             
         } catch (JSONException e) {
             e.printStackTrace();
-            listener.connectionFailed();
         }
-        
-        listener.connectionSuccess();
     }
 }
