@@ -13,6 +13,7 @@ import com.cse421.guidit.connections.SignUpConnection;
 import com.cse421.guidit.R;
 import com.cse421.guidit.callbacks.SimpleEventListener;
 import com.cse421.guidit.util.CircleTransform;
+import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -86,6 +87,9 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "비밀번호가 다릅니다", Toast.LENGTH_SHORT).show();
             return;
         }
+    
+        final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
+        progressBar.show();
 
         // 프로필 사진 파일 보내는 법 // TODO: 2017. 5. 8. 사진 전송
 
@@ -95,12 +99,14 @@ public class SignUpActivity extends AppCompatActivity {
         connection.setListener(new SimpleEventListener() {
             @Override
             public void connectionSuccess() {
+                progressBar.cancel();
                 Toast.makeText(SignUpActivity.this, "가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
                 finish();
             }
     
             @Override
             public void connectionFailed() {
+                progressBar.cancel();
                 Toast.makeText(SignUpActivity.this, "인터넷 연결을 확이해주세요", Toast.LENGTH_SHORT).show();
             }
         });

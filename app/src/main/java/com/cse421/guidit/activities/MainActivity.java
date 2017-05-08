@@ -17,6 +17,7 @@ import com.cse421.guidit.fragments.BrowseFragment;
 import com.cse421.guidit.fragments.FeedFragment;
 import com.cse421.guidit.fragments.MyPageFragment;
 import com.cse421.guidit.fragments.SightFragment;
+import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.FeedVo;
 import com.cse421.guidit.vo.FestivalVo;
 import com.cse421.guidit.vo.PlanVo;
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Adapter
     private MainPagerAdapter pagerAdapter;
+    
+    // Dialog
+    private ProgressBarDialogUtil progressBar;
 
     // 각 탭별 정보
     public PlanVo hotPlan;
@@ -64,8 +68,11 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         // 서버 통신 전까지 프로그래스 바만 돌고있는다
+        progressBar = new ProgressBarDialogUtil(this);
+        progressBar.show();
 
         // 통신 완료 후 탭별 정보 객체에 데이터가 들어오면
+        progressBar.cancel();
         setViews();
     }
 
