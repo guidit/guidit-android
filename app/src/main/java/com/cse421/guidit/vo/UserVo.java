@@ -21,7 +21,6 @@ public class UserVo {
 
     private int id;
     private String user_id;
-    private String password;
     private String name;
     private String profile;
 
@@ -39,14 +38,6 @@ public class UserVo {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getName() {
@@ -70,7 +61,6 @@ public class UserVo {
         return "UserVo{" +
                 "id=" + id +
                 ", user_id='" + user_id + '\'' +
-                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", profile='" + profile + '\'' +
                 '}';

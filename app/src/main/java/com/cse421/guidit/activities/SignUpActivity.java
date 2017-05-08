@@ -2,19 +2,16 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cse421.guidit.Connection.SignUpConnection;
 import com.cse421.guidit.R;
+import com.cse421.guidit.callbacks.SimpleEventListener;
 import com.cse421.guidit.util.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -78,7 +75,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     @OnClick(R.id.sign_up_confirm)
     public void submit (View view) {
-        // // TODO: 2017. 5. 1. 회원가입 제출 시 동작
         String name = inputName.getText().toString();
         String id = inputId.getText().toString();
         String password = inputPassword.getText().toString();
@@ -91,9 +87,23 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        // 프로필 사진 파일 보내는 법
+        // 프로필 사진 파일 보내는 법 // TODO: 2017. 5. 8. 사진 전송
 
-        startActivity(LoginActivity.getIntent(SignUpActivity.this));
-        finish();
+        // 다른 자료 보내는 법
+        // params : name, id, password
+        SignUpConnection connection = new SignUpConnection();
+        connection.setListener(new SimpleEventListener() {
+            @Override
+            public void connectionSuccess() {
+                Toast.makeText(SignUpActivity.this, "가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+    
+            @Override
+            public void connectionFailed() {
+                Toast.makeText(SignUpActivity.this, "인터넷 연결을 확이해주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(name, id, password);
     }
 }
