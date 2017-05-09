@@ -2,6 +2,7 @@ package com.cse421.guidit;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import timber.log.Timber;
 

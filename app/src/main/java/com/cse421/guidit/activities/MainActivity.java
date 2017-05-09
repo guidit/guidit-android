@@ -10,9 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.MainPagerAdapter;
+import com.cse421.guidit.callbacks.SimpleEventListener;
+import com.cse421.guidit.connections.MainConnection;
 import com.cse421.guidit.fragments.BrowseFragment;
 import com.cse421.guidit.fragments.FeedFragment;
 import com.cse421.guidit.fragments.MyPageFragment;
@@ -32,8 +35,6 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.appbar) AppBarLayout appBarLayout;
-    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.tab_layout) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
     @BindView(R.id.my_page_fab) FloatingActionButton addPlanBtn;
@@ -70,9 +71,48 @@ public class MainActivity extends AppCompatActivity {
         // 서버 통신 전까지 프로그래스 바만 돌고있는다
         progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
-
-        // 통신 완료 후 탭별 정보 객체에 데이터가 들어오면
+    
+        MainConnection connection = new MainConnection();
+        connection.setActivity(this);
+        connection.setListener(new SimpleEventListener() {
+            @Override
+            public void connectionSuccess() {
+                progressBar.cancel();
+    
+                // 통신 완료 후 탭별 정보 객체에 데이터가 들어오면
+                //setViews();
+            }
+    
+            @Override
+            public void connectionFailed() {
+                progressBar.cancel();
+    
+                Toast.makeText(MainActivity.this, "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //connection.execute();
+        //// TODO: 2017. 5. 9. test 용
+        test();
+    }
+    
+    private void test () {
         progressBar.cancel();
+        
+        hotPlan = new PlanVo();
+        hotPlan.setId(3);
+        hotPlan.setName("나는 여행을 한다");
+        hotPlan.setViewCount(20);
+        hotPlan.setPublic(true);
+        
+        hotSight = new SightVo();
+        hotSight.setId(5);
+        hotSight.setName("십리대밭");
+        hotSight.setPicture("http://cfile22.uf.tistory.com/image/2341FC4A51B5E60338157B");
+        hotSight.setInformation("태화강변에 있는 대밭이다.");
+        hotSight.setScore(3.7);
+        
+        //// TODO: 2017. 5. 9. 나머지 탭의 정보도 넣어야함
+        
         setViews();
     }
 

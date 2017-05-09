@@ -44,7 +44,8 @@ dependencies {
 
     //4. For convenience
     // butterknife (cast resources(view, etc))
-    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     // timber (log 남기기)
     compile 'com.jakewharton.timber:timber:4.3.1'
 }

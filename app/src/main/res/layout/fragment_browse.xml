@@ -13,7 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.2"
-            android:padding="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -22,36 +21,95 @@
                 android:text="축제 정보"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
                 android:orientation="horizontal">
 
-                <ImageView
+                <RelativeLayout
                     android:id="@+id/festival_present"
                     android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/profile"/>
+                    android:layout_height="60dp">
 
-                <ImageView
+                    <ImageView
+                        android:id="@+id/festival_present_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/profile"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#99FFFFFF"/>
+
+                    <TextView
+                        android:id="@+id/festival_present_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00월"
+                        android:textColor="@android:color/black"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="2dp"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/festival_future"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/profile"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp">
+
+                    <ImageView
+                        android:id="@+id/festival_future_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/profile"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#99FFFFFF"/>
+
+                    <TextView
+                        android:id="@+id/festival_future_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00월"
+                        android:textColor="@android:color/black"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="2dp"/>
+
+
+                </RelativeLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/hot_plan_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.4"
-            android:padding="10dp"
-            android:orientation="vertical">
+            android:layout_weight="0.4">
+
+            <ImageView
+                android:id="@+id/hot_plan_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#88FFFFFF"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,16 +117,37 @@
                 android:text="요즘 뜨는 여행기"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:layout_margin="10dp"/>
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/hot_plan_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="경주 여행기"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:layout_centerInParent="true"/>
 
-        <LinearLayout
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/hot_sight_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:padding="10dp"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/hot_sight_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#88FFFFFF"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -76,9 +155,19 @@
                 android:text="요즘 뜨는 여행지"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:layout_margin="10dp"/>
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/hot_sight_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="보문단지"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 

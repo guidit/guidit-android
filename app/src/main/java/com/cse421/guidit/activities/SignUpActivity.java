@@ -80,7 +80,6 @@ public class SignUpActivity extends AppCompatActivity {
         String id = inputId.getText().toString();
         String password = inputPassword.getText().toString();
         String password2 = inputPassword2.getText().toString();
-        Toast.makeText(this, name + "/" + id + "/" + password + "/" + password2, Toast.LENGTH_SHORT).show();
 
         // 비밀번호 확인
         if (!password.equals(password2)) {
