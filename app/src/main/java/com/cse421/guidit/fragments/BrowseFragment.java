@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -47,12 +48,17 @@ public class BrowseFragment extends Fragment {
     }
     
     private void setViews () {
-        
         Calendar calendar = Calendar.getInstance();
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
-        //todo festival image 구하기
+        //todo 나머지 festival image 구하기
         festivalPresentMonth.setText(currentMonth + "월");
+        Picasso.with(getActivity())
+                .load(getFestivalImage(currentMonth))
+                .into(festivalPresentImage);
         festivalFutureMonth.setText(currentMonth + 1 + "월");
+        Picasso.with(getActivity())
+                .load(getFestivalImage(currentMonth + 1))
+                .into(festivalFutureImage);
         
         MainActivity activity = (MainActivity) getActivity();
     
@@ -68,6 +74,19 @@ public class BrowseFragment extends Fragment {
             Picasso.with(getActivity())
                     .load(activity.hotSight.getPicture())
                     .into(hotSightPicture);
+    }
+    
+    private int getFestivalImage (int month) {
+        switch (month) {
+            case 5 :
+                return R.drawable.may;
+            case 6 :
+                return R.drawable.june;
+            case 7 :
+                return R.drawable.july;
+            default:
+                return R.drawable.profile;
+        }
     }
     
     @OnClick({R.id.festival_present, R.id.festival_future})

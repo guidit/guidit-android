@@ -41,12 +41,13 @@
                         android:id="@+id/festival_present_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile"/>
+                        android:src="@drawable/profile"
+                        android:scaleType="centerCrop"/>
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#99FFFFFF"/>
+                        android:background="#66FFFFFF"/>
 
                     <TextView
                         android:id="@+id/festival_present_month"
@@ -70,12 +71,13 @@
                         android:id="@+id/festival_future_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile"/>
+                        android:src="@drawable/june"
+                        android:scaleType="centerCrop"/>
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#99FFFFFF"/>
+                        android:background="#66FFFFFF"/>
 
                     <TextView
                         android:id="@+id/festival_future_month"
