@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.cse421.guidit.connections.SignUpConnection;
 import com.cse421.guidit.R;
-import com.cse421.guidit.callbacks.SimpleEventListener;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.util.CircleTransform;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.squareup.picasso.Picasso;
@@ -95,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
         // 다른 자료 보내는 법
         // params : name, id, password
         SignUpConnection connection = new SignUpConnection();
-        connection.setListener(new SimpleEventListener() {
+        connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
                 progressBar.cancel();

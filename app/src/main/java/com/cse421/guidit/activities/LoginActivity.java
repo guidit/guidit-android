@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
-import com.cse421.guidit.callbacks.SimpleEventListener;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.connections.LoginConnection;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 
@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.show();
     
         LoginConnection connection = new LoginConnection();
-        connection.setListener(new SimpleEventListener() {
+        connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
                 progressBar.cancel();

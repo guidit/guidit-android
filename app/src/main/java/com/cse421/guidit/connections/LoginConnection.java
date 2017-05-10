@@ -1,6 +1,6 @@
 package com.cse421.guidit.connections;
 
-import com.cse421.guidit.callbacks.SimpleEventListener;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.vo.UserVo;
 
 import org.json.JSONException;
@@ -19,9 +19,9 @@ import timber.log.Timber;
 
 public class LoginConnection extends BaseConnection {
     
-    private SimpleEventListener listener;
+    private SimpleConnectionEventListener listener;
     
-    public void setListener(SimpleEventListener listener) {
+    public void setListener(SimpleConnectionEventListener listener) {
         this.listener = listener;
     }
     

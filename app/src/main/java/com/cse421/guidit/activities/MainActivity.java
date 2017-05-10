@@ -2,19 +2,17 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.MainPagerAdapter;
-import com.cse421.guidit.callbacks.SimpleEventListener;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.connections.MainConnection;
 import com.cse421.guidit.fragments.BrowseFragment;
 import com.cse421.guidit.fragments.FeedFragment;
@@ -22,10 +20,8 @@ import com.cse421.guidit.fragments.MyPageFragment;
 import com.cse421.guidit.fragments.SightFragment;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.FeedVo;
-import com.cse421.guidit.vo.FestivalVo;
 import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.SightVo;
-import com.cse421.guidit.vo.UserVo;
 
 import java.util.ArrayList;
 
@@ -74,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     
         MainConnection connection = new MainConnection();
         connection.setActivity(this);
-        connection.setListener(new SimpleEventListener() {
+        connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
                 progressBar.cancel();

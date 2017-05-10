@@ -1,7 +1,7 @@
 package com.cse421.guidit.connections;
 
 import com.cse421.guidit.activities.MainActivity;
-import com.cse421.guidit.callbacks.SimpleEventListener;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.vo.FeedVo;
 import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.SightVo;
@@ -28,13 +28,13 @@ public class MainConnection extends BaseConnection {
     // 전송 받은 데이터를 액티비티의 변수에 저장하기위해
     private MainActivity activity;
     
-    private SimpleEventListener listener;
+    private SimpleConnectionEventListener listener;
     
     public void setActivity(MainActivity activity) {
         this.activity = activity;
     }
     
-    public void setListener(SimpleEventListener listener) {
+    public void setListener(SimpleConnectionEventListener listener) {
         this.listener = listener;
     }
     
