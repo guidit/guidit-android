@@ -1,5 +1,6 @@
 package com.cse421.guidit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.activities.MapActivity;
 import com.cse421.guidit.adapters.LocationRecyclerViewAdapter;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 
@@ -29,6 +32,7 @@ public class SightFragment extends Fragment {
     
     @BindView(R.id.upper_locations) RecyclerView upperRecyclerView;
     @BindView(R.id.lower_locations) RecyclerView lowerRecyclerView;
+    @BindView(R.id.search_btn) Button searchBtn;
     
     @BindArray(R.array.upper_locations) String [] upperLocations;
     @BindArray(R.array.lower_seoul) String [] seoul;
@@ -106,6 +110,7 @@ public class SightFragment extends Fragment {
                     public void itemClicked(int position) {
                         //// TODO: 2017. 5. 9. 정이 지도 검색 액티비티 띄우기
                         // lowerAdapter.getList().getposition = 원주, 평창, 강릉 등 세부적인 지역명
+                        getActivity().startActivity(new Intent(getActivity(), MapActivity.class));
                         Toast.makeText(getActivity(), lowerAdapter.getList().get(position), Toast.LENGTH_SHORT).show();
                     }
                 }
