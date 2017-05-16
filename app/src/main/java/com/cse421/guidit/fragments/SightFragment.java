@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
-import com.cse421.guidit.activities.MapActivity;
+import com.cse421.guidit.activities.SightActivity;
 import com.cse421.guidit.adapters.LocationRecyclerViewAdapter;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 /**
  * Created by hokyung on 2017. 5. 1..
@@ -110,7 +109,7 @@ public class SightFragment extends Fragment {
                     public void itemClicked(int position) {
                         //// TODO: 2017. 5. 9. 정이 지도 검색 액티비티 띄우기
                         // lowerAdapter.getList().getposition = 원주, 평창, 강릉 등 세부적인 지역명
-                        getActivity().startActivity(new Intent(getActivity(), MapActivity.class));
+                        getActivity().startActivity(new Intent(getActivity(), SightActivity.class));
                         Toast.makeText(getActivity(), lowerAdapter.getList().get(position), Toast.LENGTH_SHORT).show();
                     }
                 }
