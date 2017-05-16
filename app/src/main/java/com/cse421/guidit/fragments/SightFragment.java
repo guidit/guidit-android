@@ -31,7 +31,6 @@ public class SightFragment extends Fragment {
     
     @BindView(R.id.upper_locations) RecyclerView upperRecyclerView;
     @BindView(R.id.lower_locations) RecyclerView lowerRecyclerView;
-    @BindView(R.id.search_btn) Button searchBtn;
     
     @BindArray(R.array.upper_locations) String [] upperLocations;
     @BindArray(R.array.lower_seoul) String [] seoul;
