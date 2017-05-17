@@ -35,6 +35,7 @@ public class SignUpActivity extends AppCompatActivity {
         return new Intent(context, SignUpActivity.class);
     }
 
+    //// TODO: 2017. 5. 18. 입력 칸 별로 입력할 데이터 제한두기
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void connectionFailed() {
                 progressBar.cancel();
-                Toast.makeText(SignUpActivity.this, "인터넷 연결을 확이해주세요", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "아이디가 중복됩니다", Toast.LENGTH_SHORT).show();
             }
         });
         connection.execute(name, id, password);

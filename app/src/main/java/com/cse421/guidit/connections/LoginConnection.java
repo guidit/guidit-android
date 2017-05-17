@@ -3,6 +3,7 @@ package com.cse421.guidit.connections;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.vo.UserVo;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,11 +37,13 @@ public class LoginConnection extends BaseConnection {
         String data =
                 "id=" + params[0]
                 + "&password=" + params[1];
-    
         Timber.d(data);
+        
+        String url = serverUrl + "/users/login?";
+        Timber.d(url);
     
         Request request = new Request.Builder()
-                .url(serverUrl + "/users/user?" + data)
+                .url(url + data)
                 .build();
     
         try {
@@ -58,22 +61,26 @@ public class LoginConnection extends BaseConnection {
         Timber.d("login on post " + s);
         // 실패시 id = -1
     
+        JSONArray result;
         JSONObject user;
         UserVo userVo = UserVo.getInstance();
     
         try {
-            user = new JSONObject(s);
+            result = new JSONArray(s);
+            user = result.getJSONObject(0);
             
             userVo.setId(user.getInt("id"));
-            userVo.setUser_id(user.getString("user_id"));
-            userVo.setName(user.getString("name"));
-            userVo.setProfile(user.getString("profile"));
-            
+            if (userVo.getId() == -1) {
+                listener.connectionFailed();
+            } else {
+                userVo.setUser_id(user.getString("user_id"));
+                userVo.setName(user.getString("name"));
+                userVo.setProfile(user.getString("profile"));
+                
+                listener.connectionSuccess();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
-            listener.connectionFailed();
         }
-        
-        listener.connectionSuccess();
     }
 }

@@ -2,14 +2,18 @@ package com.cse421.guidit.connections;
 
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
 import timber.log.Timber;
 
 /**
@@ -36,11 +40,13 @@ public class SignUpConnection extends BaseConnection {
                 "name=" + params[0]
                 + "&id=" + params[1]
                 + "&password=" + params[2];
-    
         Timber.d(data);
+        
+        String url = serverUrl + "/users/signup?";
+        Timber.d("url : " + url);
     
         Request request = new Request.Builder()
-                .url(serverUrl + "/users/signup?" + data)
+                .url(url + data)
                 .build();
     
         try {
@@ -62,7 +68,7 @@ public class SignUpConnection extends BaseConnection {
         try {
             isSuccess = new JSONObject(s);
             
-            if (isSuccess.getBoolean("isSuccess")) {
+            if (isSuccess.has("isSuccess")) {
                 // 회원가입 성공
                 listener.connectionSuccess();
             } else {

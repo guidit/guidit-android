@@ -46,8 +46,9 @@ public class MainConnection extends BaseConnection {
         String result = "";
     
         String data = "id=" + UserVo.getInstance().getId();
-    
         Timber.d(data);
+        
+        String url = serverUrl + "/main?";
     
         Request request = new Request.Builder()
                 .url(serverUrl + "/main?" + data)
