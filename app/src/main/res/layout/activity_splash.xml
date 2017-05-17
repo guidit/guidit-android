@@ -6,14 +6,12 @@
     android:orientation="vertical"
     android:gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Guidit"
-        android:textColor="@color/colorMainOrange"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:layout_margin="50dp"/>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:background="@drawable/logo"
+        android:scaleType="fitStart"
+        android:layout_gravity="center"/>
 
 </LinearLayout>
