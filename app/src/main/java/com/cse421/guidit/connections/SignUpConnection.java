@@ -40,7 +40,7 @@ public class SignUpConnection extends BaseConnection {
         Timber.d(data);
     
         Request request = new Request.Builder()
-                .url(serverUrl + "/signup?" + data)
+                .url(serverUrl + "/users/signup?" + data)
                 .build();
     
         try {

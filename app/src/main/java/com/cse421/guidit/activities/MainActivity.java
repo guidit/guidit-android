@@ -107,7 +107,21 @@ public class MainActivity extends AppCompatActivity {
         hotSight.setInformation("태화강변에 있는 대밭이다.");
         hotSight.setScore(3.7);
         
-        //// TODO: 2017. 5. 9. 나머지 탭의 정보도 넣어야함
+        myPlanList = new ArrayList<>();
+        PlanVo plan1 = new PlanVo();
+        plan1.setName("첫번째 여행");
+        plan1.setPublic(true);
+        PlanVo plan2 = new PlanVo();
+        plan2.setName("두번째 여행");
+        plan2.setPublic(false);
+        PlanVo plan3 = new PlanVo();
+        plan3.setName("세번째 여행");
+        plan3.setPublic(true);
+        myPlanList.add(plan1);
+        myPlanList.add(plan2);
+        myPlanList.add(plan3);
+        
+        //// TODO: 2017. 5. 9. 피드 탭의 정보도 넣어야함
         
         setViews();
     }
@@ -133,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //// TODO: 2017. 5. 1. 나의 여행 탭 클릭시 fab 활성화
                 if (position == 3) {
                     addPlanBtn.setVisibility(View.VISIBLE);
                 } else {

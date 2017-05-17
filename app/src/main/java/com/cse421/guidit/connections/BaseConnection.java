@@ -7,5 +7,5 @@ import android.os.AsyncTask;
  */
 
 public abstract class BaseConnection extends AsyncTask<String, Void, String> {
-    public final String serverUrl = "";
+    public final String serverUrl = "uni07.unist.ac.kr:9222";
 }

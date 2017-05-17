@@ -40,7 +40,7 @@ public class LoginConnection extends BaseConnection {
         Timber.d(data);
     
         Request request = new Request.Builder()
-                .url(serverUrl + "/login?" + data)
+                .url(serverUrl + "/users/user?" + data)
                 .build();
     
         try {
@@ -56,6 +56,7 @@ public class LoginConnection extends BaseConnection {
     @Override
     protected void onPostExecute(String s) {
         Timber.d("login on post " + s);
+        // 실패시 id = -1
     
         JSONObject user;
         UserVo userVo = UserVo.getInstance();
