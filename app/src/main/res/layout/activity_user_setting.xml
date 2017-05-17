@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -56,32 +55,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="아이디"
-                android:gravity="center"/>
-
-            <EditText
-                android:id="@+id/sign_up_id"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                android:inputType="textEmailAddress"
-                android:digits="@string/id_input_require"
-                android:singleLine="true"
-                android:imeOptions="actionNext"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
                 android:text="비밀번호"
                 android:gravity="center"/>
 
@@ -117,13 +90,27 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/food_truck_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="푸드트럭 등록하기"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:background="@color/colorMainBlue"
+            android:layout_marginTop="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"/>
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/sign_up_confirm"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="회원가입 완료하기"
+        android:text="회원정보 변경하기"
         android:textSize="20sp"
         android:textColor="@android:color/white"
         android:background="@color/colorMainBlue"

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.activities.MainActivity;
+import com.cse421.guidit.activities.UserSettingActivity;
 import com.cse421.guidit.adapters.PlanRecyclerAdapter;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.util.CircleTransform;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 /**
  * Created by hokyung on 2017. 5. 1..
@@ -51,20 +53,24 @@ public class MyPageFragment extends Fragment {
         return view;
     }
     
-    private void setViews () {
+    @Override
+    public void onResume() {
+        super.onResume();
         UserVo userVo = UserVo.getInstance();
-        
+    
         // 프로필
-        if (userVo.getProfile() != null && !userVo.getProfile().equals(""))
+        if (!userVo.getProfile().equals("testprofile"))
             Picasso.with(getActivity())
                     .load(userVo.getProfile())
                     .resize(800, 600)
                     .centerCrop()
                     .transform(new CircleTransform())
                     .into(profileImage);
-        
+    
         userName.setText(userVo.getName());
-        
+    }
+    
+    private void setViews () {
         // 여행계획 리스트
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -88,7 +94,7 @@ public class MyPageFragment extends Fragment {
     
     @OnClick(R.id.user_setting)
     public void setting () {
-        //// TODO: 2017. 5. 10. 유저 설정 액티비티로
+        startActivity(UserSettingActivity.getIntent(getActivity()));
     }
     
     @OnClick(R.id.plan)

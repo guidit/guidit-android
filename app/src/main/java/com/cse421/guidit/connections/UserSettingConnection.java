@@ -1,48 +1,45 @@
 package com.cse421.guidit.connections;
 
-import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
+import com.cse421.guidit.vo.UserVo;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
 import timber.log.Timber;
 
 /**
- * Created by hokyung on 2017. 5. 2..
+ * Created by hokyung on 2017. 5. 18..
  */
 
-public class SignUpConnection extends BaseConnection {
+public class UserSettingConnection extends BaseConnection {
     
-    // params : name, id, password
+    // params : name, password
     @Override
     protected String doInBackground(String... params) {
-    
+        
         OkHttpClient client = new OkHttpClient();
         
         String result = "";
-        
+    
+        UserVo userVo = UserVo.getInstance();
         String data =
-                "name=" + params[0]
-                + "&id=" + params[1]
-                + "&password=" + params[2];
+                "id=" + userVo.getId()
+                        + "&name=" + params[0]
+                        + "&password=" + params[1];
         Timber.d(data);
         
-        String url = serverUrl + "/users/signup?";
+        String url = serverUrl + "/users/setting?";
         Timber.d("url : " + url);
-    
+        
         Request request = new Request.Builder()
                 .url(url + data)
                 .build();
-    
+        
         try {
             Response response = client.newCall(request).execute();
             result = response.body().string();
@@ -55,8 +52,8 @@ public class SignUpConnection extends BaseConnection {
     
     @Override
     protected void onPostExecute(String s) {
-        Timber.d("signup on post " + s);
-    
+        Timber.d("usersetting on post " + s);
+        
         JSONObject isSuccess;
         
         try {

@@ -20,12 +20,6 @@ import timber.log.Timber;
 
 public class LoginConnection extends BaseConnection {
     
-    private SimpleConnectionEventListener listener;
-    
-    public void setListener(SimpleConnectionEventListener listener) {
-        this.listener = listener;
-    }
-    
     // params : id, password
     @Override
     protected String doInBackground(String... params) {

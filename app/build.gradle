@@ -32,25 +32,26 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
     //1. UI, Design
     // material design
+    // support library (호환성 관리)
+    //2. Connection
+    //3. Utils
+    //picasso: download images from url
+    //4. For convenience
+    // butterknife (cast resources(view, etc))
+    // timber (log 남기기)
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
-    // support library (호환성 관리)
     compile 'com.android.support:support-core-utils:24.2.1'
-    //2. Connection
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
-    //3. Utils
-    //picasso: download images from url
     compile 'com.squareup.picasso:picasso:2.5.2'
-    //4. For convenience
-    // butterknife (cast resources(view, etc))
     compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    // timber (log 남기기)
     compile 'com.jakewharton.timber:timber:4.3.1'
     compile 'com.naver.maps.open:naver-map-api:2.1.2@aar'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }
