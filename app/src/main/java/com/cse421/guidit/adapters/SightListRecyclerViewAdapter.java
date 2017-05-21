@@ -1,6 +1,7 @@
 package com.cse421.guidit.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.activities.SightDetailActivity;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.vo.SightListVo;
 
@@ -29,9 +31,10 @@ public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
     private ArrayList<SightListVo> items;
     private SimpleListClickEventListener listener;
 
-    public SightListRecyclerViewAdapter(ArrayList<SightListVo> items, Context context) {
+    public SightListRecyclerViewAdapter(ArrayList<SightListVo> items, Context context, SimpleListClickEventListener listener) {
         this.context = context;
         this.items = items;
+        this.listener = listener;
     }
     
     public void setList(ArrayList<SightListVo> items) {
@@ -54,6 +57,18 @@ public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
         viewHolder.thumbnail.setImageResource(items.get(position).image);
         viewHolder.title.setText(items.get(position).title);
         viewHolder.subtitle.setText(items.get(position).subtitle);
+
+        viewHolder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.itemClicked(position);
+//                if (previousViewHolder != null) {
+//                    previousViewHolder.layout.setBackgroundColor(previousViewHolder.basicGray);
+//                }
+//                viewHolder.layout.setBackgroundColor(viewHolder.selectedColor);
+//                previousViewHolder = viewHolder;
+            }
+        });
     }
     
     @Override

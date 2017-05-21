@@ -1,17 +1,23 @@
 package com.cse421.guidit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.activities.SightActivity;
+import com.cse421.guidit.activities.SightDetailActivity;
 import com.cse421.guidit.adapters.LocationRecyclerViewAdapter;
 import com.cse421.guidit.adapters.SightListRecyclerViewAdapter;
+import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.navermap.NMapPOIflagType;
 import com.cse421.guidit.navermap.NMapViewerResourceProvider;
 import com.cse421.guidit.vo.SightListVo;
@@ -35,8 +41,8 @@ public class SightListFragment extends Fragment {
     @BindView(R.id.sightlist_recyclerview)
     RecyclerView sightRecyclerView;
 
-    private SightListRecyclerViewAdapter sightAdapter;
     ArrayList<SightListVo> items;
+    SightListRecyclerViewAdapter adapter;
 
     @Nullable
     @Override
@@ -45,6 +51,24 @@ public class SightListFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         setRecyclerView();
+        sightRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+                Intent i = new Intent(getActivity(), SightDetailActivity.class);
+                startActivity(i);
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
 
         return view;
     }
@@ -55,7 +79,15 @@ public class SightListFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        SightListRecyclerViewAdapter adapter = new SightListRecyclerViewAdapter(items, getContext());
+        adapter = new SightListRecyclerViewAdapter(items,
+                getContext(),
+                new SimpleListClickEventListener() {
+                    @Override
+                    public void itemClicked(int position) {
+                        getActivity().startActivity(new Intent(getActivity(), SightDetailActivity.class));
+                    }
+                }
+        );
 //        upperAdapter.setList(upperList);
         sightRecyclerView.setHasFixedSize(true);
         sightRecyclerView.setAdapter(adapter);
