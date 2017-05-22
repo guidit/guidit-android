@@ -88,7 +88,7 @@ public class UserSettingActivity extends AppCompatActivity {
     
     @OnClick(R.id.food_truck_btn)
     public void foodtruck (View view) {
-        //todo 푸드트럭 추가 버튼
+        startActivity(FoodTruckActivity.getIntent(this));
     }
     
     @OnClick(R.id.sign_up_confirm)
