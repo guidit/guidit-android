@@ -37,6 +37,10 @@ public class SightFragment extends Fragment {
     @BindArray(R.array.lower_kyunki) String [] kyunki;
     @BindArray(R.array.lower_kangwon) String [] kangwon;
     @BindArray(R.array.lower_daejun) String [] daejun;
+    @BindArray(R.array.lower_daegu) String [] daegu;
+    @BindArray(R.array.lower_choongchung) String [] choongchung;
+    @BindArray(R.array.lower_kyeongsang) String [] kyeongsang;
+    @BindArray(R.array.lower_junra) String [] junra;
     @BindArray(R.array.lower_jeju) String [] jeju;
     
     private ArrayList<String> upperList;
@@ -62,7 +66,7 @@ public class SightFragment extends Fragment {
         for (String s : upperLocations)
             upperList.add(s);
         
-        lowerList = new ArrayList[5];
+        lowerList = new ArrayList[9];
         for (int i = 0; i < lowerList.length; i++)
             lowerList[i] = new ArrayList<>();
         
@@ -70,12 +74,20 @@ public class SightFragment extends Fragment {
             lowerList[0].add(s);
         for (String s : kyunki)
             lowerList[1].add(s);
-        for (String s : kangwon)
-            lowerList[2].add(s);
         for (String s : daejun)
+            lowerList[2].add(s);
+        for (String s : kangwon)
             lowerList[3].add(s);
-        for (String s : jeju)
+        for (String s : daegu)
             lowerList[4].add(s);
+        for (String s : choongchung)
+            lowerList[5].add(s);
+        for (String s : kyeongsang)
+            lowerList[6].add(s);
+        for (String s : junra)
+            lowerList[7].add(s);
+        for (String s : jeju)
+            lowerList[8].add(s);
     }
     
     private void setUpperRecyclerView () {
