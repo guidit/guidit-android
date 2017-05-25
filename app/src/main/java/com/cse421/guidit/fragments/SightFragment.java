@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +121,9 @@ public class SightFragment extends Fragment {
                     public void itemClicked(int position) {
                         //// TODO: 2017. 5. 9. 정이 지도 검색 액티비티 띄우기
                         // lowerAdapter.getList().getposition = 원주, 평창, 강릉 등 세부적인 지역명
-                        getActivity().startActivity(new Intent(getActivity(), SightActivity.class));
+                        Intent i = new Intent(getActivity(), SightActivity.class);
+                        i.putExtra("basicCity",lowerAdapter.getList().get(position));
+                        getActivity().startActivity(i);
                         Toast.makeText(getActivity(), lowerAdapter.getList().get(position), Toast.LENGTH_SHORT).show();
                     }
                 }

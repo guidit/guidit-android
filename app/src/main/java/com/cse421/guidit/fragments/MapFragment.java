@@ -6,13 +6,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.navermap.NMapPOIflagType;
 import com.cse421.guidit.navermap.NMapViewerResourceProvider;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapContext;
+import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
@@ -26,8 +29,19 @@ public class MapFragment extends Fragment {
     private NMapContext mMapContext;// 지도 화면 View
     private final String CLIENT_ID = "mX_lrVWKTUXNDb5evrDV";// 애플리케이션 클라이언트 아이디 값
 
+    Double basicX;
+    Double basicY;
+
+    private NMapController mMapController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            basicX = bundle.getDouble("basicX");
+            basicY = bundle.getDouble("basicY");
+            Toast.makeText(getContext(),"X:"+basicX+" Y:"+basicY,Toast.LENGTH_SHORT).show();
+        }
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -67,6 +81,10 @@ public class MapFragment extends Fragment {
         poiData.addPOIitem(127.0630205, 37.5091300, "Pizza 777-111", markerId, 0);
         poiData.addPOIitem(127.061, 37.51, "Pizza 123-456", markerId, 0);
         poiData.endPOIdata();
+
+        //center
+        mMapController = mapView.getMapController();
+        mMapController.setMapCenter(new NGeoPoint(basicX,basicY));
 
         // create POI data overlay
         NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
