@@ -1,5 +1,7 @@
 package com.cse421.guidit.connections;
 
+import com.cse421.guidit.activities.SightActivity;
+import com.cse421.guidit.vo.SightVo;
 import com.cse421.guidit.vo.UserVo;
 
 import org.json.JSONArray;
@@ -7,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,8 +21,14 @@ import timber.log.Timber;
  */
 
 public class SightConnection extends BaseConnection {
-    
-    // params : id, password
+
+    private SightActivity activity;
+
+    public void setActivity(SightActivity activity) {
+        this.activity = activity;
+    }
+
+    // params : X, Y
     @Override
     protected String doInBackground(String... params) {
     
@@ -28,11 +37,11 @@ public class SightConnection extends BaseConnection {
         String result = "";
     
         String data =
-                "id=" + params[0]
-                + "&password=" + params[1];
+                "X=" + params[0]
+                + "&Y=" + params[1];
         Timber.d(data);
         
-        String url = serverUrl + "/users/login?";
+        String url = serverUrl + "/sight/sight?";
         Timber.d(url);
     
         Request request = new Request.Builder()
@@ -51,29 +60,39 @@ public class SightConnection extends BaseConnection {
     
     @Override
     protected void onPostExecute(String s) {
-        Timber.d("login on post " + s);
+        Timber.d("sight on post " + s);
         // 실패시 id = -1
     
         JSONArray result;
-        JSONObject user;
-        UserVo userVo = UserVo.getInstance();
-    
+
         try {
             result = new JSONArray(s);
-            user = result.getJSONObject(0);
-            
-            userVo.setId(user.getInt("id"));
-            if (userVo.getId() == -1) {
-                listener.connectionFailed();
-            } else {
-                userVo.setUser_id(user.getString("user_id"));
-                userVo.setName(user.getString("name"));
-                userVo.setProfile(user.getString("profile"));
-                
-                listener.connectionSuccess();
+            JSONArray sightJson = result;
+
+            ArrayList<SightVo> sightList = new ArrayList<>();
+            for (int i = 0; i < sightJson.length(); i++) {
+                JSONObject object = sightJson.getJSONObject(i);
+
+                // TODO -- 해당범위 아무것도 없을때 (id=-1) 예외처리
+                SightVo sightVo = new SightVo();
+                sightVo.setId(object.getInt("id"));
+                sightVo.setName(object.getString("name"));
+                sightVo.setType(object.getString("type"));
+                sightVo.setPicture(object.getString("picture"));
+                sightVo.setScore(object.getDouble("score"));
+                sightVo.setMapX(object.getDouble("locationX"));
+                sightVo.setMapY(object.getDouble("locationY"));
+
+                sightList.add(sightVo);
             }
+
+            activity.sightList = sightList;
+
         } catch (JSONException e) {
             e.printStackTrace();
+            listener.connectionFailed();
         }
+
+        listener.connectionSuccess();
     }
 }

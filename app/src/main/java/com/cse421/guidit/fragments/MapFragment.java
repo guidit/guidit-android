@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.cse421.guidit.R;
 import com.cse421.guidit.navermap.NMapPOIflagType;
 import com.cse421.guidit.navermap.NMapViewerResourceProvider;
+import com.cse421.guidit.vo.SightVo;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapContext;
 import com.nhn.android.maps.NMapController;
@@ -19,6 +20,8 @@ import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
+
+import java.util.ArrayList;
 
 /**
  * Created by JEONGYI on 2017. 5. 10..
@@ -31,6 +34,7 @@ public class MapFragment extends Fragment {
 
     Double basicX;
     Double basicY;
+    ArrayList<SightVo> sightList;
 
     private NMapController mMapController;
 
@@ -40,7 +44,9 @@ public class MapFragment extends Fragment {
         if(bundle != null){
             basicX = bundle.getDouble("basicX");
             basicY = bundle.getDouble("basicY");
-            Toast.makeText(getContext(),"X:"+basicX+" Y:"+basicY,Toast.LENGTH_SHORT).show();
+            sightList = bundle.getParcelableArrayList("sightList");
+//            Toast.makeText(getContext(),"X:"+basicX+" Y:"+basicY,Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(),"sight:"+sightList.get(0).getName(),Toast.LENGTH_LONG).show();
         }
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
@@ -76,15 +82,17 @@ public class MapFragment extends Fragment {
         int markerId = NMapPOIflagType.PIN;
 
         // set POI data
-        NMapPOIdata poiData = new NMapPOIdata(2, mMapViewerResourceProvider);
-        poiData.beginPOIdata(2);
-        poiData.addPOIitem(127.0630205, 37.5091300, "Pizza 777-111", markerId, 0);
-        poiData.addPOIitem(127.061, 37.51, "Pizza 123-456", markerId, 0);
+        NMapPOIdata poiData = new NMapPOIdata(sightList.size(), mMapViewerResourceProvider);
+        poiData.beginPOIdata(sightList.size());
+        for (int i=0; i<sightList.size(); i++){
+            poiData.addPOIitem(sightList.get(i).getMapX(), sightList.get(i).getMapY(), sightList.get(i).getName(),markerId,0);
+        }
         poiData.endPOIdata();
 
         //center
         mMapController = mapView.getMapController();
         mMapController.setMapCenter(new NGeoPoint(basicX,basicY));
+
 
         // create POI data overlay
         NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);

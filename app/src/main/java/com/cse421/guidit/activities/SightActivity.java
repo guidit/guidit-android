@@ -7,11 +7,18 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.MainPagerAdapter;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
+import com.cse421.guidit.connections.SightConnection;
 import com.cse421.guidit.fragments.MapFragment;
 import com.cse421.guidit.fragments.SightListFragment;
+import com.cse421.guidit.vo.SightVo;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,8 +33,10 @@ public class SightActivity extends AppCompatActivity {
     @BindView(R.id.view_pager) ViewPager viewPager;
 
     //
+    public ArrayList<SightVo> sightList;
     double X;
     double Y;
+//    Bundle bundle = new Bundle();
 
     //Fragment
     private MapFragment mapFragment;
@@ -43,15 +52,51 @@ public class SightActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        setViews();
+//        setViews();
 
         Intent i = getIntent();
         String basicCity = i.getExtras().getString("basicCity");
         getXY(basicCity);
 
+//        Bundle bundle = new Bundle();
+//        bundle.putDouble("basicX", X);
+//        bundle.putDouble("basicY", Y);
+//        mapFragment.setArguments(bundle);
+
+        sightList = new ArrayList<>();
+
+        // TODO -- 연결
+        SightConnection connection = new SightConnection();
+        connection.setActivity(this);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                //progressBar.cancel();
+                Toast.makeText(SightActivity.this, "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+//                Log.e("-------_>",sightList.get(0).getName()+"");
+//                sendData();
+                setViews();
+            }
+
+            @Override
+            public void connectionFailed() {
+                //progressBar.cancel();
+
+                Toast.makeText(SightActivity.this, "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(X+"",Y+"");
+
+    }
+
+    private void sendData() {
         Bundle bundle = new Bundle();
         bundle.putDouble("basicX", X);
         bundle.putDouble("basicY", Y);
+        if (sightList != null) {
+            Log.e("not null","");
+        }
+        bundle.putParcelableArrayList("sightList",sightList);
         mapFragment.setArguments(bundle);
     }
 
@@ -185,6 +230,8 @@ public class SightActivity extends AppCompatActivity {
     private void setViews () {
         mapFragment = new MapFragment();
         sightListFragment = new SightListFragment();
+
+        sendData();
 
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(mapFragment, "지도로 보기");

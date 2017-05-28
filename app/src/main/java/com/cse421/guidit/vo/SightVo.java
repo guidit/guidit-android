@@ -1,10 +1,13 @@
 package com.cse421.guidit.vo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by hokyung on 2017. 5. 1..
  */
 
-public class SightVo {
+public class SightVo implements Parcelable{
     int id;
     String name;
     String location;
@@ -12,7 +15,10 @@ public class SightVo {
     String information;
     String picture;
     double score;
-    
+    double mapX;
+    double mapY;
+
+
     public int getId() {
         return id;
     }
@@ -68,6 +74,23 @@ public class SightVo {
     public void setScore(double score) {
         this.score = score;
     }
+
+
+    public double getMapX() {
+        return mapX;
+    }
+
+    public void setMapX(double mapX) {
+        this.mapX = mapX;
+    }
+
+    public double getMapY() {
+        return mapY;
+    }
+
+    public void setMapY(double mapY) {
+        this.mapY = mapY;
+    }
     
     @Override
     public String toString() {
@@ -79,6 +102,60 @@ public class SightVo {
                 ", information='" + information + '\'' +
                 ", picture='" + picture + '\'' +
                 ", score=" + score +
+                ", x=" + mapX +
+                ", y=" + mapY +
                 '}';
+    }
+
+
+    //parcelable
+    public SightVo() {
+        super();
+    }
+
+    public SightVo(Parcel in) {
+        super();
+        readFromParcel(in);
+    }
+
+    public static final Parcelable.Creator<SightVo> CREATOR = new Parcelable.Creator<SightVo>() {
+        public SightVo createFromParcel(Parcel in) {
+            return new SightVo(in);
+        }
+
+        public SightVo[] newArray(int size) {
+
+            return new SightVo[size];
+        }
+
+    };
+
+    public void readFromParcel(Parcel in) {
+
+        id = in.readInt();
+        name = in.readString();
+        location = in.readString();
+        type = in.readString();
+        information = in.readString();
+        picture = in.readString();
+        score = in.readDouble();
+        mapX = in.readDouble();
+        mapY = in.readDouble();
+
+    }
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(location);
+        dest.writeString(type);
+        dest.writeString(information);
+        dest.writeString(picture);
+        dest.writeDouble(score);
+        dest.writeDouble(mapX);
+        dest.writeDouble(mapY);
     }
 }
