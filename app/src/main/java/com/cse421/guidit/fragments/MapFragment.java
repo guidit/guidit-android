@@ -1,5 +1,6 @@
 package com.cse421.guidit.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,8 +46,6 @@ public class MapFragment extends Fragment {
             basicX = bundle.getDouble("basicX");
             basicY = bundle.getDouble("basicY");
             sightList = bundle.getParcelableArrayList("sightList");
-//            Toast.makeText(getContext(),"X:"+basicX+" Y:"+basicY,Toast.LENGTH_SHORT).show();
-//            Toast.makeText(getContext(),"sight:"+sightList.get(0).getName(),Toast.LENGTH_LONG).show();
         }
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
@@ -83,9 +82,24 @@ public class MapFragment extends Fragment {
 
         // set POI data
         NMapPOIdata poiData = new NMapPOIdata(sightList.size(), mMapViewerResourceProvider);
+        Drawable pin;
         poiData.beginPOIdata(sightList.size());
         for (int i=0; i<sightList.size(); i++){
-            poiData.addPOIitem(sightList.get(i).getMapX(), sightList.get(i).getMapY(), sightList.get(i).getName(),markerId,0);
+            switch(sightList.get(i).getType()){
+                case "A":
+                    pin = getResources().getDrawable(R.drawable.pin_play);
+                    break;
+                case "B":
+                    pin = getResources().getDrawable(R.drawable.pin_stay);
+                    break;
+                case "C":
+                    pin = getResources().getDrawable(R.drawable.pin_eat);
+                    break;
+                default:
+                    pin = getResources().getDrawable(R.drawable.pin_none);
+                    break;
+            }
+            poiData.addPOIitem(sightList.get(i).getMapX(), sightList.get(i).getMapY(), sightList.get(i).getName(),pin,0);
         }
         poiData.endPOIdata();
 
