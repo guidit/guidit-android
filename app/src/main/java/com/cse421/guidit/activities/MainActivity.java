@@ -22,6 +22,7 @@ import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.FeedVo;
 import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.SightVo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.tab_layout) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
-    @BindView(R.id.my_page_fab) FloatingActionButton addPlanBtn;
+    @BindView(R.id.main_fab) FloatingActionButton addButton;
 
     // Fragment
     private BrowseFragment browseFragment;
@@ -147,10 +148,21 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 3) {
-                    addPlanBtn.setVisibility(View.VISIBLE);
-                } else {
-                    addPlanBtn.setVisibility(View.GONE);
+                switch (position) {
+                    case 2:
+                        Picasso.with(MainActivity.this)
+                                .load(R.drawable.ic_create)
+                                .into(addButton);
+                        addButton.setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        Picasso.with(MainActivity.this)
+                                .load(R.drawable.ic_add)
+                                .into(addButton);
+                        addButton.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        addButton.setVisibility(View.GONE);
                 }
             }
 
@@ -164,8 +176,17 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    @OnClick(R.id.my_page_fab)
+    @OnClick(R.id.main_fab)
     public void addPlan(View view) {
-        //// TODO: 2017. 5. 1. 여행계획 추가 버튼
+        switch (viewPager.getCurrentItem()) {
+            case 2:
+                feedFragment.createFeed();
+                break;
+            case 3:
+                myPageFragment.addPlan();
+                break;
+            default:
+                Toast.makeText(this, "잘못된 접근입니다", Toast.LENGTH_SHORT).show();
+        }
     }
 }

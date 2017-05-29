@@ -9,6 +9,7 @@ public class FeedVo {
     private String content;
     private String city;
     private String date;
+    private String userId;
     private String userName;
     private String profile;
     
@@ -43,7 +44,15 @@ public class FeedVo {
     public void setDate(String date) {
         this.date = date;
     }
-    
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -59,7 +68,7 @@ public class FeedVo {
     public void setProfile(String profile) {
         this.profile = profile;
     }
-    
+
     @Override
     public String toString() {
         return "FeedVo{" +
@@ -67,6 +76,7 @@ public class FeedVo {
                 ", content='" + content + '\'' +
                 ", city='" + city + '\'' +
                 ", date='" + date + '\'' +
+                ", userId='" + userId + '\'' +
                 ", userName='" + userName + '\'' +
                 ", profile='" + profile + '\'' +
                 '}';

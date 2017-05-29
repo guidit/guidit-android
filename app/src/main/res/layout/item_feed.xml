@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#EEE"
+    android:padding="10dp"
+    android:layout_margin="10dp">
+
+    <ImageView
+        android:id="@+id/profile_img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/profile"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/feed_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="예시 내용 \n에\n예\n에\n \n시\n이이"
+            android:layout_marginLeft="10dp"/>
+
+        <ImageView
+            android:id="@+id/feed_delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_delete"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/feed_content" />
+
+    </RelativeLayout>
+
+</LinearLayout>

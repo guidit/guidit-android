@@ -91,6 +91,10 @@ public class MyPageFragment extends Fragment {
         myPlanRecyclerView.setAdapter(adapter);
         myPlanRecyclerView.setLayoutManager(layoutManager);
     }
+
+    public void addPlan () {
+        //// TODO: 2017-05-29 여행계획 추가 액티비티로
+    }
     
     @OnClick(R.id.user_setting)
     public void setting () {
