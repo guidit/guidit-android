@@ -1,6 +1,7 @@
 package com.cse421.guidit.connections;
 
 import com.cse421.guidit.activities.SightActivity;
+import com.cse421.guidit.fragments.MapFragment;
 import com.cse421.guidit.vo.SightVo;
 import com.cse421.guidit.vo.UserVo;
 
@@ -22,10 +23,10 @@ import timber.log.Timber;
 
 public class SightConnection extends BaseConnection {
 
-    private SightActivity activity;
+    private MapFragment fragment;
 
-    public void setActivity(SightActivity activity) {
-        this.activity = activity;
+    public void setFragment(MapFragment fragment) {
+        this.fragment = fragment;
     }
 
     // params : X, Y
@@ -86,7 +87,7 @@ public class SightConnection extends BaseConnection {
                 sightList.add(sightVo);
             }
 
-            activity.sightList = sightList;
+            fragment.sightList = sightList;
 
         } catch (JSONException e) {
             e.printStackTrace();

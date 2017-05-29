@@ -4,12 +4,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.activities.SightActivity;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
+import com.cse421.guidit.connections.SightConnection;
 import com.cse421.guidit.navermap.NMapPOIflagType;
 import com.cse421.guidit.navermap.NMapViewerResourceProvider;
 import com.cse421.guidit.vo.SightVo;
@@ -24,6 +28,9 @@ import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import java.util.ArrayList;
 
+import static android.view.View.X;
+import static android.view.View.Y;
+
 /**
  * Created by JEONGYI on 2017. 5. 10..
  */
@@ -35,20 +42,14 @@ public class MapFragment extends Fragment {
 
     Double basicX;
     Double basicY;
-    ArrayList<SightVo> sightList;
+    public ArrayList<SightVo> sightList;
 
     private NMapController mMapController;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Bundle bundle = this.getArguments();
-        if(bundle != null){
-            basicX = bundle.getDouble("basicX");
-            basicY = bundle.getDouble("basicY");
-            sightList = bundle.getParcelableArrayList("sightList");
-        }
-        return inflater.inflate(R.layout.fragment_map, container, false);
-    }
+    //map
+    NMapViewerResourceProvider mMapViewerResourceProvider;
+    NMapPOIdata poiData;
+    NMapOverlayManager mOverlayManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +57,36 @@ public class MapFragment extends Fragment {
         mMapContext = new NMapContext(super.getActivity());
         mMapContext.onCreate();
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            basicX = bundle.getDouble("basicX");
+            basicY = bundle.getDouble("basicY");
+        }
+        return inflater.inflate(R.layout.fragment_map, container, false);
+    }
+
+    public void test() {
+        SightConnection connection = new SightConnection();
+        connection.setFragment(this);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                //progressBar.cancel();
+                Toast.makeText(getActivity(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                Log.e("-------_>",sightList.get(0).getName()+"");
+            }
+
+            @Override
+            public void connectionFailed() {
+                //progressBar.cancel();
+                Toast.makeText(getActivity(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(basicX+"",basicY+"");
     }
 
     @Override
@@ -73,43 +104,62 @@ public class MapFragment extends Fragment {
         mapView.requestFocus();
 
         // create resource provider
-        NMapViewerResourceProvider mMapViewerResourceProvider = new NMapViewerResourceProvider(getContext());
+        mMapViewerResourceProvider = new NMapViewerResourceProvider(getContext());
 
         // create overlay manager
-        NMapOverlayManager mOverlayManager = new NMapOverlayManager(getContext(), mapView, mMapViewerResourceProvider);
+        mOverlayManager = new NMapOverlayManager(getContext(), mapView, mMapViewerResourceProvider);
 
-        int markerId = NMapPOIflagType.PIN;
+        //int markerId = NMapPOIflagType.PIN;
 
-        // set POI data
-        NMapPOIdata poiData = new NMapPOIdata(sightList.size(), mMapViewerResourceProvider);
-        Drawable pin;
-        poiData.beginPOIdata(sightList.size());
-        for (int i=0; i<sightList.size(); i++){
-            switch(sightList.get(i).getType()){
-                case "A":
-                    pin = getResources().getDrawable(R.drawable.pin_play);
-                    break;
-                case "B":
-                    pin = getResources().getDrawable(R.drawable.pin_stay);
-                    break;
-                case "C":
-                    pin = getResources().getDrawable(R.drawable.pin_eat);
-                    break;
-                default:
-                    pin = getResources().getDrawable(R.drawable.pin_none);
-                    break;
+        //connection - sightList 받아오기
+        SightConnection connection = new SightConnection();
+        connection.setFragment(this);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                //progressBar.cancel();
+                Toast.makeText(getActivity(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+
+                //좌표뿌리기
+                // set POI data
+                poiData = new NMapPOIdata(sightList.size(), mMapViewerResourceProvider);
+                Drawable pin;
+                poiData.beginPOIdata(sightList.size());
+                for (int i=0; i<sightList.size(); i++){
+                    switch(sightList.get(i).getType()){
+                        case "A":
+                            pin = getResources().getDrawable(R.drawable.pin_play);
+                            break;
+                        case "B":
+                            pin = getResources().getDrawable(R.drawable.pin_stay);
+                            break;
+                        case "C":
+                            pin = getResources().getDrawable(R.drawable.pin_eat);
+                            break;
+                        default:
+                            pin = getResources().getDrawable(R.drawable.pin_none);
+                            break;
+                    }
+                    poiData.addPOIitem(sightList.get(i).getMapX(), sightList.get(i).getMapY(), sightList.get(i).getName(),pin,0);
+                }
+                poiData.endPOIdata();
+
+                // create POI data overlay
+                NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
             }
-            poiData.addPOIitem(sightList.get(i).getMapX(), sightList.get(i).getMapY(), sightList.get(i).getName(),pin,0);
-        }
-        poiData.endPOIdata();
+
+            @Override
+            public void connectionFailed() {
+                //progressBar.cancel();
+                Toast.makeText(getActivity(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(basicX+"",basicY+"");
 
         //center
         mMapController = mapView.getMapController();
         mMapController.setMapCenter(new NGeoPoint(basicX,basicY));
 
-
-        // create POI data overlay
-        NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
     }
     @Override
     public void onStart(){

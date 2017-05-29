@@ -32,11 +32,8 @@ public class SightActivity extends AppCompatActivity {
     @BindView(R.id.tab_layout) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
 
-    //
-    public ArrayList<SightVo> sightList;
     double X;
     double Y;
-//    Bundle bundle = new Bundle();
 
     //Fragment
     private MapFragment mapFragment;
@@ -58,45 +55,69 @@ public class SightActivity extends AppCompatActivity {
         String basicCity = i.getExtras().getString("basicCity");
         getXY(basicCity);
 
-//        Bundle bundle = new Bundle();
-//        bundle.putDouble("basicX", X);
-//        bundle.putDouble("basicY", Y);
-//        mapFragment.setArguments(bundle);
+        setViews();
+//        // TODO -- 연결
+//        SightConnection connection = new SightConnection();
+//        connection.setActivity(this);
+//        connection.setListener(new SimpleConnectionEventListener() {
+//            @Override
+//            public void connectionSuccess() {
+//                //progressBar.cancel();
+//                Toast.makeText(SightActivity.this, "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+////                Log.e("-------_>",sightList.get(0).getName()+"");
+////                sendData();
+//                setViews();
+//            }
+//
+//            @Override
+//            public void connectionFailed() {
+//                //progressBar.cancel();
+//
+//                Toast.makeText(SightActivity.this, "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        connection.execute(X+"",Y+"");
 
-        sightList = new ArrayList<>();
+    }
 
-        // TODO -- 연결
-        SightConnection connection = new SightConnection();
-        connection.setActivity(this);
-        connection.setListener(new SimpleConnectionEventListener() {
+    private void setViews () {
+        mapFragment = new MapFragment();
+        sightListFragment = new SightListFragment();
+
+        sendData();
+
+        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(mapFragment, "지도로 보기");
+        pagerAdapter.addFragment(sightListFragment, "목록으로 보기");
+
+
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void connectionSuccess() {
-                //progressBar.cancel();
-                Toast.makeText(SightActivity.this, "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
-//                Log.e("-------_>",sightList.get(0).getName()+"");
-//                sendData();
-                setViews();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
-            public void connectionFailed() {
-                //progressBar.cancel();
+            public void onPageSelected(int position) {
 
-                Toast.makeText(SightActivity.this, "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
-        connection.execute(X+"",Y+"");
 
+        // connect tabs and viewpager
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void sendData() {
         Bundle bundle = new Bundle();
         bundle.putDouble("basicX", X);
         bundle.putDouble("basicY", Y);
-        if (sightList != null) {
-            Log.e("not null","");
-        }
-        bundle.putParcelableArrayList("sightList",sightList);
+
         mapFragment.setArguments(bundle);
     }
 
@@ -225,38 +246,5 @@ public class SightActivity extends AppCompatActivity {
             default:
                 break;
         }
-    }
-
-    private void setViews () {
-        mapFragment = new MapFragment();
-        sightListFragment = new SightListFragment();
-
-        sendData();
-
-        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(mapFragment, "지도로 보기");
-        pagerAdapter.addFragment(sightListFragment, "목록으로 보기");
-
-
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        // connect tabs and viewpager
-        tabLayout.setupWithViewPager(viewPager);
     }
 }
