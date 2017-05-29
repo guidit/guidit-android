@@ -22,6 +22,7 @@ import com.nhn.android.maps.NMapContext;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
+import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
@@ -37,19 +38,20 @@ import static android.view.View.Y;
 
 public class MapFragment extends Fragment {
 
+    //map
     private NMapContext mMapContext;// 지도 화면 View
     private final String CLIENT_ID = "mX_lrVWKTUXNDb5evrDV";// 애플리케이션 클라이언트 아이디 값
 
+    NMapViewerResourceProvider mMapViewerResourceProvider;
+    NMapPOIdata poiData;
+    NMapOverlayManager mOverlayManager;
+    private NMapController mMapController;
+
+    //data
     Double basicX;
     Double basicY;
     public ArrayList<SightVo> sightList;
 
-    private NMapController mMapController;
-
-    //map
-    NMapViewerResourceProvider mMapViewerResourceProvider;
-    NMapPOIdata poiData;
-    NMapOverlayManager mOverlayManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,26 +69,6 @@ public class MapFragment extends Fragment {
             basicY = bundle.getDouble("basicY");
         }
         return inflater.inflate(R.layout.fragment_map, container, false);
-    }
-
-    public void test() {
-        SightConnection connection = new SightConnection();
-        connection.setFragment(this);
-        connection.setListener(new SimpleConnectionEventListener() {
-            @Override
-            public void connectionSuccess() {
-                //progressBar.cancel();
-                Toast.makeText(getActivity(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
-                Log.e("-------_>",sightList.get(0).getName()+"");
-            }
-
-            @Override
-            public void connectionFailed() {
-                //progressBar.cancel();
-                Toast.makeText(getActivity(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
-            }
-        });
-        connection.execute(basicX+"",basicY+"");
     }
 
     @Override
@@ -109,9 +91,47 @@ public class MapFragment extends Fragment {
         // create overlay manager
         mOverlayManager = new NMapOverlayManager(getContext(), mapView, mMapViewerResourceProvider);
 
-        //int markerId = NMapPOIflagType.PIN;
-
         //connection - sightList 받아오기
+        loadData();
+
+        //center - basic
+        mMapController = mapView.getMapController();
+        mMapController.setMapCenter(new NGeoPoint(basicX,basicY));
+
+        //센터 바뀌면 데이터 다시 로드
+        mapView.setOnMapStateChangeListener(new NMapView.OnMapStateChangeListener() {
+            @Override
+            public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
+
+            }
+
+            @Override
+            public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
+                basicX = nGeoPoint.getLongitude();
+                basicY = nGeoPoint.getLatitude();
+                Log.e("--->","basicX:"+basicX+" basicY:"+basicY);
+                loadData();
+            }
+
+            @Override
+            public void onMapCenterChangeFine(NMapView nMapView) {
+
+            }
+
+            @Override
+            public void onZoomLevelChange(NMapView nMapView, int i) {
+
+            }
+
+            @Override
+            public void onAnimationStateChange(NMapView nMapView, int i, int i1) {
+
+            }
+        });
+
+    }
+
+    public void loadData(){
         SightConnection connection = new SightConnection();
         connection.setFragment(this);
         connection.setListener(new SimpleConnectionEventListener() {
@@ -155,12 +175,8 @@ public class MapFragment extends Fragment {
             }
         });
         connection.execute(basicX+"",basicY+"");
-
-        //center
-        mMapController = mapView.getMapController();
-        mMapController.setMapCenter(new NGeoPoint(basicX,basicY));
-
     }
+
     @Override
     public void onStart(){
         super.onStart();
