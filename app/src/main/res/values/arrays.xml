@@ -5,7 +5,10 @@
         <item>서울</item>
         <item>인천/경기</item>
         <item>강원</item>
-        <item>대전/광주</item>
+        <item>충청/세종/대전</item>
+        <item>경상/대구</item>
+        <item>부산/울산</item>
+        <item>전라/광주</item>
         <item>제주</item>
     </string-array>
 

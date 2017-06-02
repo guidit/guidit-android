@@ -60,13 +60,13 @@ public class UserSettingConnection extends BaseConnection {
         try {
             isSuccess = new JSONObject(s);
             
-            if (isSuccess.has("isSuccess")) {
-                // 정보수정 성공
-                listener.connectionSuccess();
-            } else {
-                // 정보수정 실패
+            if (isSuccess.has("isSuccess"))
+                if (isSuccess.getBoolean("isSuccess"))
+                    listener.connectionSuccess();
+                else
+                    listener.connectionFailed();
+            else
                 listener.connectionFailed();
-            }
             
         } catch (JSONException e) {
             e.printStackTrace();

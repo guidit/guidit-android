@@ -1,9 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.cse421.guidit.activities.WriteFeedActivity">
+    android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="피드 작성하기"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_round_blue_border">
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/feed_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"></android.support.v7.widget.AppCompatSpinner>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/feed_input"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:background="@drawable/bg_round_black_border"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:maxLength="200"/>
+
+    <TextView
+        android:id="@+id/write_feed_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="피드 등록하기"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@color/colorMainBlue"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"/>
+
+</LinearLayout>

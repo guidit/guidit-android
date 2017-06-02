@@ -18,7 +18,10 @@ import com.cse421.guidit.R;
 import com.cse421.guidit.activities.MainActivity;
 import com.cse421.guidit.activities.WriteFeedActivity;
 import com.cse421.guidit.adapters.FeedRecyclerViewAdapter;
+import com.cse421.guidit.callbacks.ListConnectionListener;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
+import com.cse421.guidit.connections.FeedConnection;
 import com.cse421.guidit.vo.FeedVo;
 
 import java.util.ArrayList;
@@ -61,18 +64,27 @@ public class FeedFragment extends Fragment {
     private void setSpinner () {
         ArrayList<String> list = new ArrayList<>(Arrays.asList(locations));
         list.add(0, "전국");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 getActivity(),
                 android.R.layout.simple_spinner_item,
                 list
         );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        feedSpinner.setAdapter(adapter);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        feedSpinner.setAdapter(spinnerAdapter);
         feedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //// TODO: 2017-05-29 선택된 도시에대해 connection 전국은 -1
-                Toast.makeText(getActivity(), "" + (i - 1), Toast.LENGTH_SHORT).show();
+                //// TODO: 2017-05-29 선택된 도시에대해 connection 전국은 0
+                FeedConnection connection = new FeedConnection(FeedConnection.GET_LIST);
+                connection.setListConnectionListener(new ListConnectionListener<FeedVo>() {
+                    @Override
+                    public void setList(ArrayList<FeedVo> list) {
+                        feedList = list;
+                        adapter.setFeedList(feedList);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+//                connection.execute(i + "");
             }
 
             @Override
@@ -94,6 +106,20 @@ public class FeedFragment extends Fragment {
                     @Override
                     public void itemClicked(int position) {
                         //// TODO: 2017-05-29 피드 삭제 구현
+                        FeedConnection feedConnection = new FeedConnection(FeedConnection.DELETE);
+                        feedConnection.setListener(new SimpleConnectionEventListener() {
+                            @Override
+                            public void connectionSuccess() {
+                                Toast.makeText(getActivity(), "삭제되었습니다", Toast.LENGTH_SHORT).show();
+                                //// TODO: 2017-06-02 리스트 새로고침
+                            }
+
+                            @Override
+                            public void connectionFailed() {
+                                Toast.makeText(getActivity(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+//                        feedConnection.execute(feedList.get(position).getId() + "");
                     }
                 }
         );
@@ -104,7 +130,9 @@ public class FeedFragment extends Fragment {
     }
 
     public void createFeed () {
-        startActivityForResult(WriteFeedActivity.getIntent(getActivity()), REQ_WRITE_FEED);
+        Intent intent = WriteFeedActivity.getIntent(getActivity());
+        intent.putExtra("city", feedSpinner.getFirstVisiblePosition() - 1);
+        startActivityForResult(intent, REQ_WRITE_FEED);
     }
 
     @Override
@@ -114,6 +142,7 @@ public class FeedFragment extends Fragment {
         if (requestCode == REQ_WRITE_FEED)
             if (resultCode == RESULT_OK) {
                 //// TODO: 2017-06-01 spinner 사용자가 작성한 지역으로 바꾸고, 피드 새로고침
+                feedSpinner.setSelection(data.getIntExtra("city", 0));
             }
     }
 }
