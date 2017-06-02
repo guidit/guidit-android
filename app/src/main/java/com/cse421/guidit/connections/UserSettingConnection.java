@@ -29,8 +29,9 @@ public class UserSettingConnection extends BaseConnection {
         UserVo userVo = UserVo.getInstance();
         String data =
                 "id=" + userVo.getId()
-                        + "&name=" + params[0]
-                        + "&password=" + params[1];
+                        + "&name=" + params[0];
+        if (!params[1].equals(""))
+            data += "&password=" + params[1];
         Timber.d(data);
         
         String url = serverUrl + "/users/setting?";
@@ -60,10 +61,10 @@ public class UserSettingConnection extends BaseConnection {
             isSuccess = new JSONObject(s);
             
             if (isSuccess.has("isSuccess")) {
-                // 회원가입 성공
+                // 정보수정 성공
                 listener.connectionSuccess();
             } else {
-                // 회원가입 실패
+                // 정보수정 실패
                 listener.connectionFailed();
             }
             

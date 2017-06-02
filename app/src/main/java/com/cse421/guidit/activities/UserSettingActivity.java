@@ -102,9 +102,6 @@ public class UserSettingActivity extends AppCompatActivity {
             Toast.makeText(this, "이름을 입력해주세요", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (password.length() == 0) {
-            Toast.makeText(this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-        }
         
         // 비밀번호 확인
         if (!password.equals(password2)) {
@@ -132,7 +129,7 @@ public class UserSettingActivity extends AppCompatActivity {
             @Override
             public void connectionFailed() {
                 progressBar.cancel();
-                Toast.makeText(UserSettingActivity.this, "아이디가 중복됩니다", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserSettingActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
         });
         connection.execute(name, password);

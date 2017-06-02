@@ -34,7 +34,8 @@
         <activity android:name=".activities.SightActivity" />
         <activity android:name=".activities.UserSettingActivity" />
         <activity android:name=".activities.FoodTruckActivity" />
-        <activity android:name=".activities.FavoriteActivity"></activity>
+        <activity android:name=".activities.FavoriteActivity" />
+        <activity android:name=".activities.WriteFeedActivity"></activity>
     </application>
 
 </manifest>

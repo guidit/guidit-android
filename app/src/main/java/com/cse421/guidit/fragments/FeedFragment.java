@@ -1,5 +1,6 @@
 package com.cse421.guidit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,18 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.activities.MainActivity;
+import com.cse421.guidit.activities.WriteFeedActivity;
 import com.cse421.guidit.adapters.FeedRecyclerViewAdapter;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.vo.FeedVo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by hokyung on 2017. 5. 1..
@@ -30,8 +36,12 @@ import butterknife.ButterKnife;
 
 public class FeedFragment extends Fragment {
 
+    private final int REQ_WRITE_FEED = 119;
+
     @BindView(R.id.feed_spinner) AppCompatSpinner feedSpinner;
     @BindView(R.id.feed_recycler) RecyclerView feedRecyclerView;
+
+    @BindArray(R.array.upper_locations) String [] locations;
 
     private ArrayList<FeedVo> feedList;
     private FeedRecyclerViewAdapter adapter;
@@ -49,17 +59,25 @@ public class FeedFragment extends Fragment {
     }
 
     private void setSpinner () {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+        ArrayList<String> list = new ArrayList<>(Arrays.asList(locations));
+        list.add(0, "전국");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getActivity(),
-                R.array.upper_locations,
-                android.R.layout.simple_spinner_item
+                android.R.layout.simple_spinner_item,
+                list
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         feedSpinner.setAdapter(adapter);
-        feedSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        feedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //// TODO: 2017-05-29 선택된 도시에대해 connection
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                //// TODO: 2017-05-29 선택된 도시에대해 connection 전국은 -1
+                Toast.makeText(getActivity(), "" + (i - 1), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // 선택 없으면 아무것도 하지 않는다
             }
         });
     }
@@ -86,6 +104,16 @@ public class FeedFragment extends Fragment {
     }
 
     public void createFeed () {
-        //// TODO: 2017-05-29 피드 생성 액티비티로
+        startActivityForResult(WriteFeedActivity.getIntent(getActivity()), REQ_WRITE_FEED);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQ_WRITE_FEED)
+            if (resultCode == RESULT_OK) {
+                //// TODO: 2017-06-01 spinner 사용자가 작성한 지역으로 바꾸고, 피드 새로고침
+            }
     }
 }

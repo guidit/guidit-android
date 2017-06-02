@@ -9,12 +9,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_round_border_box">
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/feed_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.AppCompatSpinner>
+            android:layout_height="wrap_content"
+            android:gravity="center"></android.support.v7.widget.AppCompatSpinner>
 
     </LinearLayout>
 

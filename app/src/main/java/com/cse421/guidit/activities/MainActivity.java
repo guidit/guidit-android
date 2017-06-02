@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -121,9 +122,29 @@ public class MainActivity extends AppCompatActivity {
         myPlanList.add(plan1);
         myPlanList.add(plan2);
         myPlanList.add(plan3);
-        
-        //// TODO: 2017. 5. 9. 피드 탭의 정보도 넣어야함
-        
+
+        feedList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            FeedVo feedVo = new FeedVo();
+            feedVo.setId(i);
+            feedVo.setProfile("testprofile");
+            feedVo.setCity("울산");
+            feedVo.setContent("내용내용" + i);
+            feedVo.setUserName("유저이름" + i);
+            feedVo.setDate("17년 5월 31일");
+            feedVo.setUserId(i + "" + i);
+            feedList.add(feedVo);
+        }
+        FeedVo feedVo = new FeedVo();
+        feedVo.setId(5);
+        feedVo.setProfile("testprofile");
+        feedVo.setCity("울산");
+        feedVo.setContent("내용내용");
+        feedVo.setUserName("유저이름");
+        feedVo.setDate("17년 5월 31일");
+        feedVo.setUserId("ho");
+        feedList.add(feedVo);
+
         setViews();
     }
 
@@ -150,15 +171,13 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 2:
-                        Picasso.with(MainActivity.this)
-                                .load(R.drawable.ic_create)
-                                .into(addButton);
+                        Timber.d("page selected " + 2);
+                        addButton.setImageResource(R.drawable.ic_create);
                         addButton.setVisibility(View.VISIBLE);
                         break;
                     case 3:
-                        Picasso.with(MainActivity.this)
-                                .load(R.drawable.ic_add)
-                                .into(addButton);
+                        Timber.d("page selected " + 3);
+                        addButton.setImageResource(R.drawable.ic_add);
                         addButton.setVisibility(View.VISIBLE);
                         break;
                     default:
