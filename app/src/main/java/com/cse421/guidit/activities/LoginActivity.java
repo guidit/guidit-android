@@ -74,11 +74,4 @@ public class LoginActivity extends AppCompatActivity {
     public void signUp(View view) {
         startActivity(SignUpActivity.getIntent(LoginActivity.this));
     }
-    
-    //// TODO: 2017. 5. 8. test용 버튼
-    @OnClick(R.id.test_btn)
-    public void test(View view) {
-        startActivity(MainActivity.getIntent(LoginActivity.this));
-        finish();
-    }
 }
