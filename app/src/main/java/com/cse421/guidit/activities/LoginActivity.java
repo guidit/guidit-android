@@ -30,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login_passwd) EditText inputPassword;
     @BindView(R.id.login_btn) Button loginButton;
     @BindView(R.id.sign_up_btn) TextView signUpButton;
-    @BindView(R.id.test_btn) Button testButton;
 
     public static Intent getIntent (Context context) {
         return new Intent(context, LoginActivity.class);
