@@ -30,10 +30,11 @@
         android:layout_height="wrap_content"
         android:text="여기는 점수 아이우에와우이ㅜ이ㅜ이ㅜ이"/>
 
-    <TextView
+
+    <ImageView
         android:id="@+id/favorite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="여기는 점수 아이우에와우이ㅜ이ㅜ이ㅜ이"/>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/heart_selector"/>
 
 </LinearLayout>

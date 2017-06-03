@@ -15,6 +15,7 @@ import com.cse421.guidit.activities.SightDetailActivity;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.vo.SightListVo;
 import com.cse421.guidit.vo.SightVo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -56,9 +57,11 @@ public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final SightListViewHolder viewHolder = (SightListViewHolder) holder;
         // TODO -- 썸네일 수정
-        viewHolder.thumbnail.setImageResource(R.drawable.logo);
+        Picasso.with(context)
+                .load(sightList.get(position).getPicture())
+                .into(viewHolder.thumbnail);
         viewHolder.title.setText(sightList.get(position).getName());
-        viewHolder.subtitle.setText(sightList.get(position).getName());
+        viewHolder.subtitle.setText(sightList.get(position).getScore()+"");
 
         viewHolder.title.setOnClickListener(new View.OnClickListener() {
             @Override

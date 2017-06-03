@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by JEONGYI on 2017. 5. 10..
@@ -33,6 +34,7 @@ public class SightDetailActivity extends AppCompatActivity {
     public SightVo sightVo;
     UserVo userVo;
     int sightId;
+    boolean isFavorite=false;
 
     @BindView(R.id.sight_image)
     ImageView image;
@@ -40,7 +42,7 @@ public class SightDetailActivity extends AppCompatActivity {
     TextView title;
     @BindView(R.id.location) TextView location;
     @BindView(R.id.score) TextView score;
-    @BindView(R.id.favorite) TextView favorite;
+    @BindView(R.id.favorite) ImageView favorite;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,8 +59,15 @@ public class SightDetailActivity extends AppCompatActivity {
         loadData();
     }
 
+    @OnClick(R.id.favorite)
+    public void favorite () {
+        isFavorite = !isFavorite;
+        favorite.setSelected(isFavorite);
+        setFavorite();
+    }
+
     public void loadData(){
-        SightDetailConnection connection = new SightDetailConnection();
+        SightDetailConnection connection = new SightDetailConnection(1111);
         connection.setActivity(this);
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
@@ -72,7 +81,9 @@ public class SightDetailActivity extends AppCompatActivity {
                 title.setText(sightVo.getName());
                 location.setText(sightVo.getInformation());
                 score.setText(sightVo.getScore()+"");
-                favorite.setText(sightVo.isFavorite()+"");
+                favorite.setSelected(sightVo.isFavorite());
+
+                isFavorite = sightVo.isFavorite();
             }
 
             @Override
@@ -83,4 +94,25 @@ public class SightDetailActivity extends AppCompatActivity {
         });
         connection.execute(userVo.getId()+"",sightId+"");
     }
+
+    public void setFavorite(){
+        Log.e("is Favoritee",isFavorite+"");
+        SightDetailConnection connection = new SightDetailConnection(2222);
+        connection.setActivity(this);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                //progressBar.cancel();
+                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void connectionFailed() {
+                //progressBar.cancel();
+                Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(userVo.getId()+"",sightId+"",isFavorite+"");
+    }
+
 }

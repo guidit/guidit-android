@@ -10,12 +10,13 @@
         android:id="@+id/thumbnail_sight"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:background="@color/cardview_dark_background"
+        android:background="@color/cardview_shadow_start_color"
         android:layout_margin="5dp"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_marginTop="5dp">
 
         <TextView
@@ -26,20 +27,26 @@
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/subtitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="관광지 위치"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            android:layout_below="@+id/title"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:orientation="horizontal">
 
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_rate_star"/>
 
+            <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="관광지 위치"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
+        </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
