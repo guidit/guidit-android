@@ -39,6 +39,10 @@
         </activity>
         <activity android:name=".activities.SightDetailActivity">
         </activity>
+        <activity android:name=".activities.SightListActivity">
+        </activity>
+        <activity android:name=".activities.MapActivity">
+        </activity>
     </application>
 
 </manifest>

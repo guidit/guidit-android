@@ -5,6 +5,7 @@
               android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/sight_image"
         android:layout_width="match_parent"
         android:layout_height="240dp"
         android:background="@color/colorMainOrange"/>
@@ -24,9 +25,15 @@
         android:textSize="24sp"/>
 
     <TextView
-        android:id="@+id/description"
+        android:id="@+id/score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="여기는 설명이 아이우에와우이ㅜ이ㅜ이ㅜ이"/>
+        android:text="여기는 점수 아이우에와우이ㅜ이ㅜ이ㅜ이"/>
+
+    <TextView
+        android:id="@+id/favorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="여기는 점수 아이우에와우이ㅜ이ㅜ이ㅜ이"/>
 
 </LinearLayout>

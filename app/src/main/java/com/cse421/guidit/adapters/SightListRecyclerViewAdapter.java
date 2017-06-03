@@ -14,6 +14,7 @@ import com.cse421.guidit.R;
 import com.cse421.guidit.activities.SightDetailActivity;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.vo.SightListVo;
+import com.cse421.guidit.vo.SightVo;
 
 import java.util.ArrayList;
 
@@ -28,21 +29,21 @@ import butterknife.ButterKnife;
 public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private ArrayList<SightListVo> items;
+    private ArrayList<SightVo> sightList;
     private SimpleListClickEventListener listener;
 
-    public SightListRecyclerViewAdapter(ArrayList<SightListVo> items, Context context, SimpleListClickEventListener listener) {
+    public SightListRecyclerViewAdapter(ArrayList<SightVo> sightList, Context context, SimpleListClickEventListener listener) {
         this.context = context;
-        this.items = items;
+        this.sightList = sightList;
         this.listener = listener;
     }
     
-    public void setList(ArrayList<SightListVo> items) {
-        this.items = items;
+    public void setList(ArrayList<SightVo> sightList) {
+        this.sightList = sightList;
     }
     
-    public ArrayList<SightListVo> getList() {
-        return items;
+    public ArrayList<SightVo> getList() {
+        return sightList;
     }
     
     @Override
@@ -54,9 +55,10 @@ public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final SightListViewHolder viewHolder = (SightListViewHolder) holder;
-        viewHolder.thumbnail.setImageResource(items.get(position).image);
-        viewHolder.title.setText(items.get(position).title);
-        viewHolder.subtitle.setText(items.get(position).subtitle);
+        // TODO -- 썸네일 수정
+        viewHolder.thumbnail.setImageResource(R.drawable.logo);
+        viewHolder.title.setText(sightList.get(position).getName());
+        viewHolder.subtitle.setText(sightList.get(position).getName());
 
         viewHolder.title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +75,7 @@ public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
     
     @Override
     public int getItemCount() {
-        return items.size();
+        return sightList.size();
     }
     
     public static class SightListViewHolder extends RecyclerView.ViewHolder {

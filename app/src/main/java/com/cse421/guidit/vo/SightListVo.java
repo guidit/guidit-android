@@ -1,5 +1,7 @@
 package com.cse421.guidit.vo;
 
+import java.util.ArrayList;
+
 /**
  * Created by jeongyi on 2017. 5. 17..
  * test 용도 입니다 나중에 삭제할거임!!!!
@@ -7,37 +9,26 @@ package com.cse421.guidit.vo;
 
 public class SightListVo {
 
-    public int image;
-    public String title;
-    public String subtitle;
+    public static SightListVo sightListVo;
 
-    public SightListVo(int image, String title, String subtitle) {
-        this.image = image;
-        this.title = title;
-        this.subtitle = subtitle;
+    public static SightListVo getInstance () {
+        if (sightListVo == null) {
+            sightListVo = new SightListVo();
+        }
+        return sightListVo;
     }
 
-    public int getImage() {
-        return image;
+    public static void destroy () {
+        sightListVo = null;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    private ArrayList<SightVo> sightList;
+
+    public ArrayList<SightVo> getSightList() {
+        return sightList;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void setSightList(ArrayList<SightVo> sightList) {
+        this.sightList = sightList;
     }
 }

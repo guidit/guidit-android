@@ -1,5 +1,6 @@
 package com.cse421.guidit.activities;
 
+import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -27,20 +30,12 @@ import butterknife.ButterKnife;
  * Created by JEONGYI on 2017. 5. 10..
  */
 
-public class SightActivity extends AppCompatActivity {
-
-    @BindView(R.id.tab_layout) TabLayout tabLayout;
-    @BindView(R.id.view_pager) ViewPager viewPager;
+public class SightActivity extends TabActivity {
 
     double X;
     double Y;
 
-    //Fragment
-    private MapFragment mapFragment;
-    private SightListFragment sightListFragment;
-
-    // Adapter
-    private MainPagerAdapter pagerAdapter;
+    public ArrayList<SightVo> sightList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,13 +44,26 @@ public class SightActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-//        setViews();
-
+        //basicX, basicY 데이터 받아오기
         Intent i = getIntent();
         String basicCity = i.getExtras().getString("basicCity");
         getXY(basicCity);
 
-        setViews();
+        //탭 만들기
+        TabHost mTab = getTabHost();
+        TabHost.TabSpec spec;
+        TabWidget tabWidget = mTab.getTabWidget();
+        Intent intent;
+
+        //XY 좌표 넘겨주기
+        Intent mapIntent = new Intent(this,MapActivity.class);
+        mapIntent.putExtra("basicX",X);
+        mapIntent.putExtra("basicY",Y);
+        mTab.addTab(mTab.newTabSpec("tab1").setIndicator("지도로 보기").setContent(mapIntent));
+        mTab.addTab(mTab.newTabSpec("tab2").setIndicator("리스트로 보기").setContent(new Intent(this,SightListActivity.class)));
+
+        sightList = new ArrayList<>();
+
 //        // TODO -- 연결
 //        SightConnection connection = new SightConnection();
 //        connection.setActivity(this);
@@ -78,47 +86,6 @@ public class SightActivity extends AppCompatActivity {
 //        });
 //        connection.execute(X+"",Y+"");
 
-    }
-
-    private void setViews () {
-        mapFragment = new MapFragment();
-        sightListFragment = new SightListFragment();
-
-        sendData();
-
-        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(mapFragment, "지도로 보기");
-        pagerAdapter.addFragment(sightListFragment, "목록으로 보기");
-
-
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        // connect tabs and viewpager
-        tabLayout.setupWithViewPager(viewPager);
-    }
-
-    private void sendData() {
-        Bundle bundle = new Bundle();
-        bundle.putDouble("basicX", X);
-        bundle.putDouble("basicY", Y);
-
-        mapFragment.setArguments(bundle);
     }
 
     private void getXY(String city) {
