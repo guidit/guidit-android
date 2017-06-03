@@ -1,38 +1,51 @@
-package com.cse421.guidit.fragments;
+package com.cse421.guidit.activities;
 
+import android.app.TabActivity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
-import com.cse421.guidit.activities.SightActivity;
+import com.cse421.guidit.adapters.MainPagerAdapter;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.connections.SightConnection;
+import com.cse421.guidit.fragments.MapFragment;
+import com.cse421.guidit.fragments.SightListFragment;
 import com.cse421.guidit.navermap.NMapViewerResourceProvider;
 import com.cse421.guidit.vo.SightListVo;
 import com.cse421.guidit.vo.SightVo;
+import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapContext;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIdata;
+import com.nhn.android.maps.overlay.NMapPOIitem;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static java.lang.System.in;
+
 /**
  * Created by JEONGYI on 2017. 5. 10..
  */
 
-public class MapFragment extends Fragment {
+public class MapActivity extends NMapActivity {
 
     //map
     private NMapContext mMapContext;// 지도 화면 View
@@ -49,29 +62,25 @@ public class MapFragment extends Fragment {
     public ArrayList<SightVo> sightList;
     SightListVo sightListVo;
 
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMapContext = new NMapContext(super.getActivity());
+        setContentView(R.layout.activity_map);
+
+        ButterKnife.bind(this);
+
+        sightListVo = new SightListVo();
+        mMapContext = new NMapContext(this);
         mMapContext.onCreate();
 
-    }
+        //XY 값 받아오기
+        Intent i = getIntent();
+        basicX = i.getExtras().getDouble("basicX");
+        basicY = i.getExtras().getDouble("basicY");
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Bundle bundle = this.getArguments();
-        if(bundle != null){
-            basicX = bundle.getDouble("basicX");
-            basicY = bundle.getDouble("basicY");
-        }
-        return inflater.inflate(R.layout.activity_map, container, false);
-    }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        NMapView mapView = (NMapView)getView().findViewById(R.id.daum_map);
+        //map setting
+        NMapView mapView = (NMapView)findViewById(R.id.daum_map);
         mapView.setClientId(CLIENT_ID);// 클라이언트 아이디 설정
         mMapContext.setupMapView(mapView);
 
@@ -83,10 +92,10 @@ public class MapFragment extends Fragment {
         mapView.requestFocus();
 
         // create resource provider
-        mMapViewerResourceProvider = new NMapViewerResourceProvider(getContext());
+        mMapViewerResourceProvider = new NMapViewerResourceProvider(getApplicationContext());
 
         // create overlay manager
-        mOverlayManager = new NMapOverlayManager(getContext(), mapView, mMapViewerResourceProvider);
+        mOverlayManager = new NMapOverlayManager(getApplicationContext(), mapView, mMapViewerResourceProvider);
 
         //connection - sightList 받아오기
         loadData();
@@ -125,17 +134,16 @@ public class MapFragment extends Fragment {
 
             }
         });
-
     }
 
     public void loadData(){
         SightConnection connection = new SightConnection();
-//        connection.setMapFragment(this);
+        connection.setMapActivity(this);
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
                 //progressBar.cancel();
-                Toast.makeText(getActivity(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
 
                 //좌표뿌리기
                 // set POI data
@@ -163,50 +171,50 @@ public class MapFragment extends Fragment {
 
                 // create POI data overlay
                 NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
+                poiDataOverlay.setOnStateChangeListener(new NMapPOIdataOverlay.OnStateChangeListener() {
+                    @Override
+                    public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+                        //마커 선택시
+//                        if( nMapPOIitem != null) {
+//                            for (int i = 0; i < sightList.size(); i++) {
+//                                if (sightList.get(i).getName() == nMapPOIitem.getTitle()) {
+//                                    Log.e("->", sightList.get(i).getName() + "");
+//                                }
+//                            }
+//                        }
+                    }
 
-//                ((SightActivity) getActivity()).sightList = sightList;
+                    @Override
+                    public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+                        //말풍선 선택시
+                            Log.e("---->","callout changed");
+                            Log.e("->", nMapPOIitem.getTitle() + " ht "+nMapPOIitem.getHeadText() + " sn "+nMapPOIitem.getSnippet() + "");
+                            if( nMapPOIitem != null) {
+                                for (int i = 0; i < sightList.size(); i++) {
+                                    if (sightList.get(i).getName() == nMapPOIitem.getTitle()) {
+                                        Log.e("->", sightList.get(i).getName() + "");
+                                        Intent intent = new Intent(MapActivity.this, SightDetailActivity.class);
+                                        intent.putExtra("sightId",sightList.get(i).getId());
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                    }
+                });
+
+                //((SightActivity) getApplicationContext()).sightList = sightList;
 //                Bundle bundle = new Bundle();
 //                bundle.putParcelableArrayList("sightList",sightList);
 //                listFragment.setArguments(bundle);
-                sightListVo.setSightList(sightList);
+                sightListVo.getInstance().setSightList(sightList);
             }
 
             @Override
             public void connectionFailed() {
                 //progressBar.cancel();
-                Toast.makeText(getActivity(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
             }
         });
         connection.execute(basicX+"",basicY+"");
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        mMapContext.onStart();
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapContext.onResume();
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapContext.onPause();
-    }
-    @Override
-    public void onStop() {
-        mMapContext.onStop();
-        super.onStop();
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-    @Override
-    public void onDestroy() {
-        mMapContext.onDestroy();
-        super.onDestroy();
     }
 }

@@ -105,7 +105,7 @@ public class MainConnection extends BaseConnection {
             ArrayList<PlanVo> myPlanList = new ArrayList<>();
             for (int i = 0; i < myPlansJson.length(); i++) {
                 JSONObject object = myPlansJson.getJSONObject(i);
-                
+
                 PlanVo planVo = new PlanVo();
                 planVo.setId(object.getInt("id"));
                 planVo.setName(object.getString("name"));
