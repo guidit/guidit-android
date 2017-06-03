@@ -1,22 +1,25 @@
-package com.cse421.guidit.fragments;
+package com.cse421.guidit.activities;
 
+import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 
 import com.cse421.guidit.R;
-import com.cse421.guidit.activities.SightActivity;
-import com.cse421.guidit.activities.SightDetailActivity;
+import com.cse421.guidit.adapters.MainPagerAdapter;
 import com.cse421.guidit.adapters.SightListRecyclerViewAdapter;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
+import com.cse421.guidit.fragments.MapFragment;
+import com.cse421.guidit.fragments.SightListFragment;
 import com.cse421.guidit.vo.SightListVo;
 import com.cse421.guidit.vo.SightVo;
 
@@ -29,7 +32,7 @@ import butterknife.ButterKnife;
  * Created by JEONGYI on 2017. 5. 10..
  */
 
-public class SightListFragment extends Fragment {
+public class SightListActivity extends AppCompatActivity {
 
     @BindView(R.id.sightlist_recyclerview)
     RecyclerView sightRecyclerView;
@@ -38,15 +41,17 @@ public class SightListFragment extends Fragment {
     SightListRecyclerViewAdapter adapter;
     SightListVo sightListVo;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_sightlist, container, false);
-        ButterKnife.bind(this, view);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sightlist);
+
+        ButterKnife.bind(this);
 
         sightList = new ArrayList<>();
-        initList();
+        sightListVo = SightListVo.getInstance();
 
+        initList();
         setRecyclerView();
         sightRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
@@ -57,7 +62,7 @@ public class SightListFragment extends Fragment {
 
             @Override
             public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                Intent i = new Intent(getActivity(), SightDetailActivity.class);
+                Intent i = new Intent(SightListActivity.this, SightDetailActivity.class);
                 startActivity(i);
             }
 
@@ -67,7 +72,6 @@ public class SightListFragment extends Fragment {
             }
         });
 
-        return view;
     }
 
     @Override
@@ -75,7 +79,8 @@ public class SightListFragment extends Fragment {
         super.onResume();
         Log.d("--->","onResume called");
 //        sightList = ((SightActivity) getActivity()).sightList;
-        sightList = sightListVo.getSightList();
+        sightList = sightListVo.getInstance().getSightList();
+        Log.d("--->",sightList.size()+"");
         adapter.setList(sightList);
         adapter.notifyDataSetChanged();
     }
@@ -84,15 +89,15 @@ public class SightListFragment extends Fragment {
 
 //        test();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         Log.e("sightList num",sightList.size()+"");
         adapter = new SightListRecyclerViewAdapter(sightList,
-                getContext(),
+                getApplicationContext(),
                 new SimpleListClickEventListener() {
                     @Override
                     public void itemClicked(int position) {
-                        getActivity().startActivity(new Intent(getActivity(), SightDetailActivity.class));
+                        startActivity(new Intent(SightListActivity.this, SightDetailActivity.class));
                     }
                 }
         );
