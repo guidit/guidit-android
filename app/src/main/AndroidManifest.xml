@@ -35,6 +35,7 @@
         <activity android:name=".activities.UserSettingActivity" />
         <activity android:name=".activities.FoodTruckActivity" />
         <activity android:name=".activities.FavoriteActivity" />
+        <activity android:name=".activities.PlanActivity"></activity>
         <activity android:name=".activities.WriteFeedActivity" android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".activities.SightDetailActivity">
         </activity>

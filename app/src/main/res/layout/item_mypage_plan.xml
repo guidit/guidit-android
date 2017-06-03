@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/relative_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+            android:padding="15dp">
+
+    <TextView
+        android:id="@+id/plan_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="여행 이름"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:background="#CCC"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"/>
+
+    <ImageView
+        android:id="@+id/lock"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_lock"
+        android:layout_alignRight="@id/plan_name"
+        android:layout_alignBottom="@id/plan_name"
+        android:layout_margin="5dp"/>
+
+</RelativeLayout>

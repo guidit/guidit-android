@@ -1,5 +1,6 @@
 package com.cse421.guidit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +15,9 @@ import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.activities.MainActivity;
+import com.cse421.guidit.activities.PlanActivity;
 import com.cse421.guidit.activities.UserSettingActivity;
-import com.cse421.guidit.adapters.PlanRecyclerAdapter;
+import com.cse421.guidit.adapters.MyPagePlanRecyclerAdapter;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.util.CircleTransform;
 import com.cse421.guidit.vo.PlanVo;
@@ -27,20 +29,23 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by hokyung on 2017. 5. 1..
  */
 
 public class MyPageFragment extends Fragment {
+
+    public final int REQEST_ADD_PLAN = 1357;
     
     @BindView(R.id.my_profile_img) ImageView profileImage;
     @BindView(R.id.my_name) TextView userName;
     @BindView(R.id.my_plan_list) RecyclerView myPlanRecyclerView;
     
     private ArrayList<PlanVo> planList;
-    private PlanRecyclerAdapter adapter;
+    private MyPagePlanRecyclerAdapter adapter;
     
     @Nullable
     @Override
@@ -76,7 +81,7 @@ public class MyPageFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         
         planList = ((MainActivity) getActivity()).myPlanList;
-        adapter = new PlanRecyclerAdapter(
+        adapter = new MyPagePlanRecyclerAdapter(
                 getActivity(),
                 new SimpleListClickEventListener() {
                     @Override
@@ -93,9 +98,18 @@ public class MyPageFragment extends Fragment {
     }
 
     public void addPlan () {
-        //// TODO: 2017-05-29 여행계획 추가 액티비티로
+        startActivityForResult(PlanActivity.getIntent(getActivity()), REQEST_ADD_PLAN);
     }
-    
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQEST_ADD_PLAN)
+            if (resultCode == RESULT_OK) {
+                //// TODO: 2017-06-03 사용자 여행계획 새로고침
+            }
+    }
+
     @OnClick(R.id.user_setting)
     public void setting () {
         startActivity(UserSettingActivity.getIntent(getActivity()));
