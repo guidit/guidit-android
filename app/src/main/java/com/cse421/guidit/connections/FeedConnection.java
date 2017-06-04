@@ -98,9 +98,14 @@ public class FeedConnection extends BaseConnection {
     protected void onPostExecute(String s) {
         Timber.d("on post " + s);
 
-        if (s.equals("")) {
-            listener.connectionFailed();
-        }
+        if (s.equals(""))
+            if (listener != null) {
+                listener.connectionFailed();
+                return;
+            } else {
+                listConnectionListener.connectionFailed();
+                return;
+            }
 
         try {
             switch (mode) {

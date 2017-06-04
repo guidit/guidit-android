@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
-import com.cse421.guidit.activities.MainActivity;
 import com.cse421.guidit.activities.WriteFeedActivity;
 import com.cse421.guidit.adapters.FeedRecyclerViewAdapter;
 import com.cse421.guidit.callbacks.ListConnectionListener;
@@ -49,6 +48,8 @@ public class FeedFragment extends Fragment {
 
     private ArrayList<FeedVo> feedList;
     private FeedRecyclerViewAdapter adapter;
+    private ProgressBarDialogUtil progressBar;
+    private ListConnectionListener listener;
 
     @Nullable
     @Override
@@ -56,14 +57,34 @@ public class FeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
         ButterKnife.bind(this, view);
 
+        setConnector();
         setSpinner();
         setRecyclerView();
 
         return view;
     }
 
+    private void setConnector() {
+        progressBar = new ProgressBarDialogUtil(getActivity());
+        listener = new ListConnectionListener<FeedVo>() {
+            @Override
+            public void setList(ArrayList<FeedVo> list) {
+                progressBar.cancel();
+                feedList = list;
+                adapter.setFeedList(feedList);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void connectionFailed() {
+                progressBar.cancel();
+                Toast.makeText(getActivity(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
     private void setSpinner () {
-        ArrayList<String> list = new ArrayList<>(Arrays.asList(locations));
+        final ArrayList<String> list = new ArrayList<>(Arrays.asList(locations));
         list.add(0, "전국");
         final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 getActivity(),
@@ -75,18 +96,9 @@ public class FeedFragment extends Fragment {
         feedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                final ProgressBarDialogUtil progressBarDialogUtil = new ProgressBarDialogUtil(getActivity());
-                progressBarDialogUtil.show();
+                progressBar.show();
                 FeedConnection connection = new FeedConnection(FeedConnection.GET_LIST);
-                connection.setListConnectionListener(new ListConnectionListener<FeedVo>() {
-                    @Override
-                    public void setList(ArrayList<FeedVo> list) {
-                        progressBarDialogUtil.cancel();
-                        feedList = list;
-                        adapter.setFeedList(feedList);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+                connection.setListConnectionListener(listener);
                 connection.execute(i + "");
             }
 
@@ -114,18 +126,10 @@ public class FeedFragment extends Fragment {
                             public void connectionSuccess() {
                                 Toast.makeText(getActivity(), "삭제되었습니다", Toast.LENGTH_SHORT).show();
 
-                                final ProgressBarDialogUtil progressBarDialogUtil = new ProgressBarDialogUtil(getActivity());
-                                progressBarDialogUtil.show();
+                                progressBar.show();
+
                                 FeedConnection connection = new FeedConnection(FeedConnection.GET_LIST);
-                                connection.setListConnectionListener(new ListConnectionListener<FeedVo>() {
-                                    @Override
-                                    public void setList(ArrayList<FeedVo> list) {
-                                        progressBarDialogUtil.cancel();
-                                        feedList = list;
-                                        adapter.setFeedList(feedList);
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                });
+                                connection.setListConnectionListener(listener);
                                 connection.execute(feedSpinner.getFirstVisiblePosition() + "");
                             }
 
@@ -158,18 +162,9 @@ public class FeedFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 feedSpinner.setSelection(data.getIntExtra("city", 0));
 
-                final ProgressBarDialogUtil progressBarDialogUtil = new ProgressBarDialogUtil(getActivity());
-                progressBarDialogUtil.show();
+                progressBar.show();
                 FeedConnection connection = new FeedConnection(FeedConnection.GET_LIST);
-                connection.setListConnectionListener(new ListConnectionListener<FeedVo>() {
-                    @Override
-                    public void setList(ArrayList<FeedVo> list) {
-                        progressBarDialogUtil.cancel();
-                        feedList = list;
-                        adapter.setFeedList(feedList);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+                connection.setListConnectionListener(listener);
                 connection.execute(feedSpinner.getFirstVisiblePosition() + "");
             }
     }

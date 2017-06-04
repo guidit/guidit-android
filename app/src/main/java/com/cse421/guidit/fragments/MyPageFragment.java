@@ -18,8 +18,11 @@ import com.cse421.guidit.activities.MainActivity;
 import com.cse421.guidit.activities.PlanActivity;
 import com.cse421.guidit.activities.UserSettingActivity;
 import com.cse421.guidit.adapters.MyPagePlanRecyclerAdapter;
+import com.cse421.guidit.callbacks.ListConnectionListener;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
+import com.cse421.guidit.connections.PlanConnection;
 import com.cse421.guidit.util.CircleTransform;
+import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.UserVo;
 import com.squareup.picasso.Picasso;
@@ -98,6 +101,25 @@ public class MyPageFragment extends Fragment {
 
         //리스트 불러오기
         //// TODO: 2017-06-04 myplan connection 추가
+        final ProgressBarDialogUtil progresbar = new ProgressBarDialogUtil(getActivity());
+        PlanConnection connection = new PlanConnection(PlanConnection.modes.MY_PLANS);
+        connection.setListConnectionListener(new ListConnectionListener<PlanVo>() {
+            @Override
+            public void setList(ArrayList<PlanVo> list) {
+                progresbar.cancel();
+                planList = list;
+                adapter.setPlanList(planList);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void connectionFailed() {
+                progresbar.cancel();
+                Toast.makeText(getActivity(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+//        progresbar.show();
+//        connection.execute();
 
         PlanVo plan1 = new PlanVo();
         plan1.setName("첫번째 여행");
@@ -125,6 +147,25 @@ public class MyPageFragment extends Fragment {
         if (requestCode == REQEST_ADD_PLAN)
             if (resultCode == RESULT_OK) {
                 //// TODO: 2017-06-03 사용자 여행계획 새로고침
+                final ProgressBarDialogUtil progresbar = new ProgressBarDialogUtil(getActivity());
+                PlanConnection connection = new PlanConnection(PlanConnection.modes.MY_PLANS);
+                connection.setListConnectionListener(new ListConnectionListener<PlanVo>() {
+                    @Override
+                    public void setList(ArrayList<PlanVo> list) {
+                        progresbar.cancel();
+                        planList = list;
+                        adapter.setPlanList(planList);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void connectionFailed() {
+                        progresbar.cancel();
+                        Toast.makeText(getActivity(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                progresbar.show();
+//                connection.execute();
             }
     }
 
@@ -135,7 +176,7 @@ public class MyPageFragment extends Fragment {
     
     @OnClick(R.id.plan)
     public void plan () {
-        //// TODO: 2017. 5. 10. ?? 얜 뭐하는애지
+        //// TODO: 2017. 5. 10. 남들의 여행계획 보는 곳으로
     }
     
     @OnClick(R.id.favorite)
