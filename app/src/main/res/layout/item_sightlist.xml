@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/linear_layout"
-              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="80dp"
-              android:gravity="center">
+              android:layout_height="105dp"
+              android:orientation="vertical"
+              >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
     <ImageView
         android:id="@+id/thumbnail_sight"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:background="@color/cardview_shadow_start_color"
-        android:layout_margin="5dp"/>
+        android:layout_margin="16dp"
+        android:scaleType="centerCrop"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
@@ -25,28 +32,48 @@
             android:layout_height="wrap_content"
             android:text="관광지 이름"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_rate_star"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="평점"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="관광지 위치"
-                android:textColor="@android:color/black"
+                android:layout_marginLeft="4dp"
+                android:text="4.8"
+                android:textColor="@color/colorMainOrange"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#식당"
+            android:textSize="14sp" />
+
     </LinearLayout>
 
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+    </RelativeLayout>
 </LinearLayout>

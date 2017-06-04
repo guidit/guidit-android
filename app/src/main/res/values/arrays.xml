@@ -31,11 +31,6 @@
         <item>가평</item>
     </string-array>
 
-    <string-array name="lower_daejun">
-        <item>대전</item>
-        <item>광주</item>
-    </string-array>
-
     <string-array name="lower_kangwon">
         <item>춘천</item>
         <item>원주</item>
@@ -43,25 +38,28 @@
         <item>속초</item>
     </string-array>
 
-    <string-array name="lower_daegu">
-        <item>대구</item>
-        <item>부샨</item>
-        <item>울산</item>
-    </string-array>
-
     <string-array name="lower_choongchung">
         <item>충남</item>
         <item>충북</item>
+        <item>세종</item>
+        <item>대전</item>
     </string-array>
 
     <string-array name="lower_kyeongsang">
         <item>경남</item>
         <item>경북</item>
+        <item>대구</item>
+    </string-array>
+
+    <string-array name="lower_busan">
+        <item>부산</item>
+        <item>울산</item>
     </string-array>
 
     <string-array name="lower_junra">
         <item>전남</item>
         <item>전북</item>
+        <item>광주</item>
     </string-array>
 
     <string-array name="lower_jeju">

@@ -1,5 +1,6 @@
 package com.cse421.guidit.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import com.cse421.guidit.R;
 import com.cse421.guidit.activities.MainActivity;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
@@ -35,13 +38,21 @@ public class BrowseFragment extends Fragment {
     @BindView(R.id.hot_plan_picture) ImageView hotPlanPicture;
     @BindView(R.id.hot_sight_name) TextView hotSightName;
     @BindView(R.id.hot_sight_picture) ImageView hotSightPicture;
+    @BindView(R.id.subtitle1) TextView subtitle1;
+    @BindView(R.id.subtitle2) TextView subtitle2;
+    @BindView(R.id.subtitle3) TextView subtitle3;
     
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_browse, container, false);
         ButterKnife.bind(this, view);
-        
+
+        Typeface type = Typeface.createFromAsset(getActivity().getAssets(), "fonts/BMJUA_ttf.ttf");
+        subtitle1.setTypeface(type);
+        subtitle2.setTypeface(type);
+        subtitle3.setTypeface(type);
+
         setViews();
 
         return view;
