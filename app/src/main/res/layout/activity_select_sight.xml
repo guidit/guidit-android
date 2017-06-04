@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="찜목록"
+        android:textColor="@android:color/black"
+        android:textSize="23sp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"/>
+
+    <TextView
+        android:id="@+id/select_sight_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="입력하기"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@color/colorMainBlue"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/favorite_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/tv"
+        android:layout_above="@id/select_sight_confirm"></android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

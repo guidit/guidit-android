@@ -1,10 +1,13 @@
 package com.cse421.guidit.connections;
 
 import com.cse421.guidit.callbacks.ListConnectionListener;
+import com.cse421.guidit.vo.DailyPlanVo;
 import com.cse421.guidit.vo.PlanVo;
+import com.cse421.guidit.vo.SightVo;
 import com.cse421.guidit.vo.UserVo;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import timber.log.Timber;
 
@@ -23,6 +27,7 @@ public class PlanConnection extends BaseConnection {
 
     private modes mode;
     private ListConnectionListener<PlanVo> listConnectionListener;
+    private ArrayList<DailyPlanVo> dailyPlanList;
 
     public PlanConnection(modes mode) {
         this.mode = mode;
@@ -30,6 +35,10 @@ public class PlanConnection extends BaseConnection {
 
     public void setListConnectionListener(ListConnectionListener<PlanVo> listConnectionListener) {
         this.listConnectionListener = listConnectionListener;
+    }
+
+    public void setDailyPlanList(ArrayList<DailyPlanVo> dailyPlanList) {
+        this.dailyPlanList = dailyPlanList;
     }
 
     public enum modes {
@@ -42,7 +51,7 @@ public class PlanConnection extends BaseConnection {
 
         String data, url, result;
         result = "";
-        Request request;
+        Request request = null;
 
         switch (mode) {
             case MY_PLANS:
@@ -61,10 +70,37 @@ public class PlanConnection extends BaseConnection {
                         .build();
                 Timber.d("url:" + url + " / data:" + data);
                 break;
-//            case ADD_PLAN:
-//                break;
-//            case DELETE_PLAN:
-//                break;
+            case ADD_PLAN:
+                try {
+                    JSONArray list = new JSONArray();
+                    for (DailyPlanVo dailyPlanVo : dailyPlanList) {
+                        JSONArray dailyArray = new JSONArray();
+                        for (SightVo sightVo : dailyPlanVo.getSightList()) {
+                            JSONObject dailyObject = new JSONObject();
+                            dailyObject.put("id", sightVo.getId());
+                            dailyArray.put(dailyObject);
+                        }
+                        list.put(dailyArray);
+                    }
+
+                    JSONObject object = new JSONObject();
+                    object.put("name", strings[0]);
+                    object.put("id", UserVo.getInstance().getId());
+                    object.put("is_public", Boolean.valueOf(strings[1]));
+                    object.put("daily_plan", list);
+
+                    RequestBody body = RequestBody.create(JSON, object.toString());
+                    url = serverUrl + "/plan/create";
+                    request = new Request.Builder()
+                            .url(url)
+                            .post(body)
+                            .build();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case DELETE_PLAN:
+                break;
             default:
                 return "";
         }
@@ -111,6 +147,13 @@ public class PlanConnection extends BaseConnection {
                 case ALL_PLANS:
                     break;
                 case ADD_PLAN:
+                    JSONObject object = new JSONObject(s);
+                    if (object.has("isSuccess")) {
+                        if (object.getBoolean("isSuccess"))
+                            listener.connectionSuccess();
+                        else
+                            listener.connectionFailed();
+                    }
                     break;
                 case DELETE_PLAN:
                     break;

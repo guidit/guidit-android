@@ -18,7 +18,7 @@ public class SightVo implements Parcelable{
     double mapX;
     double mapY;
     boolean favorite;
-
+    boolean checked;
 
     public int getId() {
         return id;
@@ -101,24 +101,31 @@ public class SightVo implements Parcelable{
         this.favorite = favorite;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     @Override
     public String toString() {
         return "SightVo{" +
                 "id=" + id +
-
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
                 ", type='" + type + '\'' +
                 ", information='" + information + '\'' +
                 ", picture='" + picture + '\'' +
                 ", score=" + score +
-                ", x=" + mapX +
-                ", y=" + mapY +
+                ", mapX=" + mapX +
+                ", mapY=" + mapY +
+                ", favorite=" + favorite +
+                ", checked=" + checked +
                 '}';
     }
-
-
-    //parcelable
+//parcelable
 
     public SightVo(int id, String name, String type, String picture, double score, double mapX, double mapY) {
         this.id = id;

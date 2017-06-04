@@ -105,6 +105,7 @@ public class FavoriteConnection extends BaseConnection {
                         sightVo.setPicture(data.getString("picture"));
                         sightVo.setMapX(data.getDouble("x"));
                         sightVo.setMapY(data.getDouble("y"));
+                        sightVo.setFavorite(true);
                         favorites.add(sightVo);
                     }
                     listConnectionListener.setList(favorites);
