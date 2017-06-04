@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.activities.FavoriteActivity;
 import com.cse421.guidit.activities.MainActivity;
 import com.cse421.guidit.activities.PlanActivity;
 import com.cse421.guidit.activities.UserSettingActivity;
@@ -181,6 +182,6 @@ public class MyPageFragment extends Fragment {
     
     @OnClick(R.id.favorite)
     public void favorite () {
-        //// TODO: 2017. 5. 10. 찜목록 보여주는 액티비티로
+        startActivity(FavoriteActivity.getIntent(getActivity()));
     }
 }

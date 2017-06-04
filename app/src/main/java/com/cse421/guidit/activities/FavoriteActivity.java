@@ -1,5 +1,7 @@
 package com.cse421.guidit.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,8 +15,10 @@ import android.widget.Toast;
 import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.FavoriteRecyclerViewAdapter;
 import com.cse421.guidit.callbacks.FavoriteClickEventListener;
-import com.cse421.guidit.callbacks.FavoriteConnectionEventListener;
+import com.cse421.guidit.callbacks.ListConnectionListener;
+import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.connections.FavoriteConnection;
+import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.SightVo;
 
 import java.util.ArrayList;
@@ -30,6 +34,10 @@ public class FavoriteActivity extends AppCompatActivity {
     private ArrayList<SightVo> favorites;
     private FavoriteRecyclerViewAdapter adapter;
 
+    public static Intent getIntent (Context context) {
+        return new Intent(context, FavoriteActivity.class);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,23 +46,8 @@ public class FavoriteActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setToolbar();
-
-        //// TODO: 2017-05-21 favorite리스트 받아오는 서버통신 후 setRecycler
-        FavoriteConnection connection = new FavoriteConnection();
-        connection.setListener(new FavoriteConnectionEventListener() {
-            @Override
-            public void onSuccess(ArrayList<SightVo> items) {
-
-            }
-
-            @Override
-            public void onFailed() {
-
-            }
-        });
-        connection.execute();
-        favorites = new ArrayList<>();
         setRecycler();
+        getFavoriteList();
     }
 
     private void setToolbar () {
@@ -67,6 +60,7 @@ public class FavoriteActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
 
+        favorites = new ArrayList<>();
         adapter = new FavoriteRecyclerViewAdapter(this, favorites);
         adapter.setListener(new FavoriteClickEventListener() {
             @Override
@@ -84,12 +78,50 @@ public class FavoriteActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
     }
 
-    private void delete (int position) {
-        //// TODO: 2017-05-21 즐찾 제거 서버 통신
+    private void getFavoriteList () {
+        final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
+        progressBar.show();
+
+        FavoriteConnection connection = new FavoriteConnection(FavoriteConnection.Modes.GET_LIST);
+        connection.setListConnectionListener(new ListConnectionListener() {
+            @Override
+            public void setList(ArrayList list) {
+                progressBar.cancel();
+                favorites = list;
+                adapter.setList(favorites);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void connectionFailed() {
+                progressBar.cancel();
+                Toast.makeText(FavoriteActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute();
+    }
+
+    private void delete (final int position) {
         //// TODO: 2017-05-21 지우기전에 다이얼로그로 물어볼까?
-        favorites.remove(position);
-        adapter.setList(favorites);
-        adapter.notifyDataSetChanged();
+        final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
+        progressBar.show();
+
+        FavoriteConnection connection = new FavoriteConnection(FavoriteConnection.Modes.DELETE);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                progressBar.cancel();
+                favorites.remove(position);
+                adapter.setList(favorites);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void connectionFailed() {
+                progressBar.cancel();
+                Toast.makeText(FavoriteActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
