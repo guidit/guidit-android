@@ -1,6 +1,7 @@
 package com.cse421.guidit.fragments;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -32,15 +34,17 @@ public class SightFragment extends Fragment {
     
     @BindView(R.id.upper_locations) RecyclerView upperRecyclerView;
     @BindView(R.id.lower_locations) RecyclerView lowerRecyclerView;
-    
+
+    @BindView(R.id.wheretogo)
+    TextView title;
+
     @BindArray(R.array.upper_locations) String [] upperLocations;
     @BindArray(R.array.lower_seoul) String [] seoul;
     @BindArray(R.array.lower_kyunki) String [] kyunki;
     @BindArray(R.array.lower_kangwon) String [] kangwon;
-    @BindArray(R.array.lower_daejun) String [] daejun;
-    @BindArray(R.array.lower_daegu) String [] daegu;
     @BindArray(R.array.lower_choongchung) String [] choongchung;
     @BindArray(R.array.lower_kyeongsang) String [] kyeongsang;
+    @BindArray(R.array.lower_busan) String [] busan;
     @BindArray(R.array.lower_junra) String [] junra;
     @BindArray(R.array.lower_jeju) String [] jeju;
     
@@ -54,7 +58,10 @@ public class SightFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sight, container, false);
         ButterKnife.bind(this, view);
-        
+
+        Typeface type = Typeface.createFromAsset(getActivity().getAssets(), "fonts/BMJUA_ttf.ttf");
+        title.setTypeface(type);
+
         convertXMLToArrayList();
         setUpperRecyclerView();
         setLowerRecyclerView();
@@ -75,20 +82,18 @@ public class SightFragment extends Fragment {
             lowerList[0].add(s);
         for (String s : kyunki)
             lowerList[1].add(s);
-        for (String s : daejun)
-            lowerList[2].add(s);
         for (String s : kangwon)
-            lowerList[3].add(s);
-        for (String s : daegu)
-            lowerList[4].add(s);
+            lowerList[2].add(s);
         for (String s : choongchung)
-            lowerList[5].add(s);
+            lowerList[3].add(s);
         for (String s : kyeongsang)
-            lowerList[6].add(s);
+            lowerList[4].add(s);
+        for (String s : busan)
+            lowerList[5].add(s);
         for (String s : junra)
-            lowerList[7].add(s);
+            lowerList[6].add(s);
         for (String s : jeju)
-            lowerList[8].add(s);
+            lowerList[7].add(s);
     }
     
     private void setUpperRecyclerView () {
