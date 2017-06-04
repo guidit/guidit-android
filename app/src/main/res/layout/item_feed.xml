@@ -18,10 +18,20 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이름"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
             android:id="@+id/feed_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="예시 내용 \n에\n예\n에\n \n시\n이이"
+            android:layout_below="@id/user_name"
             android:layout_marginLeft="10dp"/>
 
         <ImageView

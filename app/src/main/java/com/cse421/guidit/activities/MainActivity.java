@@ -52,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
     // 각 탭별 정보
     public PlanVo hotPlan;
     public SightVo hotSight;
-    public ArrayList<FeedVo> feedList;
-    public ArrayList<PlanVo> myPlanList;
 
     public static Intent getIntent (Context context) {
         return new Intent(context, MainActivity.class);
@@ -108,42 +106,6 @@ public class MainActivity extends AppCompatActivity {
         hotSight.setPicture("http://cfile22.uf.tistory.com/image/2341FC4A51B5E60338157B");
         hotSight.setInformation("태화강변에 있는 대밭이다.");
         hotSight.setScore(3.7);
-        
-        myPlanList = new ArrayList<>();
-        PlanVo plan1 = new PlanVo();
-        plan1.setName("첫번째 여행");
-        plan1.setPublic(true);
-        PlanVo plan2 = new PlanVo();
-        plan2.setName("두번째 여행");
-        plan2.setPublic(false);
-        PlanVo plan3 = new PlanVo();
-        plan3.setName("세번째 여행");
-        plan3.setPublic(true);
-        myPlanList.add(plan1);
-        myPlanList.add(plan2);
-        myPlanList.add(plan3);
-
-        feedList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            FeedVo feedVo = new FeedVo();
-            feedVo.setId(i);
-            feedVo.setProfile("testprofile");
-            feedVo.setCity("울산");
-            feedVo.setContent("내용내용" + i);
-            feedVo.setUserName("유저이름" + i);
-            feedVo.setDate("17년 5월 31일");
-            feedVo.setUserId(i + "" + i);
-            feedList.add(feedVo);
-        }
-        FeedVo feedVo = new FeedVo();
-        feedVo.setId(5);
-        feedVo.setProfile("testprofile");
-        feedVo.setCity("울산");
-        feedVo.setContent("내용내용");
-        feedVo.setUserName("유저이름");
-        feedVo.setDate("17년 5월 31일");
-        feedVo.setUserId("ho");
-        feedList.add(feedVo);
 
         setViews();
     }

@@ -80,7 +80,7 @@ public class MyPageFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         
-        planList = ((MainActivity) getActivity()).myPlanList;
+        planList = new ArrayList<>();
         adapter = new MyPagePlanRecyclerAdapter(
                 getActivity(),
                 new SimpleListClickEventListener() {
@@ -95,6 +95,24 @@ public class MyPageFragment extends Fragment {
         myPlanRecyclerView.setHasFixedSize(true);
         myPlanRecyclerView.setAdapter(adapter);
         myPlanRecyclerView.setLayoutManager(layoutManager);
+
+        //리스트 불러오기
+        //// TODO: 2017-06-04 myplan connection 추가
+
+        PlanVo plan1 = new PlanVo();
+        plan1.setName("첫번째 여행");
+        plan1.setPublic(true);
+        PlanVo plan2 = new PlanVo();
+        plan2.setName("두번째 여행");
+        plan2.setPublic(false);
+        PlanVo plan3 = new PlanVo();
+        plan3.setName("세번째 여행");
+        plan3.setPublic(true);
+        planList.add(plan1);
+        planList.add(plan2);
+        planList.add(plan3);
+        adapter.setPlanList(planList);
+        adapter.notifyDataSetChanged();
     }
 
     public void addPlan () {
