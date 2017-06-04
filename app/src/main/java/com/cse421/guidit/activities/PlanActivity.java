@@ -73,5 +73,7 @@ public class PlanActivity extends AppCompatActivity {
     public void addDate () {
         //// TODO: 2017-06-03 날짜 추가 기능
         dailyList.add(new ArrayList<DailyPlanVo>());
+        adapter.setList(dailyList);
+        adapter.notifyDataSetChanged();
     }
 }

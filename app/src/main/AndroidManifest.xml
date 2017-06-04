@@ -28,21 +28,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LoginActivity" android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.LoginActivity" />
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.SightActivity" />
         <activity android:name=".activities.UserSettingActivity" />
         <activity android:name=".activities.FoodTruckActivity" />
         <activity android:name=".activities.FavoriteActivity" />
-        <activity android:name=".activities.PlanActivity"></activity>
-        <activity android:name=".activities.WriteFeedActivity" android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".activities.SightDetailActivity">
-        </activity>
-        <activity android:name=".activities.SightListActivity">
-        </activity>
-        <activity android:name=".activities.MapActivity">
-        </activity>
+        <activity android:name=".activities.PlanActivity" />
+        <activity
+            android:name=".activities.WriteFeedActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activities.SightDetailActivity"></activity>
+        <activity android:name=".activities.SightListActivity"></activity>
+        <activity android:name=".activities.MapActivity"></activity>
+        <activity android:name=".activities.FestivalActivity"></activity>
     </application>
 
 </manifest>
