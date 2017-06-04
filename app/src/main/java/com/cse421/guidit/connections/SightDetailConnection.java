@@ -22,8 +22,15 @@ import timber.log.Timber;
 
 public class SightDetailConnection extends BaseConnection {
 
-    private SightDetailActivity activity;
+    public static final int GET_DETAIL = 1111;
+    public static final int FAVORITE = 2222;
 
+    private SightDetailActivity activity;
+    private int mode;
+
+    public SightDetailConnection(int mode) {
+        this.mode = mode;
+    }
     public void setActivity(SightDetailActivity activity) {
         this.activity = activity;
     }
@@ -33,20 +40,35 @@ public class SightDetailConnection extends BaseConnection {
     protected String doInBackground(String... params) {
     
         OkHttpClient client = new OkHttpClient();
-    
-        String result = "";
-    
-        String data =
-                "userId=" + params[0]
-                + "&sightId=" + params[1];
-        Timber.d(data);
-        
-        String url = serverUrl + "/sight/detail?";
-        Timber.d(url);
-    
-        Request request = new Request.Builder()
-                .url(url + data)
-                .build();
+
+        String data, url, result;
+        data = url = result = "";
+        Request request;
+
+        switch(mode){
+            case GET_DETAIL:
+                data = "userId=" + params[0]
+                       + "&sightId=" + params[1];
+                url = serverUrl + "/sight/detail?";
+                request = new Request.Builder()
+                        .url(url + data)
+                        .build();
+                Timber.d("url:" + url + " / data:" + data);
+                break;
+            case FAVORITE:
+                data = "userId=" + params[0]
+                        + "&sightId=" + params[1]
+                        + "&favorite=" + params[2];
+                url = serverUrl + "/sight/favorite?";
+                request = new Request.Builder()
+                        .url(url + data)
+                        .build();
+                Timber.d("url:" + url + " / data:" + data);
+                break;
+            default:
+                return "";
+
+        }
     
         try {
             Response response = client.newCall(request).execute();
@@ -66,19 +88,39 @@ public class SightDetailConnection extends BaseConnection {
         JSONArray result;
 
         try {
-            result = new JSONArray(s);
-            JSONObject sightDetailJson = result.getJSONObject(0);
+            switch (mode) {
+                case GET_DETAIL:
+                    result = new JSONArray(s);
+                    JSONObject sightDetailJson = result.getJSONObject(0);
 
-            SightVo sightVo = new SightVo();
-            sightVo.setId(sightDetailJson.getInt("id"));
-            sightVo.setName(sightDetailJson.getString("name"));
-            sightVo.setPicture(sightDetailJson.getString("picture"));
-            sightVo.setScore(sightDetailJson.getDouble("score"));
-            sightVo.setInformation(sightDetailJson.getString("information"));
-            sightVo.setFavorite(sightDetailJson.getBoolean("favorite"));
+                    if(sightDetailJson.getInt("id") == -1){
+                        listener.connectionFailed();
+                    }else {
+                        SightVo sightVo = new SightVo();
+                        sightVo.setId(sightDetailJson.getInt("id"));
+                        sightVo.setName(sightDetailJson.getString("name"));
+                        sightVo.setPicture(sightDetailJson.getString("picture"));
+                        sightVo.setScore(sightDetailJson.getDouble("score"));
+                        sightVo.setInformation(sightDetailJson.getString("information"));
+                        sightVo.setFavorite(sightDetailJson.getBoolean("favorite"));
 
-            activity.sightVo = sightVo;
-
+                        activity.sightVo = sightVo;
+                        listener.connectionSuccess();
+                    }
+                    return;
+                case FAVORITE:
+                    JSONObject isSuccess = new JSONObject(s);
+                    if (isSuccess.has("isSuccess"))
+                        if (isSuccess.getBoolean("isSuccess"))
+                            listener.connectionSuccess();
+                        else
+                            listener.connectionFailed();
+                    else
+                        listener.connectionFailed();
+                    return;
+                default:
+                    return;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

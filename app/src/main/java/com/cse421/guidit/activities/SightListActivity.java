@@ -97,7 +97,9 @@ public class SightListActivity extends AppCompatActivity {
                 new SimpleListClickEventListener() {
                     @Override
                     public void itemClicked(int position) {
-                        startActivity(new Intent(SightListActivity.this, SightDetailActivity.class));
+                        Intent intent = new Intent(SightListActivity.this, SightDetailActivity.class);
+                        intent.putExtra("sightId",sightList.get(position).getId());
+                        startActivity(intent);
                     }
                 }
         );
