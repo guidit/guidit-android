@@ -6,9 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -22,25 +24,39 @@ import timber.log.Timber;
 
 public class SignUpConnection extends BaseConnection {
     
-    // params : name, id, password
+    // params : name, id, password, image
     @Override
     protected String doInBackground(String... params) {
     
         OkHttpClient client = new OkHttpClient();
         
         String result = "";
+
+        RequestBody body;
+        if (params[3].equals("")) {
+            body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("name", params[0])
+                    .addFormDataPart("id", params[1])
+                    .addFormDataPart("password", params[2])
+                    .build();
+        } else {
+            File file = new File(params[3]);
+            body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("name", params[0])
+                    .addFormDataPart("id", params[1])
+                    .addFormDataPart("password", params[2])
+                    .addFormDataPart("file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, file))
+                    .build();
+        }
         
-        String data =
-                "name=" + params[0]
-                + "&id=" + params[1]
-                + "&password=" + params[2];
-        Timber.d(data);
-        
-        String url = serverUrl + "/users/signup?";
+        String url = serverUrl + "/users/signup";
         Timber.d("url : " + url);
     
         Request request = new Request.Builder()
-                .url(url + data)
+                .url(url)
+                .post(body)
                 .build();
     
         try {

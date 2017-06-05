@@ -5,10 +5,13 @@ import com.cse421.guidit.vo.UserVo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import timber.log.Timber;
 
@@ -18,27 +21,33 @@ import timber.log.Timber;
 
 public class UserSettingConnection extends BaseConnection {
     
-    // params : name, password
+    // params : name, password, image
     @Override
     protected String doInBackground(String... params) {
         
         OkHttpClient client = new OkHttpClient();
         
         String result = "";
-    
-        UserVo userVo = UserVo.getInstance();
-        String data =
-                "id=" + userVo.getId()
-                        + "&name=" + params[0];
-        if (!params[1].equals(""))
-            data += "&password=" + params[1];
-        Timber.d(data);
+
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.addFormDataPart("id", UserVo.getInstance().getId() + "");
+        builder.addFormDataPart("name", params[0]);
+        if (!params[1].equals("")) {
+            builder.addFormDataPart("password", params[2]);
+        }
+        if (!params[2].equals("")) {
+            File file = new File(params[2]);
+            builder.addFormDataPart("file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, file));
+        }
+
+        RequestBody body = builder.build();
         
-        String url = serverUrl + "/users/setting?";
+        String url = serverUrl + "/users/setting";
         Timber.d("url : " + url);
         
         Request request = new Request.Builder()
-                .url(url + data)
+                .url(url)
+                .post(body)
                 .build();
         
         try {

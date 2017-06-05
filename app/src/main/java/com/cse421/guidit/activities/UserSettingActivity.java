@@ -14,6 +14,7 @@ import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.connections.SignUpConnection;
 import com.cse421.guidit.connections.UserSettingConnection;
 import com.cse421.guidit.util.CircleTransform;
+import com.cse421.guidit.util.ImageUtil;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.UserVo;
 import com.squareup.picasso.Picasso;
@@ -31,6 +32,8 @@ public class UserSettingActivity extends AppCompatActivity {
     @BindView(R.id.sign_up_name) EditText inputName;
     @BindView(R.id.sign_up_password) EditText inputPassword;
     @BindView(R.id.password_confirm) EditText inputPassword2;
+
+    private String imagePath;
     
     public static Intent getIntent (Context context) {
         return new Intent(context, UserSettingActivity.class);
@@ -44,6 +47,7 @@ public class UserSettingActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         
         setViews();
+        imagePath = "";
     }
     
     private void setViews () {
@@ -77,6 +81,8 @@ public class UserSettingActivity extends AppCompatActivity {
             Toast.makeText(this, "사진이 선택되지 않았습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        imagePath = ImageUtil.getRealPathFromURI(this, data.getData());
         
         Picasso.with(this)
                 .load(data.getData().toString())
@@ -111,10 +117,7 @@ public class UserSettingActivity extends AppCompatActivity {
         
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
-        
-        // 프로필 사진 파일 보내는 법 // TODO: 2017. 5. 8. 사진 전송
-        
-        // 다른 자료 보내는 법
+
         UserSettingConnection connection = new UserSettingConnection();
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
@@ -132,6 +135,6 @@ public class UserSettingActivity extends AppCompatActivity {
                 Toast.makeText(UserSettingActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
         });
-        connection.execute(name, password);
+        connection.execute(name, password, imagePath);
     }
 }

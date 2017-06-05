@@ -2,6 +2,10 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +17,7 @@ import com.cse421.guidit.connections.SignUpConnection;
 import com.cse421.guidit.R;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.util.CircleTransform;
+import com.cse421.guidit.util.ImageUtil;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.squareup.picasso.Picasso;
 
@@ -31,6 +36,8 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.sign_up_password) EditText inputPassword;
     @BindView(R.id.password_confirm) EditText inputPassword2;
 
+    String imagePath;
+
     public static Intent getIntent (Context context) {
         return new Intent(context, SignUpActivity.class);
     }
@@ -42,6 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        imagePath = "";
         Picasso.with(this)
                 .load(R.drawable.profile)
                 .transform(new CircleTransform())
@@ -65,6 +73,8 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "사진이 선택되지 않았습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        imagePath = ImageUtil.getRealPathFromURI(this, data.getData());
 
         Picasso.with(this)
                 .load(data.getData().toString())
@@ -103,10 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
 
-        // 프로필 사진 파일 보내는 법 // TODO: 2017. 5. 8. 사진 전송
-
-        // 다른 자료 보내는 법
-        // params : name, id, password
+        // params : name, id, password, image
         SignUpConnection connection = new SignUpConnection();
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
@@ -122,6 +129,6 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "아이디가 중복됩니다", Toast.LENGTH_SHORT).show();
             }
         });
-        connection.execute(name, id, password);
+        connection.execute(name, id, password, imagePath);
     }
 }
