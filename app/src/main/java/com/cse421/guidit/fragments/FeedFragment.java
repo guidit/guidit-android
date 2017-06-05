@@ -93,7 +93,7 @@ public class FeedFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                     }
                 });
-//                connection.execute(i + "");
+                connection.execute(i + "");
             }
 
             @Override
@@ -108,7 +108,7 @@ public class FeedFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        feedList = ((MainActivity) getActivity()).feedList;
+        feedList = new ArrayList<>();
         adapter = new FeedRecyclerViewAdapter(
                 getActivity(),
                 new SimpleListClickEventListener() {
