@@ -58,8 +58,10 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter {
                 listener.itemClicked(position);
                 if (previousViewHolder != null) {
                     previousViewHolder.layout.setBackgroundColor(previousViewHolder.basicGray);
+                    previousViewHolder.location.setTextColor(previousViewHolder.black);
                 }
-                viewHolder.layout.setBackgroundColor(viewHolder.selectedColor);
+                viewHolder.layout.setBackgroundColor(viewHolder.white);
+                viewHolder.location.setTextColor(viewHolder.selectedColor);
                 previousViewHolder = viewHolder;
             }
         });
@@ -73,6 +75,7 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter {
     public void customDataSetChange () {
         if (previousViewHolder != null) {
             previousViewHolder.layout.setBackgroundColor(previousViewHolder.basicGray);
+            previousViewHolder.location.setTextColor(previousViewHolder.black);
         }
         notifyDataSetChanged();
     }
@@ -81,8 +84,10 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter {
     
         @BindView(R.id.linear_layout) LinearLayout layout;
         @BindView(R.id.location) TextView location;
-        @BindColor(R.color.androidBasicGray) int basicGray;
+        @BindColor(R.color.gray) int basicGray;
+        @BindColor(R.color.white) int white;
         @BindColor(R.color.colorMainOrange) int selectedColor;
+        @BindColor(R.color.black) int black;
         
         public LocationViewHolder(View itemView) {
             super(itemView);

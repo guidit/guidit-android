@@ -16,13 +16,14 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="축제 정보"
                 android:textSize="24sp"
                 android:textColor="@android:color/black"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="18dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -94,12 +95,13 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/subtitle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="요즘 뜨는 여행기"
             android:textSize="24sp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="18dp"
             android:textColor="@android:color/black" />
 
         <RelativeLayout
@@ -132,13 +134,14 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/subtitle3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="요즘 뜨는 여행지"
             android:textSize="24sp"
             android:textColor="@android:color/black"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="18dp"/>
 
         <RelativeLayout
             android:id="@+id/hot_sight_layout"

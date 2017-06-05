@@ -62,6 +62,26 @@ public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
                 .into(viewHolder.thumbnail);
         viewHolder.title.setText(sightList.get(position).getName());
         viewHolder.subtitle.setText(sightList.get(position).getScore()+"");
+        String hashtag = "";
+        switch(sightList.get(position).getType()){
+            case "A":
+                hashtag = "#관광지";
+                break;
+            case "B":
+                hashtag = "#숙소";
+                break;
+            case "C":
+                hashtag = "#식당";
+                break;
+            case "D":
+                hashtag = "#푸드트럭";
+                break;
+            default:
+                hashtag = "";
+                break;
+        }
+        viewHolder.type.setText(hashtag);
+
 
         viewHolder.title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +106,7 @@ public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
         @BindView(R.id.thumbnail_sight) ImageView thumbnail;
         @BindView(R.id.title) TextView title;
         @BindView(R.id.subtitle) TextView subtitle;
+        @BindView(R.id.type) TextView type;
         
         public SightListViewHolder(View itemView) {
             super(itemView);
