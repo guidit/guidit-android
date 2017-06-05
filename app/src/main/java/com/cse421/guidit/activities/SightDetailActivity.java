@@ -2,6 +2,7 @@ package com.cse421.guidit.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -53,10 +54,12 @@ public class SightDetailActivity extends AppCompatActivity {
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.location) TextView location;
+    @BindView(R.id.phone) TextView phone;
     @BindView(R.id.score) TextView score;
     @BindView(R.id.favorite) ImageView favorite;
     @BindView(R.id.rating_bar)
     RatingBar ratingBar;
+    @BindView(R.id.hashtag) TextView hashtag;
 
     //comment
     @BindView(R.id.wrapper)
@@ -111,15 +114,35 @@ public class SightDetailActivity extends AppCompatActivity {
                 //progressBar.cancel();
                 Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
 
+                String infos = sightVo.getInformation();
+                String[] info = infos.split("%");
+                if(info.length == 4){
+                    phone.setText(info[1].substring(4,info[1].length()));
+                    location.setText(info[3].substring(8,info[3].length()));
+                }else if(info.length == 2){
+                    phone.setText("등록된 연락처가 없습니다");
+                    location.setText(info[1].substring(8,info[1].length()));
+                }else{
+                    phone.setText("등록된 연락처가 없습니다");
+                    location.setText("등록된 주소가 없습니다");
+                }
+
                 Picasso.with(getApplicationContext())
                         .load(sightVo.getPicture())
                         .into(image);
                 title.setText(sightVo.getName());
-                location.setText(sightVo.getInformation());
                 score.setText(sightVo.getScore()+"");
                 favorite.setSelected(sightVo.isFavorite());
+                hashtag.setText("#"+sightVo.getName().replaceAll("\\s",""));
 
                 isFavorite = sightVo.isFavorite();
+                hashtag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/explore/tags/"+sightVo.getName().replaceAll("\\s","")));
+                        startActivity(i);
+                    }
+                });
             }
 
             @Override

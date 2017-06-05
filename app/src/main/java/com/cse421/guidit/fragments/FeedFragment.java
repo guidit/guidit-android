@@ -1,6 +1,8 @@
 package com.cse421.guidit.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -43,6 +46,7 @@ public class FeedFragment extends Fragment {
 
     @BindView(R.id.feed_spinner) AppCompatSpinner feedSpinner;
     @BindView(R.id.feed_recycler) RecyclerView feedRecyclerView;
+    @BindView(R.id.title) TextView title;
 
     @BindArray(R.array.upper_locations) String [] locations;
 
@@ -58,6 +62,9 @@ public class FeedFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         setConnector();
+        Typeface type = Typeface.createFromAsset(getActivity().getAssets(), "fonts/BMJUA_ttf.ttf");
+        title.setTypeface(type);
+
         setSpinner();
         setRecyclerView();
 
@@ -97,6 +104,9 @@ public class FeedFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 progressBar.show();
+
+                //// TODO: 2017-05-29 선택된 도시에대해 connection 전국은 0
+
                 FeedConnection connection = new FeedConnection(FeedConnection.GET_LIST);
                 connection.setListConnectionListener(listener);
                 connection.execute(i + "");
