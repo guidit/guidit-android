@@ -6,10 +6,12 @@ import com.cse421.guidit.callbacks.ListConnectionListener;
 import com.cse421.guidit.vo.FeedVo;
 import com.cse421.guidit.vo.UserVo;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -96,14 +98,34 @@ public class FeedConnection extends BaseConnection {
     protected void onPostExecute(String s) {
         Timber.d("on post " + s);
 
-        if (s.equals("")) {
-            listener.connectionFailed();
-        }
+        if (s.equals(""))
+            if (listener != null) {
+                listener.connectionFailed();
+                return;
+            } else {
+                listConnectionListener.connectionFailed();
+                return;
+            }
 
         try {
             switch (mode) {
                 case GET_LIST:
-                    //// TODO: 2017-06-02 리스트 받기
+                    ArrayList<FeedVo> feedList = new ArrayList<>();
+                    JSONArray list = new JSONArray(s);
+                    for (int i = 0; i < list.length(); i++) {
+                        JSONObject object = list.getJSONObject(i);
+                        FeedVo feedVo = new FeedVo();
+
+                        feedVo.setId(object.getInt("id"));
+                        feedVo.setCity(object.getString("city"));
+                        feedVo.setContent(object.getString("content"));
+                        feedVo.setDate(object.getString("date"));
+                        feedVo.setUserId(object.getInt("user_id"));
+                        feedVo.setUserName(object.getString("name"));
+                        feedVo.setProfile(object.getString("profile"));
+                        feedList.add(feedVo);
+                    }
+                    listConnectionListener.setList(feedList);
                     return;
                 case CREATE:
                 case DELETE:

@@ -19,6 +19,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
+
+import static android.view.View.GONE;
 
 /**
  * Created by ho on 2017-05-29.
@@ -59,9 +62,11 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter {
                     .transform(new CircleTransform())
                     .into(feedViewHolder.profile);
 
+        feedViewHolder.name.setText(feedVo.getUserName());
+
         feedViewHolder.content.setText(feedVo.getContent());
 
-        if (feedVo.getUserId().equals(UserVo.getInstance().getUser_id())) {
+        if (feedVo.getUserId() == UserVo.getInstance().getId()) {
             feedViewHolder.deleteButton.setVisibility(View.VISIBLE);
             feedViewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -69,6 +74,9 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter {
                     listener.itemClicked(position);
                 }
             });
+        } else {
+            feedViewHolder.deleteButton.setVisibility(GONE);
+            feedViewHolder.deleteButton.setOnClickListener(null);
         }
     }
 
@@ -80,6 +88,7 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter {
     public class FeedViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.profile_img) ImageView profile;
+        @BindView(R.id.user_name) TextView name;
         @BindView(R.id.feed_content) TextView content;
         @BindView(R.id.feed_delete) ImageView deleteButton;
 

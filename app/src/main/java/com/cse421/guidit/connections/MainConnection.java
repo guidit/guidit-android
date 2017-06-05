@@ -38,14 +38,11 @@ public class MainConnection extends BaseConnection {
         OkHttpClient client = new OkHttpClient();
     
         String result = "";
-    
-        String data = "id=" + UserVo.getInstance().getId();
-        Timber.d(data);
         
-        String url = serverUrl + "/main?";
+        String url = serverUrl + "/main";
     
         Request request = new Request.Builder()
-                .url(serverUrl + "/main?" + data)
+                .url(url)
                 .build();
     
         try {
@@ -66,8 +63,6 @@ public class MainConnection extends BaseConnection {
             JSONArray main = new JSONArray(s);
             JSONObject hotPlanJson = main.getJSONObject(0);
             JSONObject hotSightJson = main.getJSONObject(1);
-            JSONArray feedsJson = main.getJSONArray(2);
-            JSONArray myPlansJson = main.getJSONArray(3);
             
             PlanVo hotPlanVo = new PlanVo();
             hotPlanVo.setId(hotPlanJson.getInt("id"));
@@ -85,36 +80,6 @@ public class MainConnection extends BaseConnection {
             sightVo.setPicture(hotSightJson.getString("picture"));
             sightVo.setScore(hotSightJson.getDouble("score"));
             activity.hotSight = sightVo;
-    
-            ArrayList<FeedVo> feedList = new ArrayList<>();
-            for (int i = 0; i < feedsJson.length(); i++) {
-                JSONObject object = feedsJson.getJSONObject(i);
-                
-                FeedVo feedVo = new FeedVo();
-                feedVo.setId(object.getInt("id"));
-                feedVo.setContent(object.getString("content"));
-                feedVo.setCity(object.getString("city"));
-                feedVo.setDate(object.getString("date"));
-                feedVo.setUserName(object.getString("user_name"));
-                feedVo.setProfile(object.getString("profile"));
-                
-                feedList.add(feedVo);
-            }
-            activity.feedList = feedList;
-            
-            ArrayList<PlanVo> myPlanList = new ArrayList<>();
-            for (int i = 0; i < myPlansJson.length(); i++) {
-                JSONObject object = myPlansJson.getJSONObject(i);
-
-                PlanVo planVo = new PlanVo();
-                planVo.setId(object.getInt("id"));
-                planVo.setName(object.getString("name"));
-                planVo.setPublic(object.getBoolean("is_public"));
-                planVo.setViewCount(object.getInt("view_count"));
-                
-                myPlanList.add(planVo);
-            }
-            activity.myPlanList = myPlanList;
             
         } catch (JSONException e) {
             e.printStackTrace();

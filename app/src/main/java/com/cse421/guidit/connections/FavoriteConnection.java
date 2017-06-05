@@ -1,6 +1,6 @@
 package com.cse421.guidit.connections;
 
-import com.cse421.guidit.callbacks.FavoriteConnectionEventListener;
+import com.cse421.guidit.callbacks.ListConnectionListener;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.vo.SightVo;
 import com.cse421.guidit.vo.UserVo;
@@ -23,29 +23,47 @@ import timber.log.Timber;
 
 public class FavoriteConnection extends BaseConnection {
 
-    private FavoriteConnectionEventListener favoriteListener;
+    private Modes mode;
+    private ListConnectionListener listConnectionListener;
 
-    public void setListener (FavoriteConnectionEventListener listener) {
-        favoriteListener = listener;
+    public enum Modes {
+        GET_LIST, DELETE
+    }
+
+    public FavoriteConnection(Modes mode) {
+        this.mode = mode;
+    }
+
+    public void setListConnectionListener(ListConnectionListener listConnectionListener) {
+        this.listConnectionListener = listConnectionListener;
     }
 
     @Override
     protected String doInBackground(String... params) {
-
         OkHttpClient client = new OkHttpClient();
+        String data, url, result = "";
+        Request request;
 
-        String result = "";
-
-        String data =
-                "id=" + UserVo.getInstance().getId();
-        Timber.d(data);
-
-        String url = serverUrl + "/users/favorite?";
-        Timber.d("url : " + url);
-
-        Request request = new Request.Builder()
-                .url(url + data)
-                .build();
+        switch (mode) {
+            case GET_LIST:
+                data = "id=" + UserVo.getInstance().getId();
+                url = serverUrl + "/favorite/list?";
+                request = new Request.Builder()
+                        .url(url + data)
+                        .build();
+                break;
+            case DELETE:
+                data = "userId=" + UserVo.getInstance().getId()
+                        + "&sightId=" + params[0]
+                        + "&favorite=" + false;
+                url = serverUrl + "/sight/favorite?";
+                request = new Request.Builder()
+                        .url(url + data)
+                        .build();
+                break;
+            default:
+                return "";
+        }
 
         try {
             Response response = client.newCall(request).execute();
@@ -61,32 +79,52 @@ public class FavoriteConnection extends BaseConnection {
     protected void onPostExecute(String s) {
         Timber.d("favorite on post " + s);
 
-        JSONArray favoriteList;
-        ArrayList<SightVo> favorites = new ArrayList<>();
+        if (s.equals("") || s.startsWith("<!")) {
+            if (listener != null) {
+                listener.connectionFailed();
+                return;
+            } else {
+                listConnectionListener.connectionFailed();
+                return;
+            }
+        }
 
         try {
-            favoriteList = new JSONArray(s);
+            switch (mode) {
+                case GET_LIST:
+                    JSONArray favoriteList = new JSONArray(s);
+                    ArrayList<SightVo> favorites = new ArrayList<>();
 
-            for (int i = 0; i < favoriteList.length(); i++) {
-                JSONObject data = favoriteList.getJSONObject(i);
+                    for (int i = 0; i < favoriteList.length(); i++) {
+                        JSONObject data = favoriteList.getJSONObject(i);
 
-                SightVo sightVo = new SightVo();
-                sightVo.setId(data.getInt("id"));
-                sightVo.setName(data.getString("name"));
-                sightVo.setType(data.getString("type"));
-                sightVo.setInformation(data.getString("information"));
-                sightVo.setLocation(data.getString("location"));
-                sightVo.setPicture(data.getString("picture"));
-                sightVo.setScore(data.getDouble("score"));
-
-                favorites.add(sightVo);
+                        SightVo sightVo = new SightVo();
+                        sightVo.setId(data.getInt("id"));
+                        sightVo.setName(data.getString("name"));
+                        sightVo.setInformation(data.getString("information"));
+                        sightVo.setPicture(data.getString("picture"));
+                        sightVo.setMapX(data.getDouble("x"));
+                        sightVo.setMapY(data.getDouble("y"));
+                        sightVo.setFavorite(true);
+                        favorites.add(sightVo);
+                    }
+                    listConnectionListener.setList(favorites);
+                    break;
+                case DELETE:
+                    JSONObject object = new JSONObject(s);
+                    if (object.has("isSuccess")) {
+                        if (object.getBoolean("isSuccess")) {
+                            listener.connectionSuccess();
+                        } else {
+                            listener.connectionFailed();
+                        }
+                    } else {
+                        listener.connectionFailed();
+                    }
+                    break;
             }
-
-            favoriteListener.onSuccess(favorites);
-
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            favoriteListener.onFailed();
         }
     }
 }

@@ -9,7 +9,7 @@ public class FeedVo {
     private String content;
     private String city;
     private String date;
-    private String userId;
+    private int userId;
     private String userName;
     private String profile;
     
@@ -45,11 +45,11 @@ public class FeedVo {
         this.date = date;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

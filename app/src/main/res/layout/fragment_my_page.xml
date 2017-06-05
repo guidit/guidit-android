@@ -45,7 +45,7 @@
             android:id="@+id/plan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여행 일정"
+            android:text="여행 계획"
             android:textColor="@android:color/black"
             android:textSize="14sp"
             android:layout_alignParentBottom="true"

@@ -1,5 +1,7 @@
 package com.cse421.guidit.fragments;
 
+import butterknife.BindView;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.activities.FestivalActivity;
 import com.cse421.guidit.activities.MainActivity;
 import com.squareup.picasso.Picasso;
 
@@ -20,7 +23,6 @@ import org.w3c.dom.Text;
 import java.util.Calendar;
 
 import butterknife.BindDrawable;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -38,9 +40,13 @@ public class BrowseFragment extends Fragment {
     @BindView(R.id.hot_plan_picture) ImageView hotPlanPicture;
     @BindView(R.id.hot_sight_name) TextView hotSightName;
     @BindView(R.id.hot_sight_picture) ImageView hotSightPicture;
+
+    private int currentMonth;
+
     @BindView(R.id.subtitle1) TextView subtitle1;
     @BindView(R.id.subtitle2) TextView subtitle2;
     @BindView(R.id.subtitle3) TextView subtitle3;
+
     
     @Nullable
     @Override
@@ -60,7 +66,7 @@ public class BrowseFragment extends Fragment {
     
     private void setViews () {
         Calendar calendar = Calendar.getInstance();
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        currentMonth = calendar.get(Calendar.MONTH) + 1;
         //todo 나머지 festival image 구하기
         festivalPresentMonth.setText(currentMonth + "월");
         Picasso.with(getActivity())
@@ -102,15 +108,18 @@ public class BrowseFragment extends Fragment {
     
     @OnClick({R.id.festival_present, R.id.festival_future})
     public void festivalClick (View view)  {
+        Intent intent = FestivalActivity.getIntent(getActivity());
         switch (view.getId()) {
             case R.id.festival_present :
-                Toast.makeText(getContext(), "현재 축제", Toast.LENGTH_SHORT).show();
+                intent.putExtra("month", currentMonth);
+                startActivity(intent);
                 break;
             case R.id.festival_future :
-                Toast.makeText(getContext(), "미래 축제", Toast.LENGTH_SHORT).show();
+                intent.putExtra("month", currentMonth + 1);
+                startActivity(intent);
                 break;
             default:
-                Toast.makeText(getContext(), "잘못된 접근", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "잘못된 접근입니다", Toast.LENGTH_SHORT).show();
         }
     }
     
