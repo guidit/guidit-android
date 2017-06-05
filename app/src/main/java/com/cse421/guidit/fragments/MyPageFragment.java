@@ -1,6 +1,7 @@
 package com.cse421.guidit.fragments;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,8 @@ import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.UserVo;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -39,10 +42,13 @@ import static android.app.Activity.RESULT_OK;
 public class MyPageFragment extends Fragment {
 
     public final int REQEST_ADD_PLAN = 1357;
+    Typeface type;
     
     @BindView(R.id.my_profile_img) ImageView profileImage;
     @BindView(R.id.my_name) TextView userName;
     @BindView(R.id.my_plan_list) RecyclerView myPlanRecyclerView;
+    @BindView(R.id.plan) TextView plan;
+    @BindView(R.id.favorite) TextView favorite;
     
     private ArrayList<PlanVo> planList;
     private MyPagePlanRecyclerAdapter adapter;
@@ -52,6 +58,10 @@ public class MyPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_page, container, false);
         ButterKnife.bind(this, view);
+
+        type = Typeface.createFromAsset(getActivity().getAssets(), "fonts/BMJUA_ttf.ttf");
+        plan.setTypeface(type);
+        favorite.setTypeface(type);
 
         setViews();
         
@@ -73,6 +83,7 @@ public class MyPageFragment extends Fragment {
                     .into(profileImage);
     
         userName.setText(userVo.getName());
+        userName.setTypeface(type);
     }
     
     private void setViews () {

@@ -3,7 +3,7 @@
                 android:id="@+id/relative_layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-            android:padding="15dp">
+            android:padding="5dp">
 
     <TextView
         android:id="@+id/plan_name"
@@ -15,8 +15,8 @@
         android:background="#CCC"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp"/>
+        android:paddingTop="40dp"
+        android:paddingBottom="40dp"/>
 
     <ImageView
         android:id="@+id/lock"

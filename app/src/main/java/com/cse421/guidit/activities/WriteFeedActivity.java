@@ -2,6 +2,7 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -25,6 +27,9 @@ import timber.log.Timber;
 
 public class WriteFeedActivity extends AppCompatActivity {
 
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.write_feed_btn) TextView writeBtn;
     @BindView(R.id.feed_spinner) AppCompatSpinner spinner;
     @BindView(R.id.feed_input) EditText feedInput;
 
@@ -40,6 +45,10 @@ public class WriteFeedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_write_feed);
 
         ButterKnife.bind(this);
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        title.setTypeface(type);
+        writeBtn.setTypeface(type);
 
         setViews();
     }
