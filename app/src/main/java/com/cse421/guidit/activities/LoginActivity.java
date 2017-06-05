@@ -2,9 +2,11 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +32,11 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login_passwd) EditText inputPassword;
     @BindView(R.id.login_btn) Button loginButton;
     @BindView(R.id.sign_up_btn) TextView signUpButton;
+    @BindView(R.id.title) TextView title;
+    @BindView(R.id.subtitle1) TextView subtitle1;
+    @BindView(R.id.subtitle2) TextView subtitle2;
+    @BindView(R.id.name) TextView name;
+    @BindView(R.id.made) TextView made;
 
     public static Intent getIntent (Context context) {
         return new Intent(context, LoginActivity.class);
@@ -41,6 +48,24 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        title.setTypeface(type);
+        loginButton.setTypeface(type);
+        subtitle1.setTypeface(type);
+        subtitle2.setTypeface(type);
+        made.setTypeface(type);
+        name.setTypeface(type);
+
+        test();
+    }
+
+    public void test(){
+        String str = "%address=서울특별시 강남구 언주로133길 18%";
+        String[] result = str.split("%");
+        for(int i=0; i<result.length; i++){
+            Log.e("---->",i+"="+result[i]);
+        }
     }
 
     @OnClick(R.id.login_btn)

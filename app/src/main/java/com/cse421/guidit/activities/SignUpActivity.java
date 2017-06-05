@@ -2,15 +2,13 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.connections.SignUpConnection;
@@ -35,6 +33,12 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.sign_up_id) EditText inputId;
     @BindView(R.id.sign_up_password) EditText inputPassword;
     @BindView(R.id.password_confirm) EditText inputPassword2;
+    @BindView(R.id.title) TextView title;
+    @BindView(R.id.subtitle1) TextView subtitle1;
+    @BindView(R.id.subtitle2) TextView subtitle2;
+    @BindView(R.id.subtitle3) TextView subtitle3;
+    @BindView(R.id.subtitle4) TextView subtitle4;
+    @BindView(R.id.sign_up_confirm) TextView confirm;
 
     String imagePath;
 
@@ -54,6 +58,15 @@ public class SignUpActivity extends AppCompatActivity {
                 .load(R.drawable.profile)
                 .transform(new CircleTransform())
                 .into(profileImage);
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        title.setTypeface(type);
+        subtitle1.setTypeface(type);
+        subtitle2.setTypeface(type);
+        subtitle3.setTypeface(type);
+        subtitle4.setTypeface(type);
+        confirm.setTypeface(type);
+
     }
 
     @OnClick(R.id.profile_img)
