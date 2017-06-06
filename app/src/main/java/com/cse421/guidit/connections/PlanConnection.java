@@ -48,7 +48,7 @@ public class PlanConnection extends BaseConnection {
     }
 
     public enum modes {
-        MY_PLANS, ALL_PLANS, ADD_PLAN, GET_PLAN
+        MY_PLANS, ALL_PLANS, ADD_PLAN, GET_PLAN, MODIFY_PLAN
     }
 
     @Override
@@ -64,7 +64,7 @@ public class PlanConnection extends BaseConnection {
                 data = "id=" + UserVo.getInstance().getId();
                 url = serverUrl + "/plan/list?";
                 request = new Request.Builder()
-                        .url(url)
+                        .url(url + data)
                         .build();
                 Timber.d("url:" + url + " / data:" + data);
                 break;
@@ -72,21 +72,25 @@ public class PlanConnection extends BaseConnection {
                 data = "id=" + 0;
                 url = serverUrl + "/plan/list?";
                 request = new Request.Builder()
-                        .url(url)
+                        .url(url + data)
                         .build();
                 Timber.d("url:" + url + " / data:" + data);
                 break;
             case ADD_PLAN:
                 try {
                     JSONArray list = new JSONArray();
-                    for (DailyPlanVo dailyPlanVo : dailyPlanList) {
-                        JSONArray dailyArray = new JSONArray();
+                    for (int i = 0; i < dailyPlanList.size(); i++) {
+                        DailyPlanVo dailyPlanVo = dailyPlanList.get(i);
+                        JSONArray sightArray = new JSONArray();
                         for (SightVo sightVo : dailyPlanVo.getSightList()) {
                             JSONObject dailyObject = new JSONObject();
                             dailyObject.put("id", sightVo.getId());
-                            dailyArray.put(dailyObject);
+                            sightArray.put(dailyObject);
                         }
-                        list.put(dailyArray);
+                        JSONObject dailyObject = new JSONObject();
+                        dailyObject.put("day_num", i);
+                        dailyObject.put("sight_list", sightArray);
+                        list.put(dailyObject);
                     }
 
                     JSONObject object = new JSONObject();
@@ -106,6 +110,45 @@ public class PlanConnection extends BaseConnection {
                 }
                 break;
             case GET_PLAN:
+                data = "id=" + strings[0];
+                url = serverUrl + "/plan/detail?";
+                request = new Request.Builder()
+                        .url(url + data)
+                        .build();
+                Timber.d("url:" + url + " / data:" + data);
+                break;
+            case MODIFY_PLAN:
+                try {
+                    JSONArray list = new JSONArray();
+                    for (int i = 0; i < dailyPlanList.size(); i++) {
+                        DailyPlanVo dailyPlanVo = dailyPlanList.get(i);
+                        JSONArray sightArray = new JSONArray();
+                        for (SightVo sightVo : dailyPlanVo.getSightList()) {
+                            JSONObject dailyObject = new JSONObject();
+                            dailyObject.put("id", sightVo.getId());
+                            sightArray.put(dailyObject);
+                        }
+                        JSONObject dailyObject = new JSONObject();
+                        dailyObject.put("day_num", i);
+                        dailyObject.put("sight_list", sightArray);
+                        list.put(dailyObject);
+                    }
+
+                    JSONObject object = new JSONObject();
+                    object.put("id", strings[0]);
+                    object.put("name", strings[1]);
+                    object.put("is_public", Boolean.valueOf(strings[2]));
+                    object.put("daily_plan", list);
+
+                    RequestBody body = RequestBody.create(JSON, object.toString());
+                    url = serverUrl + "/plan/modify";
+                    request = new Request.Builder()
+                            .url(url)
+                            .post(body)
+                            .build();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 return "";
@@ -127,8 +170,11 @@ public class PlanConnection extends BaseConnection {
             if (listener != null) {
                 listener.connectionFailed();
                 return;
-            } else {
+            } else if (listConnectionListener != null) {
                 listConnectionListener.connectionFailed();
+                return;
+            } else {
+                singleObjectConnectionListener.connectionFailed();
                 return;
             }
         }
@@ -136,6 +182,7 @@ public class PlanConnection extends BaseConnection {
         try {
             switch (mode) {
                 case MY_PLANS:
+                case ALL_PLANS:
                     ArrayList<PlanVo> planList = new ArrayList<>();
                     JSONArray list = new JSONArray(s);
                     for (int i = 0; i < list.length(); i++) {
@@ -150,22 +197,66 @@ public class PlanConnection extends BaseConnection {
                     }
                     listConnectionListener.setList(planList);
                     break;
-                case ALL_PLANS:
-                    break;
                 case ADD_PLAN:
+                case MODIFY_PLAN:
                     JSONObject object = new JSONObject(s);
                     if (object.has("isSuccess")) {
                         if (object.getBoolean("isSuccess"))
                             listener.connectionSuccess();
                         else
                             listener.connectionFailed();
+                    } else {
+                        listener.connectionFailed();
                     }
                     break;
                 case GET_PLAN:
+                    JSONObject plan = new JSONObject(s);
+                    PlanVo planVo = new PlanVo();
+                    planVo.setId(plan.getInt("id"));
+                    planVo.setName(plan.getString("name"));
+                    planVo.setViewCount(plan.getInt("view_count"));
+
+                    ArrayList<DailyPlanVo> dailyPlanList = new ArrayList<>();
+                    JSONArray dailyPlanArray = plan.getJSONArray("daily_plan");
+                    for (int i = 0; i < dailyPlanArray.length(); i++) {
+                        DailyPlanVo dailyPlanVo = new DailyPlanVo();
+                        JSONObject dailyObject = dailyPlanArray.getJSONObject(i);
+                        dailyPlanVo.setId(dailyObject.getInt("id"));
+                        dailyPlanVo.setDayNum(dailyObject.getInt("day_num"));
+                        dailyPlanVo.setReview(dailyObject.getString("review"));
+                        dailyPlanVo.setPicture(dailyObject.getString("picture"));
+
+                        ArrayList<SightVo> sightList = new ArrayList<>();
+                        JSONArray sightArray = dailyObject.getJSONArray("sight_list");
+                        for (int j = 0; j < sightArray.length(); j++) {
+                            SightVo sightVo = new SightVo();
+                            JSONObject sightObject = sightArray.getJSONObject(j);
+                            sightVo.setId(sightObject.getInt("id"));
+                            sightVo.setName(sightObject.getString("name"));
+
+                            sightList.add(sightVo);
+                        }
+                        dailyPlanVo.setSightList(sightList);
+
+                        dailyPlanList.add(dailyPlanVo);
+                    }
+                    planVo.setDailyPlanList(dailyPlanList);
+
+                    singleObjectConnectionListener.connectionSuccess(planVo);
                     break;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            if (listener != null) {
+                listener.connectionFailed();
+                return;
+            } else if (listConnectionListener != null) {
+                listConnectionListener.connectionFailed();
+                return;
+            } else {
+                singleObjectConnectionListener.connectionFailed();
+                return;
+            }
         }
     }
 }

@@ -40,7 +40,6 @@ public class FoodTruckConnection extends BaseConnection {
     protected String doInBackground(String... strings) {
         OkHttpClient client = new OkHttpClient();
         String url, result = "";
-        File file;
         MultipartBody.Builder builder;
         Request request;
 

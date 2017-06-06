@@ -28,7 +28,6 @@ import butterknife.ButterKnife;
 
 public class FavoriteActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.favorite_recycler) RecyclerView recyclerView;
 
     private ArrayList<SightVo> favorites;
@@ -45,15 +44,8 @@ public class FavoriteActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        setToolbar();
         setRecycler();
         getFavoriteList();
-    }
-
-    private void setToolbar () {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setRecycler () {
@@ -123,18 +115,5 @@ public class FavoriteActivity extends AppCompatActivity {
                 Toast.makeText(FavoriteActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home :
-                onBackPressed();
-                break;
-            default:
-                Toast.makeText(this, "잘못된 입력입니다", Toast.LENGTH_SHORT).show();
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

@@ -101,8 +101,8 @@ public class MyPageFragment extends Fragment {
                 new SimpleListClickEventListener() {
                     @Override
                     public void itemClicked(int position) {
-                        //// TODO: 2017. 5. 10. 세부 계획으로
-                        Toast.makeText(getActivity(), planList.get(position) + "", Toast.LENGTH_SHORT).show();
+                        Intent intent = PlanActivity.getIntent(getActivity());
+                        intent.putExtra("planId", planList.get(position).getId());
                     }
                 }
         );
@@ -113,12 +113,12 @@ public class MyPageFragment extends Fragment {
 
         //리스트 불러오기
         //// TODO: 2017-06-04 myplan connection 추가
-        final ProgressBarDialogUtil progresbar = new ProgressBarDialogUtil(getActivity());
+        final ProgressBarDialogUtil progresBar = new ProgressBarDialogUtil(getActivity());
         PlanConnection connection = new PlanConnection(PlanConnection.modes.MY_PLANS);
         connection.setListConnectionListener(new ListConnectionListener<PlanVo>() {
             @Override
             public void setList(ArrayList<PlanVo> list) {
-                progresbar.cancel();
+                progresBar.cancel();
                 planList = list;
                 adapter.setPlanList(planList);
                 adapter.notifyDataSetChanged();
@@ -126,12 +126,12 @@ public class MyPageFragment extends Fragment {
 
             @Override
             public void connectionFailed() {
-                progresbar.cancel();
+                progresBar.cancel();
                 Toast.makeText(getActivity(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
         });
 //        progresbar.show();
-//        connection.execute();
+//        connection.execute(); //// TODO: 2017-06-06 여기 더미데이터있음
 
         PlanVo plan1 = new PlanVo();
         plan1.setName("첫번째 여행");

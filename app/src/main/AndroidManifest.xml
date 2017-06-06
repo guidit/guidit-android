@@ -43,7 +43,8 @@
         <activity android:name=".activities.SightListActivity" />
         <activity android:name=".activities.MapActivity" />
         <activity android:name=".activities.FestivalActivity" />
-        <activity android:name=".activities.SelectSightActivity"></activity>
+        <activity android:name=".activities.SelectSightActivity" />
+        <activity android:name=".activities.ReviewActivity" android:windowSoftInputMode="adjustResize"></activity>
     </application>
 
 </manifest>

@@ -7,14 +7,32 @@ import java.util.ArrayList;
  */
 
 public class DailyPlanVo {
+    private int id;
+    private int dayNum;
     private ArrayList<SightVo> sightList;
     private String review;
-    private ArrayList<String> pictureList;
+    private String picture;
 
     public DailyPlanVo() {
+        id = dayNum = 0;
         sightList = new ArrayList<>();
-        review = "";
-        pictureList = new ArrayList<>();
+        review = picture = "";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getDayNum() {
+        return dayNum;
+    }
+
+    public void setDayNum(int dayNum) {
+        this.dayNum = dayNum;
     }
 
     public ArrayList<SightVo> getSightList() {
@@ -33,20 +51,22 @@ public class DailyPlanVo {
         this.review = review;
     }
 
-    public ArrayList<String> getPictureList() {
-        return pictureList;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setPictureList(ArrayList<String> pictureList) {
-        this.pictureList = pictureList;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     @Override
     public String toString() {
         return "DailyPlanVo{" +
-                "sightList=" + sightList +
+                "id=" + id +
+                ", dayNum=" + dayNum +
+                ", sightList=" + sightList +
                 ", review='" + review + '\'' +
-                ", pictureList=" + pictureList +
+                ", picture='" + picture + '\'' +
                 '}';
     }
 }
