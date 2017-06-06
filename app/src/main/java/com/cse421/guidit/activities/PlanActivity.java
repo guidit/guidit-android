@@ -15,9 +15,11 @@ import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.PlanRecyclerAdapter;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
+import com.cse421.guidit.callbacks.SingleObjectConnectionListener;
 import com.cse421.guidit.connections.PlanConnection;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.DailyPlanVo;
+import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.SightVo;
 import com.squareup.picasso.Picasso;
 
@@ -37,6 +39,7 @@ public class PlanActivity extends AppCompatActivity {
 
     private ArrayList<DailyPlanVo> dailyPlanList;
     private PlanRecyclerAdapter adapter;
+    private PlanVo planVo;
     private int selectedDate;
     private boolean isPublic;
 
@@ -51,13 +54,45 @@ public class PlanActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        setViews();
+        getExistData();
+    }
+
+    private void getExistData () {
+        Intent intent = getIntent();
+        if (intent.hasExtra("planId")) {
+            ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
+            progressBar.show();
+            PlanConnection connection = new PlanConnection(PlanConnection.modes.GET_PLAN);
+            connection.setSingleObjectConnectionListener(new SingleObjectConnectionListener() {
+                @Override
+                public void connectionSuccess(Object object) {
+                    planVo = (PlanVo) object;
+                    dailyPlanList = planVo.getDailyPlanList();
+                    isPublic = planVo.isPublic();
+                    setViews();
+                }//// TODO: 2017-06-05 여기하다 말았나?
+
+                @Override
+                public void connectionFailed() {
+                    Toast.makeText(PlanActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    dailyPlanList = new ArrayList<>();
+                    dailyPlanList.add(new DailyPlanVo());
+                    isPublic = true;
+                    setViews();
+                }
+            });
+        } else {
+            dailyPlanList = new ArrayList<>();
+            dailyPlanList.add(new DailyPlanVo());
+            isPublic = true;
+            setViews();
+        }
     }
 
     private void setViews () {
-        //// TODO: 2017-06-03 여행계획 수정으로 들어왔을 때의 동작 추가
-        dailyPlanList = new ArrayList<>();
-        dailyPlanList.add(new DailyPlanVo());
+        if (planVo != null) {
+            nameInput.setText(planVo.getName().toString());
+        }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -76,7 +111,15 @@ public class PlanActivity extends AppCompatActivity {
         planRecyclerView.setAdapter(adapter);
         planRecyclerView.setLayoutManager(layoutManager);
 
-        isPublic = true;
+        if (isPublic) {
+            Picasso.with(this)
+                    .load(R.drawable.ic_lock_open)
+                    .into(lockButton);
+        } else {
+            Picasso.with(this)
+                    .load(R.drawable.ic_lock)
+                    .into(lockButton);
+        }
         lockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,5 +1,7 @@
 package com.cse421.guidit.vo;
 
+import java.util.ArrayList;
+
 /**
  * Created by hokyung on 2017. 5. 1..
  */
@@ -10,6 +12,7 @@ public class PlanVo {
     boolean isPublic;
     int viewCount;
     String picture;
+    ArrayList<DailyPlanVo> dailyPlanList;
     
     public int getId() {
         return id;
@@ -50,7 +53,15 @@ public class PlanVo {
     public void setPicture(String picture) {
         this.picture = picture;
     }
-    
+
+    public ArrayList<DailyPlanVo> getDailyPlanList() {
+        return dailyPlanList;
+    }
+
+    public void setDailyPlanList(ArrayList<DailyPlanVo> dailyPlanList) {
+        this.dailyPlanList = dailyPlanList;
+    }
+
     @Override
     public String toString() {
         return "PlanVo{" +
@@ -59,6 +70,7 @@ public class PlanVo {
                 ", isPublic=" + isPublic +
                 ", viewCount=" + viewCount +
                 ", picture='" + picture + '\'' +
+                ", dailyPlanList=" + dailyPlanList +
                 '}';
     }
 }

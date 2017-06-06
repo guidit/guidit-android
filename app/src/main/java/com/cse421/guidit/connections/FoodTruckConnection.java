@@ -76,9 +76,10 @@ public class FoodTruckConnection extends BaseConnection {
                         .build();
                 break;
             case GET:
+                String data = "id=" + UserVo.getInstance().getId();
                 url = serverUrl + "/sight/foodtruck?";
                 request = new Request.Builder()
-                        .url(url)
+                        .url(url + data)
                         .build();
                 break;
             default:

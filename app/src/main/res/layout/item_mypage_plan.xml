@@ -12,7 +12,7 @@
         android:text="여행 이름"
         android:textColor="@android:color/black"
         android:textSize="30sp"
-        android:background="#CCC"
+        android:background="#EEE"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:paddingTop="40dp"

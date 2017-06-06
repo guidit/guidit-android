@@ -1,6 +1,7 @@
 package com.cse421.guidit.connections;
 
 import com.cse421.guidit.callbacks.ListConnectionListener;
+import com.cse421.guidit.callbacks.SingleObjectConnectionListener;
 import com.cse421.guidit.vo.DailyPlanVo;
 import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.SightVo;
@@ -26,23 +27,28 @@ import timber.log.Timber;
 public class PlanConnection extends BaseConnection {
 
     private modes mode;
-    private ListConnectionListener<PlanVo> listConnectionListener;
     private ArrayList<DailyPlanVo> dailyPlanList;
+    private ListConnectionListener<PlanVo> listConnectionListener;
+    private SingleObjectConnectionListener singleObjectConnectionListener;
 
     public PlanConnection(modes mode) {
         this.mode = mode;
-    }
-
-    public void setListConnectionListener(ListConnectionListener<PlanVo> listConnectionListener) {
-        this.listConnectionListener = listConnectionListener;
     }
 
     public void setDailyPlanList(ArrayList<DailyPlanVo> dailyPlanList) {
         this.dailyPlanList = dailyPlanList;
     }
 
+    public void setListConnectionListener(ListConnectionListener<PlanVo> listConnectionListener) {
+        this.listConnectionListener = listConnectionListener;
+    }
+
+    public void setSingleObjectConnectionListener(SingleObjectConnectionListener singleObjectConnectionListener) {
+        this.singleObjectConnectionListener = singleObjectConnectionListener;
+    }
+
     public enum modes {
-        MY_PLANS, ALL_PLANS, ADD_PLAN, DELETE_PLAN
+        MY_PLANS, ALL_PLANS, ADD_PLAN, GET_PLAN
     }
 
     @Override
@@ -63,7 +69,7 @@ public class PlanConnection extends BaseConnection {
                 Timber.d("url:" + url + " / data:" + data);
                 break;
             case ALL_PLANS:
-                data = "id=" + 0;   //// TODO: 2017-06-04 전체 리스트 불러오기 규약 정해야함
+                data = "id=" + 0;
                 url = serverUrl + "/plan/list?";
                 request = new Request.Builder()
                         .url(url)
@@ -99,7 +105,7 @@ public class PlanConnection extends BaseConnection {
                     e.printStackTrace();
                 }
                 break;
-            case DELETE_PLAN:
+            case GET_PLAN:
                 break;
             default:
                 return "";
@@ -155,7 +161,7 @@ public class PlanConnection extends BaseConnection {
                             listener.connectionFailed();
                     }
                     break;
-                case DELETE_PLAN:
+                case GET_PLAN:
                     break;
             }
         } catch (Exception e) {

@@ -65,7 +65,9 @@ public class FavoriteActivity extends AppCompatActivity {
         adapter.setListener(new FavoriteClickEventListener() {
             @Override
             public void itemClicked(int position) {
-                //// TODO: 2017-05-21 정이 관광지 상세정보 액티비티?
+                Intent intent = new Intent(FavoriteActivity.this, SightDetailActivity.class);
+                intent.putExtra("sightId", favorites.get(position).getId());
+                startActivity(intent);
             }
 
             @Override
@@ -102,7 +104,6 @@ public class FavoriteActivity extends AppCompatActivity {
     }
 
     private void delete (final int position) {
-        //// TODO: 2017-05-21 지우기전에 다이얼로그로 물어볼까?
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
 
