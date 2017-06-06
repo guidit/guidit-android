@@ -67,7 +67,6 @@ public class BrowseFragment extends Fragment {
     private void setViews () {
         Calendar calendar = Calendar.getInstance();
         currentMonth = calendar.get(Calendar.MONTH) + 1;
-        //todo 나머지 festival image 구하기
         festivalPresentMonth.setText(currentMonth + "월");
         Picasso.with(getActivity())
                 .load(getFestivalImage(currentMonth))
@@ -78,8 +77,7 @@ public class BrowseFragment extends Fragment {
                 .into(festivalFutureImage);
         
         MainActivity activity = (MainActivity) getActivity();
-    
-        //// TODO: 2017. 5. 9. 여행계획의 대표 이미지도 달라고 해야겠다
+
         hotPlanName.setText(activity.hotPlan.getName());
         if (activity.hotPlan.getPicture() != null && !activity.hotPlan.getPicture().equals(""))
             Picasso.with(getActivity())

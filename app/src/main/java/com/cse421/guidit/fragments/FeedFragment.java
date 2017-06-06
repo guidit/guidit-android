@@ -105,8 +105,6 @@ public class FeedFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 progressBar.show();
 
-                //// TODO: 2017-05-29 선택된 도시에대해 connection 전국은 0
-
                 FeedConnection connection = new FeedConnection(FeedConnection.GET_LIST);
                 connection.setListConnectionListener(listener);
                 connection.execute(i + "");

@@ -124,7 +124,6 @@ public class SightFragment extends Fragment {
                 new SimpleListClickEventListener() {
                     @Override
                     public void itemClicked(int position) {
-                        //// TODO: 2017. 5. 9. 정이 지도 검색 액티비티 띄우기
                         // lowerAdapter.getList().getposition = 원주, 평창, 강릉 등 세부적인 지역명
                         Intent i = new Intent(getActivity(), SightActivity.class);
                         i.putExtra("basicCity",lowerAdapter.getList().get(position));

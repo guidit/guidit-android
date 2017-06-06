@@ -57,7 +57,6 @@ public class FestivalActivity extends AppCompatActivity {
                 new SimpleListClickEventListener() {
                     @Override
                     public void itemClicked(int position) {
-                        //// TODO: 2017-06-04 축제 상세보기로 가기
                     }
                 }
         );

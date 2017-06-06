@@ -35,7 +35,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
     private Mode mode;
 
     public enum Mode {
-        NEW, EXIST
+        NEW, EXIST, OTHER
     }
 
     public PlanRecyclerAdapter(Context context, PlanClickEventListener listener) {
@@ -83,38 +83,42 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
             planViewHolder.dailyRecyclerView.setLayoutManager(layoutManager);
         }
 
-        if (mode == Mode.EXIST && !item.getPicture().equals("")) {
+        if (mode == Mode.NEW || item.getPicture().equals("")) {
+            planViewHolder.reviewImage.setVisibility(GONE);
+        } else {
             planViewHolder.reviewImage.setVisibility(View.VISIBLE);
             Picasso.with(context)
                     .load(item.getPicture())
                     .into(planViewHolder.reviewImage);
-        } else {
-            planViewHolder.reviewImage.setVisibility(GONE);
         }
 
-        if (mode == Mode.EXIST && !item.getReview().equals("")) {
+        if (mode == Mode.NEW || item.getReview().equals("")) {
+            planViewHolder.review.setVisibility(GONE);
+        } else {
             planViewHolder.review.setText(item.getReview());
             planViewHolder.review.setVisibility(View.VISIBLE);
-        } else {
-            planViewHolder.review.setVisibility(GONE);
         }
 
-        planViewHolder.addDailyPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.addDailyPlan(position);
-            }
-        });
-
-        planViewHolder.writeReviewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.writeReview(position);
-            }
-        });
+        if (mode != Mode.OTHER) {
+            planViewHolder.addDailyPlanButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.addDailyPlan(position);
+                }
+            });
+            planViewHolder.writeReviewButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.writeReview(position);
+                }
+            });
+        }
 
         if (mode == Mode.EXIST) {
             planViewHolder.writeReviewButton.setVisibility(View.VISIBLE);
+        } else if (mode == Mode.OTHER) {
+            planViewHolder.addDailyPlanButton.setVisibility(GONE);
+            planViewHolder.writeReviewButton.setVisibility(GONE);
         } else {
             planViewHolder.writeReviewButton.setVisibility(GONE);
         }

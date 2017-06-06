@@ -22,6 +22,7 @@ import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.DailyPlanVo;
 import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.SightVo;
+import com.cse421.guidit.vo.UserVo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,16 +35,21 @@ public class PlanActivity extends AppCompatActivity {
 
     public final int REQUEST_SELECTED_SIGHT = 8859;
     public final int REQUEST_WRITE_REVIEW = 9957;
+    public final int NEW = 0;
+    public final int EXIST = 1;
+    public final int OTHER = 2;
 
     @BindView(R.id.plan_name) EditText nameInput;
     @BindView(R.id.plan_recycler) RecyclerView planRecyclerView;
     @BindView(R.id.public_btn) ImageView lockButton;
+    @BindView(R.id.add_date_btn) ImageView addDateButton;
+    @BindView(R.id.plan_confirm) ImageView confirmButton;
 
     private ArrayList<DailyPlanVo> dailyPlanList;
     private PlanRecyclerAdapter adapter;
     private PlanVo planVo;
-    private int selectedDate;
-    private boolean isPublic, isExist;
+    private int selectedDate, mode;
+    private boolean isPublic;
 
     public static Intent getIntent (Context context) {
         return new Intent(context, PlanActivity.class);
@@ -62,7 +68,10 @@ public class PlanActivity extends AppCompatActivity {
     private void getExistData () {
         Intent intent = getIntent();
         if (intent.hasExtra("planId")) {
-            isExist = true;
+            if (intent.hasExtra("other"))
+                mode = OTHER;
+            else
+                mode = EXIST;
             final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
             progressBar.show();
             PlanConnection connection = new PlanConnection(PlanConnection.modes.GET_PLAN);
@@ -80,16 +89,12 @@ public class PlanActivity extends AppCompatActivity {
                 public void connectionFailed() {
                     progressBar.cancel();
                     Toast.makeText(PlanActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
-                    isExist = false;
-                    dailyPlanList = new ArrayList<>();
-                    dailyPlanList.add(new DailyPlanVo());
-                    isPublic = true;
-                    setViews();
+                    finish();
                 }
             });
             connection.execute(intent.getIntExtra("planId", 0) + "");
         } else {
-            isExist = false;
+            mode = NEW;
             dailyPlanList = new ArrayList<>();
             dailyPlanList.add(new DailyPlanVo());
             isPublic = true;
@@ -127,10 +132,14 @@ public class PlanActivity extends AppCompatActivity {
                 }
         );
         adapter.setList(dailyPlanList);
-        if (isExist)
+
+        if (mode == EXIST)
             adapter.setMode(PlanRecyclerAdapter.Mode.EXIST);
-        else
+        else if (mode == NEW)
             adapter.setMode(PlanRecyclerAdapter.Mode.NEW);
+        else
+            adapter.setMode(PlanRecyclerAdapter.Mode.OTHER);
+
         planRecyclerView.setHasFixedSize(true);
         planRecyclerView.setAdapter(adapter);
         planRecyclerView.setLayoutManager(layoutManager);
@@ -159,6 +168,14 @@ public class PlanActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // 이 여행계획이 내꺼가 아닐 경우
+        if (mode == OTHER) {
+            nameInput.setEnabled(false);
+            lockButton.setEnabled(false);
+            addDateButton.setVisibility(View.GONE);
+            confirmButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -201,10 +218,10 @@ public class PlanActivity extends AppCompatActivity {
 
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
-        PlanConnection connection;
-        if (isExist) {
+        PlanConnection connection = null;
+        if (mode == EXIST) {
             connection = new PlanConnection(PlanConnection.modes.MODIFY_PLAN);
-        } else {
+        } else if (mode == NEW){
             connection = new PlanConnection(PlanConnection.modes.ADD_PLAN);
         }
         connection.setListener(new SimpleConnectionEventListener() {
@@ -221,9 +238,9 @@ public class PlanActivity extends AppCompatActivity {
             }
         });
         connection.setDailyPlanList(dailyPlanList);
-        if (isExist) {
+        if (mode == EXIST) {
             connection.execute(planVo.getId() + "", nameInput.getText().toString(), isPublic + "");
-        } else {
+        } else if (mode == NEW){
             connection.execute(nameInput.getText().toString(), isPublic + "");
         }
     }
