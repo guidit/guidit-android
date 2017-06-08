@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,7 +33,8 @@ public class FoodTruckActivity extends AppCompatActivity {
     private final int REQ_PICK_CODE = 8834;
 
     @BindView(R.id.food_truck_img) ImageView imageInput;
-    @BindView(R.id.food_truck_image_add) LinearLayout imageText;
+    @BindView(R.id.food_truck_image_add) LinearLayout imageLayout;
+    @BindView(R.id.food_truck_image_text) TextView imageText;
     @BindView(R.id.food_truck_name) EditText nameInput;
     @BindView(R.id.food_truck_location) EditText locationInput;
     @BindView(R.id.food_truck_description) EditText descriptionInput;
@@ -96,7 +96,7 @@ public class FoodTruckActivity extends AppCompatActivity {
                 .resize(800, 600)
                 .centerCrop()
                 .into(imageInput);
-        imageText.setVisibility(GONE);
+        imageLayout.setVisibility(GONE);
         nameInput.setText(foodTruck.getName());
         locationInput.setText(foodTruck.getLocation());
         descriptionInput.setText(foodTruck.getInformation());
@@ -136,7 +136,7 @@ public class FoodTruckActivity extends AppCompatActivity {
                 .resize(800, 600)
                 .centerCrop()
                 .into(imageInput);
-        imageText.setVisibility(GONE);
+        imageLayout.setVisibility(GONE);
     }
 
     @OnClick(R.id.food_truck_auth_btn)
