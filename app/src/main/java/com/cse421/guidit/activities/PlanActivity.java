@@ -46,7 +46,6 @@ public class PlanActivity extends AppCompatActivity {
     @BindView(R.id.add_date_btn) TextView addDateButton;
     @BindView(R.id.plan_confirm) TextView confirmButton;
 
-
     private ArrayList<DailyPlanVo> dailyPlanList;
     private PlanRecyclerAdapter adapter;
     private PlanVo planVo;

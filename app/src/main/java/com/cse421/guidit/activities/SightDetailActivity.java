@@ -159,11 +159,9 @@ public class SightDetailActivity extends AppCompatActivity {
                 }
 
                 if (!sightVo.getPicture().equals("null")) {
-                    Timber.d("not null!!!!");
+                    Timber.d("picture : " + sightVo.getPicture());
                     Picasso.with(getApplicationContext())
                             .load(sightVo.getPicture())
-                            .resize(800, 600)
-                            .centerCrop()
                             .into(image);
                 }
                 title.setText(sightVo.getName());

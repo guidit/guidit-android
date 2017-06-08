@@ -16,7 +16,12 @@ import android.widget.Toast;
 import com.cse421.guidit.R;
 import com.cse421.guidit.activities.FestivalActivity;
 import com.cse421.guidit.activities.MainActivity;
+import com.cse421.guidit.activities.OtherPlanActivity;
+import com.cse421.guidit.activities.PlanActivity;
+import com.cse421.guidit.activities.SightDetailActivity;
 import com.cse421.guidit.util.ImageUtil;
+import com.cse421.guidit.vo.PlanVo;
+import com.cse421.guidit.vo.SightVo;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -43,6 +48,8 @@ public class BrowseFragment extends Fragment {
     @BindView(R.id.hot_sight_picture) ImageView hotSightPicture;
 
     private int currentMonth;
+    private PlanVo hotPlan;
+    private SightVo hotSight;
 
     @BindView(R.id.subtitle1) TextView subtitle1;
     @BindView(R.id.subtitle2) TextView subtitle2;
@@ -78,6 +85,8 @@ public class BrowseFragment extends Fragment {
                 .into(festivalFutureImage);
         
         MainActivity activity = (MainActivity) getActivity();
+        hotPlan = activity.hotPlan;
+        hotSight = activity.hotSight;
 
         hotPlanName.setText(activity.hotPlan.getName());
         Picasso.with(getActivity())
@@ -112,11 +121,17 @@ public class BrowseFragment extends Fragment {
     
     @OnClick(R.id.hot_plan_layout)
     public void hotPlanClick () {
-        Toast.makeText(getContext(), "hot plan으로 가자", Toast.LENGTH_SHORT).show();
+        Intent intent = PlanActivity.getIntent(getActivity());
+        intent.putExtra("planId", hotPlan.getId());
+        intent.putExtra("other", 0);
+        startActivity(intent);
+
     }
     
     @OnClick(R.id.hot_sight_layout)
     public void hotSightClick () {
-        Toast.makeText(getContext(), "hot sight로 가자", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), SightDetailActivity.class);
+        intent.putExtra("sightId", hotSight.getId());
+        startActivity(intent);
     }
 }
