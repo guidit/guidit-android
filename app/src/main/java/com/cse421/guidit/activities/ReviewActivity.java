@@ -79,7 +79,7 @@ public class ReviewActivity extends AppCompatActivity {
         dailyPlanRecycler.setAdapter(adapter);
         dailyPlanRecycler.setLayoutManager(layoutManager);
 
-        if (pictureUrl.equals("")) {
+        if (pictureUrl.equals("") || pictureUrl.equals("null")) {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -100,7 +100,8 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
 
-        reviewInput.setText(review);
+        if (!review.equals("null"))
+            reviewInput.setText(review);
     }
 
     private void getPicture () {

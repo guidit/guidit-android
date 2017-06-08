@@ -84,7 +84,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
             planViewHolder.dailyRecyclerView.setLayoutManager(layoutManager);
         }
 
-        if (mode == Mode.NEW || item.getPicture() == null || item.getPicture().equals("null") || item.getPicture().equals("")) {
+        if (mode == Mode.NEW || item.getPicture().equals("null")) {
             planViewHolder.reviewImage.setVisibility(GONE);
         } else {
             planViewHolder.reviewImage.setVisibility(View.VISIBLE);
@@ -93,7 +93,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
                     .into(planViewHolder.reviewImage);
         }
 
-        if (mode == Mode.NEW || item.getReview() == null || item.getReview().equals("null") || item.getReview().equals("")) {
+        if (mode == Mode.NEW || item.getReview().equals("null")) {
             planViewHolder.review.setVisibility(GONE);
         } else {
             planViewHolder.review.setText(item.getReview());

@@ -47,7 +47,7 @@
             android:maxLength="300"
             android:gravity="start"
             android:padding="5dp"
-            android:background="@android:color/transparent"/>
+            android:background="@drawable/bg_round_black_border"/>
 
     </LinearLayout>
 
