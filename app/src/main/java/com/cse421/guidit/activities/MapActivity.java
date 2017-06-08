@@ -1,26 +1,17 @@
 package com.cse421.guidit.activities;
 
-import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
-import com.cse421.guidit.adapters.MainPagerAdapter;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.connections.SightConnection;
-import com.cse421.guidit.fragments.MapFragment;
-import com.cse421.guidit.fragments.SightListFragment;
 import com.cse421.guidit.navermap.NMapViewerResourceProvider;
+import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.SightListVo;
 import com.cse421.guidit.vo.SightVo;
 import com.nhn.android.maps.NMapActivity;
@@ -62,6 +53,9 @@ public class MapActivity extends NMapActivity {
     public ArrayList<SightVo> sightList;
     SightListVo sightListVo;
 
+    //progressbar
+    ProgressBarDialogUtil progressBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +92,8 @@ public class MapActivity extends NMapActivity {
         mOverlayManager = new NMapOverlayManager(getApplicationContext(), mapView, mMapViewerResourceProvider);
 
         //connection - sightList 받아오기
+        progressBar = new ProgressBarDialogUtil(this);
+        progressBar.show();
         loadData();
 
         //center - basic
@@ -115,7 +111,7 @@ public class MapActivity extends NMapActivity {
             public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
                 basicX = nGeoPoint.getLongitude();
                 basicY = nGeoPoint.getLatitude();
-                Log.e("--->","basicX:"+basicX+" basicY:"+basicY);
+                progressBar.show();
                 loadData();
             }
 
@@ -142,8 +138,7 @@ public class MapActivity extends NMapActivity {
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
-                //progressBar.cancel();
-                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                progressBar.cancel();
 
                 //좌표뿌리기
                 // set POI data
@@ -174,25 +169,13 @@ public class MapActivity extends NMapActivity {
                 poiDataOverlay.setOnStateChangeListener(new NMapPOIdataOverlay.OnStateChangeListener() {
                     @Override
                     public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
-                        //마커 선택시
-//                        if( nMapPOIitem != null) {
-//                            for (int i = 0; i < sightList.size(); i++) {
-//                                if (sightList.get(i).getName() == nMapPOIitem.getTitle()) {
-//                                    Log.e("->", sightList.get(i).getName() + "");
-//                                }
-//                            }
-//                        }
                     }
 
                     @Override
                     public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
-                        //말풍선 선택시
-                            Log.e("---->","callout changed");
-                            Log.e("->", nMapPOIitem.getTitle() + " ht "+nMapPOIitem.getHeadText() + " sn "+nMapPOIitem.getSnippet() + "");
                             if( nMapPOIitem != null) {
                                 for (int i = 0; i < sightList.size(); i++) {
                                     if (sightList.get(i).getName() == nMapPOIitem.getTitle()) {
-                                        Log.e("->", sightList.get(i).getName() + "");
                                         Intent intent = new Intent(MapActivity.this, SightDetailActivity.class);
                                         intent.putExtra("sightId",sightList.get(i).getId());
                                         startActivity(intent);
@@ -202,16 +185,12 @@ public class MapActivity extends NMapActivity {
                     }
                 });
 
-                //((SightActivity) getApplicationContext()).sightList = sightList;
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelableArrayList("sightList",sightList);
-//                listFragment.setArguments(bundle);
                 sightListVo.getInstance().setSightList(sightList);
             }
 
             @Override
             public void connectionFailed() {
-                //progressBar.cancel();
+                progressBar.cancel();
                 Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
             }
         });

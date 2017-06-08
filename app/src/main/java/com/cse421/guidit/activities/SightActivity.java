@@ -4,26 +4,10 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.Toast;
-
 import com.cse421.guidit.R;
-import com.cse421.guidit.adapters.MainPagerAdapter;
-import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
-import com.cse421.guidit.connections.SightConnection;
-import com.cse421.guidit.fragments.MapFragment;
-import com.cse421.guidit.fragments.SightListFragment;
 import com.cse421.guidit.vo.SightVo;
-
 import java.util.ArrayList;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -51,9 +35,6 @@ public class SightActivity extends TabActivity {
 
         //탭 만들기
         TabHost mTab = getTabHost();
-        TabHost.TabSpec spec;
-        TabWidget tabWidget = mTab.getTabWidget();
-        Intent intent;
 
         //XY 좌표 넘겨주기
         Intent mapIntent = new Intent(this,MapActivity.class);
@@ -63,28 +44,6 @@ public class SightActivity extends TabActivity {
         mTab.addTab(mTab.newTabSpec("tab2").setIndicator("리스트로 보기").setContent(new Intent(this,SightListActivity.class)));
 
         sightList = new ArrayList<>();
-
-//        // TODO -- 연결
-//        SightConnection connection = new SightConnection();
-//        connection.setActivity(this);
-//        connection.setListener(new SimpleConnectionEventListener() {
-//            @Override
-//            public void connectionSuccess() {
-//                //progressBar.cancel();
-//                Toast.makeText(SightActivity.this, "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
-////                Log.e("-------_>",sightList.get(0).getName()+"");
-////                sendData();
-//                setViews();
-//            }
-//
-//            @Override
-//            public void connectionFailed() {
-//                //progressBar.cancel();
-//
-//                Toast.makeText(SightActivity.this, "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        connection.execute(X+"",Y+"");
 
     }
 

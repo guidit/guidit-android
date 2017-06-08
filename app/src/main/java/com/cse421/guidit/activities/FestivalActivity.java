@@ -2,6 +2,7 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +51,9 @@ public class FestivalActivity extends AppCompatActivity {
         Intent data = getIntent();
         currentMonth = data.getIntExtra("month", 1);
         monthTitle.setText(currentMonth + "월 축제");
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        monthTitle.setTypeface(type);
 
         festivalList = new ArrayList<>();
         adapter = new FestivalRecyclerAdapter(
