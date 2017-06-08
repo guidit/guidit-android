@@ -56,12 +56,13 @@ public class SightListRecyclerViewAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final SightListViewHolder viewHolder = (SightListViewHolder) holder;
-        // TODO -- 썸네일 수정
-        if (!sightList.get(position).getPicture().equals("null"))
+        if (sightList.get(position).getPicture().equals("null"))
+            Picasso.with(context)
+                    .load(R.drawable.empty_image)
+                    .into(viewHolder.thumbnail);
+        else
             Picasso.with(context)
                     .load(sightList.get(position).getPicture())
-                    .resize(500, 350)
-                    .centerCrop()
                     .into(viewHolder.thumbnail);
         viewHolder.title.setText(sightList.get(position).getName());
         viewHolder.subtitle.setText(sightList.get(position).getScore()+"");
