@@ -43,7 +43,7 @@
             android:id="@+id/review"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="후기 내용"
+            android:hint="후기 내용"
             android:maxLength="300"
             android:gravity="start"
             android:padding="5dp"
