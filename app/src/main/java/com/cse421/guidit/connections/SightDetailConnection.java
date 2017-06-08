@@ -24,6 +24,7 @@ public class SightDetailConnection extends BaseConnection {
 
     public static final int GET_DETAIL = 1111;
     public static final int FAVORITE = 2222;
+    public static final int RATE = 3333;
 
     private SightDetailActivity activity;
     private int mode;
@@ -65,6 +66,16 @@ public class SightDetailConnection extends BaseConnection {
                         .build();
                 Timber.d("url:" + url + " / data:" + data);
                 break;
+            case RATE:
+                data = "userId=" + params[0]
+                        + "&sightId=" + params[1]
+                        + "&myScore=" + params[2];
+                url = serverUrl + "/sight/score?";
+                request = new Request.Builder()
+                        .url(url + data)
+                        .build();
+                Timber.d("url:" + url + " / data:" + data);
+                break;
             default:
                 return "";
 
@@ -101,6 +112,7 @@ public class SightDetailConnection extends BaseConnection {
                         sightVo.setName(sightDetailJson.getString("name"));
                         sightVo.setPicture(sightDetailJson.getString("picture"));
                         sightVo.setScore(sightDetailJson.getDouble("score"));
+                        sightVo.setMyScore(sightDetailJson.getDouble("myScore"));
                         sightVo.setInformation(sightDetailJson.getString("information"));
                         sightVo.setFavorite(sightDetailJson.getBoolean("favorite"));
 
@@ -112,6 +124,16 @@ public class SightDetailConnection extends BaseConnection {
                     JSONObject isSuccess = new JSONObject(s);
                     if (isSuccess.has("isSuccess"))
                         if (isSuccess.getBoolean("isSuccess"))
+                            listener.connectionSuccess();
+                        else
+                            listener.connectionFailed();
+                    else
+                        listener.connectionFailed();
+                    return;
+                case RATE:
+                    JSONObject isSuccess2 = new JSONObject(s);
+                    if (isSuccess2.has("isSuccess"))
+                        if (isSuccess2.getBoolean("isSuccess"))
                             listener.connectionSuccess();
                         else
                             listener.connectionFailed();

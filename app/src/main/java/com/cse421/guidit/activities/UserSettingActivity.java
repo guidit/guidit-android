@@ -2,11 +2,13 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -34,6 +36,11 @@ public class UserSettingActivity extends AppCompatActivity {
     @BindView(R.id.password_confirm) EditText inputPassword2;
 
     private String imagePath;
+
+    @BindView(R.id.food_truck_btn)
+    TextView foodTruck;
+    @BindView(R.id.sign_up_confirm) TextView confirm;
+
     
     public static Intent getIntent (Context context) {
         return new Intent(context, UserSettingActivity.class);
@@ -45,6 +52,10 @@ public class UserSettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_setting);
     
         ButterKnife.bind(this);
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        foodTruck.setTypeface(type);
+        confirm.setTypeface(type);
         
         setViews();
         imagePath = "";
