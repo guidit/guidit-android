@@ -2,6 +2,7 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +40,7 @@ public class ReviewActivity extends AppCompatActivity {
     @BindView(R.id.image_btn) TextView imageButton;
     @BindView(R.id.review_image) ImageView image;
     @BindView(R.id.review) EditText reviewInput;
+    @BindView(R.id.review_confirm) TextView confirmBtn;
 
     private int date, dailyPlanId;
     private String pictureUrl, review;
@@ -56,6 +58,9 @@ public class ReviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_review);
 
         ButterKnife.bind(this);
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        confirmBtn.setTypeface(type);
 
         imagePath = "";
         setViews();

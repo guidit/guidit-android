@@ -2,10 +2,12 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -24,6 +26,8 @@ import butterknife.ButterKnife;
 public class OtherPlanActivity extends AppCompatActivity {
 
     @BindView(R.id.other_plan_recycler) RecyclerView planRecyclerView;
+    @BindView(R.id.title)
+    TextView title;
 
     private ArrayList<PlanVo> planList;
     private MyPagePlanRecyclerAdapter adapter;
@@ -38,6 +42,9 @@ public class OtherPlanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_other_plan);
 
         ButterKnife.bind(this);
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        title.setTypeface(type);
 
         getData();
     }

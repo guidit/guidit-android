@@ -61,11 +61,8 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter {
         });
         Picasso.with(context)
                 .load(sightVo.getPicture())
-                .resize(600, 600)
-                .centerCrop()
                 .into(viewHolder.image);
         viewHolder.name.setText(sightVo.getName());
-        viewHolder.location.setText(sightVo.getLocation());
         viewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +81,6 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter {
         @BindView(R.id.favorite_layout) RelativeLayout layout;
         @BindView(R.id.sight_img) ImageView image;
         @BindView(R.id.sight_name) TextView name;
-        @BindView(R.id.sight_location) TextView location;
         @BindView(R.id.favorite_delete_btn) ImageView deleteButton;
 
         public FavoriteViewHolder(View itemView) {
