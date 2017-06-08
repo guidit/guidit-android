@@ -15,14 +15,6 @@ public class CommentVo {
         return id;
     }
 
-    public CommentVo(int id, String userProfile, String userId, String comment, String date) {
-        this.id = id;
-        this.userProfile = userProfile;
-        this.userId = userId;
-        this.comment = comment;
-        this.date = date;
-    }
-
     public void setId(int id) {
         this.id = id;
     }

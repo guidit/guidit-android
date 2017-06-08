@@ -24,11 +24,13 @@ import android.widget.Toast;
 import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.CommentListRecyclerViewAdapter;
 import com.cse421.guidit.adapters.MainPagerAdapter;
+import com.cse421.guidit.callbacks.ListConnectionListener;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.connections.CommentConnection;
 import com.cse421.guidit.connections.SightDetailConnection;
 import com.cse421.guidit.fragments.MapFragment;
 import com.cse421.guidit.fragments.SightListFragment;
+import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.CommentVo;
 import com.cse421.guidit.vo.SightVo;
 import com.cse421.guidit.vo.UserVo;
@@ -75,8 +77,9 @@ public class SightDetailActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     @BindView(R.id.comment)
     EditText commentEditText;
-    ArrayList<CommentVo> commentList;
+    public ArrayList<CommentVo> commentList;
     CommentListRecyclerViewAdapter adapter;
+    private ListConnectionListener listener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,12 +106,15 @@ public class SightDetailActivity extends AppCompatActivity {
             }
         });
 
+        commentList = new ArrayList<>();
+
+        loadData();
+
         //create comment
 
         //comment
-        commentList = new ArrayList<>();
-        loadData();
         setRecyclerView();
+        loadComment();
     }
 
     @OnClick(R.id.favorite)
@@ -183,7 +189,6 @@ public class SightDetailActivity extends AppCompatActivity {
     }
 
     public void setFavorite(){
-        Log.e("is Favoritee",isFavorite+"");
         SightDetailConnection connection = new SightDetailConnection(2222);
         connection.setActivity(this);
         connection.setListener(new SimpleConnectionEventListener() {
@@ -229,6 +234,9 @@ public class SightDetailActivity extends AppCompatActivity {
                 //progressBar.cancel();
                 Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
                 commentEditText.setText("");
+                loadComment();
+                adapter.setList(commentList);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -240,9 +248,25 @@ public class SightDetailActivity extends AppCompatActivity {
         connection.execute(userVo.getId()+"",sightId+"",comment+"",date+"");
     }
 
-    public void setRecyclerView(){
+    public void loadComment(){
+        CommentConnection connection = new CommentConnection(1111);
+        connection.setActivity(this);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                setRecyclerView();
+            }
 
-        test();
+            @Override
+            public void connectionFailed() {
+                Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        connection.execute(sightId+"");
+    }
+
+    public void setRecyclerView(){
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -259,12 +283,6 @@ public class SightDetailActivity extends AppCompatActivity {
         wrapper.setLayoutParams(params);
 
         recyclerView.clearFocus();
-    }
-
-    public void test(){
-        commentList.add(new CommentVo(1,"http://www.9dog.co.kr/wp-content/uploads/2013/07/img_0214.jpg","julie90555","ㅎㅎㅎㅎㅎㅎ안드로이드 야야야얍","2017.18.29"));
-        commentList.add(new CommentVo(2,"http://www.9dog.co.kr/wp-content/uploads/2013/07/img_0214.jpg","julie9055","ㅎㅎㅎㅎ안드로이드 야야야얍","2017.18.29"));
-        commentList.add(new CommentVo(3,"http://www.9dog.co.kr/wp-content/uploads/2013/07/img_0214.jpg","julie905","ㅎㅎㅎ안드로이드 야야야얍","2017.18.29"));
     }
 
 }
