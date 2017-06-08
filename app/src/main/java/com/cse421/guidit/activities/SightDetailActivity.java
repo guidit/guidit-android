@@ -5,13 +5,9 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewGroupCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -23,13 +19,10 @@ import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.CommentListRecyclerViewAdapter;
-import com.cse421.guidit.adapters.MainPagerAdapter;
 import com.cse421.guidit.callbacks.ListConnectionListener;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.connections.CommentConnection;
 import com.cse421.guidit.connections.SightDetailConnection;
-import com.cse421.guidit.fragments.MapFragment;
-import com.cse421.guidit.fragments.SightListFragment;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.CommentVo;
 import com.cse421.guidit.vo.SightVo;
@@ -50,6 +43,7 @@ import butterknife.OnClick;
 
 public class SightDetailActivity extends AppCompatActivity {
 
+    //data
     public SightVo sightVo;
     UserVo userVo;
     int sightId;
@@ -58,6 +52,7 @@ public class SightDetailActivity extends AppCompatActivity {
     String comment;
     String date;
 
+    //bindview
     @BindView(R.id.sight_image)
     ImageView image;
     @BindView(R.id.title)
@@ -81,6 +76,9 @@ public class SightDetailActivity extends AppCompatActivity {
     CommentListRecyclerViewAdapter adapter;
     private ListConnectionListener listener;
 
+    //progressbar
+    ProgressBarDialogUtil progressBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,25 +90,22 @@ public class SightDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         sightId = intent.getExtras().getInt("sightId");
-        Log.e("sightId :",sightId+"");
-
         userVo = UserVo.getInstance();
+        commentList = new ArrayList<>();
 
         //rating bar
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                Log.e("rating --->",rating+"");
                 myScore = (double)rating;
                 setMyScore();
             }
         });
 
-        commentList = new ArrayList<>();
-
+        //load info
+        progressBar = new ProgressBarDialogUtil(this);
+        progressBar.show();
         loadData();
-
-        //create comment
 
         //comment
         setRecyclerView();
@@ -121,6 +116,8 @@ public class SightDetailActivity extends AppCompatActivity {
     public void favorite () {
         isFavorite = !isFavorite;
         favorite.setSelected(isFavorite);
+
+        progressBar.show();
         setFavorite();
     }
 
@@ -132,6 +129,7 @@ public class SightDetailActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         date = sdf.format(tdate);
 
+        progressBar.show();
         setComment();
     }
 
@@ -141,8 +139,7 @@ public class SightDetailActivity extends AppCompatActivity {
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
-                //progressBar.cancel();
-                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                progressBar.cancel();
 
                 String infos = sightVo.getInformation();
                 String[] info = infos.split("%");
@@ -181,7 +178,7 @@ public class SightDetailActivity extends AppCompatActivity {
 
             @Override
             public void connectionFailed() {
-                //progressBar.cancel();
+                progressBar.cancel();
                 Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
             }
         });
@@ -194,13 +191,12 @@ public class SightDetailActivity extends AppCompatActivity {
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
-                //progressBar.cancel();
-                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                progressBar.cancel();
             }
 
             @Override
             public void connectionFailed() {
-                //progressBar.cancel();
+                progressBar.cancel();
                 Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
             }
         });
@@ -213,13 +209,12 @@ public class SightDetailActivity extends AppCompatActivity {
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
-                //progressBar.cancel();
-                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                progressBar.cancel();
             }
 
             @Override
             public void connectionFailed() {
-                //progressBar.cancel();
+                progressBar.cancel();
                 Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
             }
         });
@@ -231,8 +226,7 @@ public class SightDetailActivity extends AppCompatActivity {
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
-                //progressBar.cancel();
-                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                progressBar.cancel();
                 commentEditText.setText("");
                 loadComment();
                 adapter.setList(commentList);
@@ -241,7 +235,7 @@ public class SightDetailActivity extends AppCompatActivity {
 
             @Override
             public void connectionFailed() {
-                //progressBar.cancel();
+                progressBar.cancel();
                 Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
             }
         });
@@ -254,11 +248,13 @@ public class SightDetailActivity extends AppCompatActivity {
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
+                progressBar.cancel();
                 setRecyclerView();
             }
 
             @Override
             public void connectionFailed() {
+                progressBar.cancel();
                 Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
 
             }
@@ -270,7 +266,6 @@ public class SightDetailActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        Log.e("sightList num",commentList.size()+"");
         adapter = new CommentListRecyclerViewAdapter(commentList,
                 getApplicationContext());
         recyclerView.setHasFixedSize(false);
