@@ -59,7 +59,13 @@ public class OtherPlanActivity extends AppCompatActivity {
                 progressBar.cancel();
                 Toast.makeText(OtherPlanActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void listIsEmpty() {
+                connectionFailed();
+            }
         });
+        connection.execute();
     }
 
     private void setRecyclerView () {
@@ -70,7 +76,7 @@ public class OtherPlanActivity extends AppCompatActivity {
             @Override
             public void itemClicked(int position) {
                 Intent intent = PlanActivity.getIntent(OtherPlanActivity.this);
-                intent.putExtra("planId", planList.get(position).getId() + "");
+                intent.putExtra("planId", planList.get(position).getId());
                 intent.putExtra("other", 0);
                 startActivity(intent);
             }

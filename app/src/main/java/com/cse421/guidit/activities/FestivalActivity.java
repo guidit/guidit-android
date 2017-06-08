@@ -87,6 +87,11 @@ public class FestivalActivity extends AppCompatActivity {
                 progressBar.cancel();
                 Toast.makeText(FestivalActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void listIsEmpty() {
+                connectionFailed();
+            }
         });
         connection.execute(currentMonth + "");
     }

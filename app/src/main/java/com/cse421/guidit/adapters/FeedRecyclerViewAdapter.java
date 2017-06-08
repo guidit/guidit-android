@@ -54,7 +54,7 @@ public class FeedRecyclerViewAdapter extends RecyclerView.Adapter {
         FeedViewHolder feedViewHolder = (FeedViewHolder) holder;
         FeedVo feedVo = feedList.get(position);
 
-        if (!feedVo.getProfile().equals("testprofile"))
+        if (!feedVo.getProfile().equals("null"))
             Picasso.with(context)
                     .load(feedVo.getProfile())
                     .resize(800, 600)

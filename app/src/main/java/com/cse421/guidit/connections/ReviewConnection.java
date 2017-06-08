@@ -22,22 +22,22 @@ public class ReviewConnection extends BaseConnection {
     @Override
     protected String doInBackground(String... strings) {
         OkHttpClient client = new OkHttpClient();
-        String result = "";
+        String data, result = "";
 
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("id", strings[0])
-                .addFormDataPart("review", strings[1]);
-        if (!strings[2].equals("")) {
-            File file = new File(strings[2]);
-            builder.addFormDataPart("file", "picture.png", RequestBody.create(MEDIA_TYPE_PNG, file));
+        RequestBody body;
+        data = "id=" + strings[0]
+                + "&review=" + strings[1];
+        if (strings.length > 2) {
+            data += "&file=" + strings[2];
         }
+        body = RequestBody.create(HTML, data);
+        Timber.d("body " + body.toString());
 
         String url = serverUrl + "/plan/review";
 
         Request request = new Request.Builder()
                 .url(url)
-                .post(builder.build())
+                .post(body)
                 .build();
 
         try {

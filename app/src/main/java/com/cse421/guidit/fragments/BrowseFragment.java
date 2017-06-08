@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.cse421.guidit.R;
 import com.cse421.guidit.activities.FestivalActivity;
 import com.cse421.guidit.activities.MainActivity;
+import com.cse421.guidit.util.ImageUtil;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -69,39 +70,27 @@ public class BrowseFragment extends Fragment {
         currentMonth = calendar.get(Calendar.MONTH) + 1;
         festivalPresentMonth.setText(currentMonth + "월");
         Picasso.with(getActivity())
-                .load(getFestivalImage(currentMonth))
+                .load(ImageUtil.getFestivalImage(currentMonth))
                 .into(festivalPresentImage);
         festivalFutureMonth.setText(currentMonth + 1 + "월");
         Picasso.with(getActivity())
-                .load(getFestivalImage(currentMonth + 1))
+                .load(ImageUtil.getFestivalImage(currentMonth + 1))
                 .into(festivalFutureImage);
         
         MainActivity activity = (MainActivity) getActivity();
 
         hotPlanName.setText(activity.hotPlan.getName());
-        if (activity.hotPlan.getPicture() != null && !activity.hotPlan.getPicture().equals(""))
-            Picasso.with(getActivity())
-                    .load(activity.hotPlan.getPicture())
-                    .into(hotPlanPicture);
+        Picasso.with(getActivity())
+                .load(ImageUtil.getTravelImageId())
+                .resize(800, 600)
+                .centerCrop()
+                .into(hotPlanPicture);
         
         hotSightName.setText(activity.hotSight.getName());
         if (activity.hotSight.getPicture() != null && !activity.hotSight.getPicture().equals(""))
             Picasso.with(getActivity())
                     .load(activity.hotSight.getPicture())
                     .into(hotSightPicture);
-    }
-    
-    private int getFestivalImage (int month) {
-        switch (month) {
-            case 5 :
-                return R.drawable.may;
-            case 6 :
-                return R.drawable.june;
-            case 7 :
-                return R.drawable.july;
-            default:
-                return R.drawable.profile;
-        }
     }
     
     @OnClick({R.id.festival_present, R.id.festival_future})

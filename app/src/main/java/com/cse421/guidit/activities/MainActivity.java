@@ -74,9 +74,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void connectionSuccess() {
                 progressBar.cancel();
-    
-                // 통신 완료 후 탭별 정보 객체에 데이터가 들어오면
-                //setViews();
+
+                setViews();
             }
     
             @Override
@@ -86,29 +85,28 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
             }
         });
-        //connection.execute();
-        //// TODO: 2017. 5. 9. test 용
-        test();
+        connection.execute();
+//        test();
     }
     
-    private void test () {
-        progressBar.cancel();
-        
-        hotPlan = new PlanVo();
-        hotPlan.setId(3);
-        hotPlan.setName("나는 여행을 한다");
-        hotPlan.setViewCount(20);
-        hotPlan.setPublic(true);
-        
-        hotSight = new SightVo();
-        hotSight.setId(5);
-        hotSight.setName("십리대밭");
-        hotSight.setPicture("http://cfile22.uf.tistory.com/image/2341FC4A51B5E60338157B");
-        hotSight.setInformation("태화강변에 있는 대밭이다.");
-        hotSight.setScore(3.7);
-
-        setViews();
-    }
+//    private void test () {
+//        progressBar.cancel();
+//
+//        hotPlan = new PlanVo();
+//        hotPlan.setId(3);
+//        hotPlan.setName("나는 여행을 한다");
+//        hotPlan.setViewCount(20);
+//        hotPlan.setPublic(true);
+//
+//        hotSight = new SightVo();
+//        hotSight.setId(5);
+//        hotSight.setName("십리대밭");
+//        hotSight.setPicture("http://cfile22.uf.tistory.com/image/2341FC4A51B5E60338157B");
+//        hotSight.setInformation("태화강변에 있는 대밭이다.");
+//        hotSight.setScore(3.7);
+//
+//        setViews();
+//    }
 
     private void setViews () {
         browseFragment = new BrowseFragment();

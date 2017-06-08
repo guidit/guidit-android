@@ -11,8 +11,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"
+            android:layout_height="110dp"
             android:orientation="vertical">
 
             <TextView
@@ -107,9 +106,8 @@
         <RelativeLayout
             android:id="@+id/hot_plan_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="0.3">
+            android:layout_height="170dp"
+            android:layout_marginTop="5dp">
 
             <ImageView
                 android:id="@+id/hot_plan_picture"
@@ -146,8 +144,7 @@
         <RelativeLayout
             android:id="@+id/hot_sight_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_height="170dp"
             android:layout_marginTop="10dp">
 
             <ImageView

@@ -76,7 +76,7 @@ public class MyPageFragment extends Fragment {
         UserVo userVo = UserVo.getInstance();
     
         // 프로필
-        if (!userVo.getProfile().equals("testprofile"))
+        if (!userVo.getProfile().equals("null"))
             Picasso.with(getActivity())
                     .load(userVo.getProfile())
                     .resize(800, 600)
@@ -101,6 +101,7 @@ public class MyPageFragment extends Fragment {
                     public void itemClicked(int position) {
                         Intent intent = PlanActivity.getIntent(getActivity());
                         intent.putExtra("planId", planList.get(position).getId());
+                        startActivity(intent);
                     }
                 }
         );
@@ -111,6 +112,8 @@ public class MyPageFragment extends Fragment {
 
         //리스트 불러오기
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(getActivity());
+        progressBar.show();
+
         PlanConnection connection = new PlanConnection(PlanConnection.modes.MY_PLANS);
         connection.setListConnectionListener(new ListConnectionListener<PlanVo>() {
             @Override
@@ -126,24 +129,14 @@ public class MyPageFragment extends Fragment {
                 progressBar.cancel();
                 Toast.makeText(getActivity(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
-        });
-//        progresbar.show();
-//        connection.execute(); //// TODO: 2017-06-06 여기 더미데이터있음
 
-        PlanVo plan1 = new PlanVo();
-        plan1.setName("첫번째 여행");
-        plan1.setPublic(true);
-        PlanVo plan2 = new PlanVo();
-        plan2.setName("두번째 여행");
-        plan2.setPublic(false);
-        PlanVo plan3 = new PlanVo();
-        plan3.setName("세번째 여행");
-        plan3.setPublic(true);
-        planList.add(plan1);
-        planList.add(plan2);
-        planList.add(plan3);
-        adapter.setPlanList(planList);
-        adapter.notifyDataSetChanged();
+            @Override
+            public void listIsEmpty() {
+                progressBar.cancel();
+                Toast.makeText(getActivity(), "여행 계획이 없습니다", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute();
     }
 
     public void addPlan () {
@@ -155,8 +148,9 @@ public class MyPageFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ADD_PLAN)
             if (resultCode == RESULT_OK) {
-                //// TODO: 2017-06-03 사용자 여행계획 새로고침
                 final ProgressBarDialogUtil progresbar = new ProgressBarDialogUtil(getActivity());
+                progresbar.show();
+
                 PlanConnection connection = new PlanConnection(PlanConnection.modes.MY_PLANS);
                 connection.setListConnectionListener(new ListConnectionListener<PlanVo>() {
                     @Override
@@ -172,9 +166,14 @@ public class MyPageFragment extends Fragment {
                         progresbar.cancel();
                         Toast.makeText(getActivity(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
                     }
+
+                    @Override
+                    public void listIsEmpty() {
+                        progresbar.cancel();
+                        Toast.makeText(getActivity(), "여행 계획이 없습니다", Toast.LENGTH_SHORT).show();
+                    }
                 });
-//                progresbar.show();
-//                connection.execute();
+                connection.execute();
             }
     }
 

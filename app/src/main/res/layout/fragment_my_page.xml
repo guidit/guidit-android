@@ -46,12 +46,13 @@
             android:id="@+id/plan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여행 계획"
+            android:text="여행 후기"
             android:textColor="@android:color/black"
             android:textSize="14sp"
             android:layout_alignParentBottom="true"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
+            android:paddingTop="8dp"
             android:layout_marginLeft="8dp"/>
 
         <TextView
@@ -64,6 +65,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:paddingTop="8dp"
+            android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:layout_marginRight="8dp"/>
 

@@ -92,11 +92,16 @@ public class FavoriteConnection extends BaseConnection {
         try {
             switch (mode) {
                 case GET_LIST:
+
                     JSONArray favoriteList = new JSONArray(s);
                     ArrayList<SightVo> favorites = new ArrayList<>();
 
                     for (int i = 0; i < favoriteList.length(); i++) {
                         JSONObject data = favoriteList.getJSONObject(i);
+                        if (data.has("id") && data.getInt("id") == -1) {
+                            listConnectionListener.listIsEmpty();
+                            return;
+                        }
 
                         SightVo sightVo = new SightVo();
                         sightVo.setId(data.getInt("sight_id"));

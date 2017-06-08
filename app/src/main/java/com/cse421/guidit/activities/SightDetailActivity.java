@@ -43,6 +43,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 /**
  * Created by JEONGYI on 2017. 5. 10..
@@ -157,9 +158,14 @@ public class SightDetailActivity extends AppCompatActivity {
                     location.setText("등록된 주소가 없습니다");
                 }
 
-                Picasso.with(getApplicationContext())
-                        .load(sightVo.getPicture())
-                        .into(image);
+                if (!sightVo.getPicture().equals("null")) {
+                    Timber.d("not null!!!!");
+                    Picasso.with(getApplicationContext())
+                            .load(sightVo.getPicture())
+                            .resize(800, 600)
+                            .centerCrop()
+                            .into(image);
+                }
                 title.setText(sightVo.getName());
                 score.setText(sightVo.getScore()+"");
                 favorite.setSelected(sightVo.isFavorite());

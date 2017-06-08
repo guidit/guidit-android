@@ -15,6 +15,7 @@
             android:id="@+id/sight_image"
             android:layout_width="match_parent"
             android:layout_height="240dp"
+            android:src="@drawable/empty_image"
             android:background="@color/gray"
             android:focusable="true"
             android:scaleType="centerCrop"/>

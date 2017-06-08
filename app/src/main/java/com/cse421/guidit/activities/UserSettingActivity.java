@@ -66,7 +66,7 @@ public class UserSettingActivity extends AppCompatActivity {
     private void setViews () {
         UserVo userVo = UserVo.getInstance();
         
-        if (!userVo.getProfile().equals("testprofile")) {
+        if (!userVo.getProfile().equals("null")) {
             Picasso.with(this)
                     .load(userVo.getProfile())
                     .resize(800, 600)

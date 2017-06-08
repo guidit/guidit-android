@@ -57,7 +57,7 @@ public class MainConnection extends BaseConnection {
     
     @Override
     protected void onPostExecute(String s) {
-        Timber.d("login on post " + s);
+        Timber.d("main on post " + s);
     
         try {
             JSONArray main = new JSONArray(s);
@@ -79,6 +79,8 @@ public class MainConnection extends BaseConnection {
             sightVo.setInformation(hotSightJson.getString("information"));
             sightVo.setPicture(hotSightJson.getString("picture"));
             sightVo.setScore(hotSightJson.getDouble("score"));
+            sightVo.setMapX(hotSightJson.getDouble("locationX"));
+            sightVo.setMapY(hotSightJson.getDouble("locationY"));
             activity.hotSight = sightVo;
             
         } catch (JSONException e) {

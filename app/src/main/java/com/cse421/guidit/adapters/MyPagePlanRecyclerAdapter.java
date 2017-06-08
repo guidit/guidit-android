@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
+import com.cse421.guidit.util.ImageUtil;
 import com.cse421.guidit.vo.PlanVo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -48,6 +50,12 @@ public class MyPagePlanRecyclerAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         PlanViewHolder planViewHolder = (PlanViewHolder) holder;
         PlanVo planVo = planList.get(position);
+
+        Picasso.with(context)
+                .load(ImageUtil.getTravelImageId())
+                .resize(500, 300)
+                .centerCrop()
+                .into(planViewHolder.image);
         
         planViewHolder.planName.setText(planVo.getName());
         if (planVo.isPublic()) {
@@ -70,6 +78,7 @@ public class MyPagePlanRecyclerAdapter extends RecyclerView.Adapter {
     public class PlanViewHolder extends RecyclerView.ViewHolder {
         
         @BindView(R.id.relative_layout) RelativeLayout layout;
+        @BindView(R.id.plan_image) ImageView image;
         @BindView(R.id.plan_name) TextView planName;
         @BindView(R.id.lock) ImageView lock;
         

@@ -15,7 +15,9 @@ import android.widget.Toast;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.DailyPlanRecyclerViewAdapter;
+import com.cse421.guidit.callbacks.ImageUploadListener;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
+import com.cse421.guidit.connections.ImgurConnection;
 import com.cse421.guidit.connections.ReviewConnection;
 import com.cse421.guidit.util.ImageUtil;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
@@ -140,25 +142,62 @@ public class ReviewActivity extends AppCompatActivity {
 
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
-        ReviewConnection connection = new ReviewConnection();
-        connection.setListener(new SimpleConnectionEventListener() {
-            @Override
-            public void connectionSuccess() {
-                progressBar.cancel();
-                Toast.makeText(ReviewActivity.this, "입력에 성공하였습니다", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.putExtra("image", localImagePath);
-                intent.putExtra("review", content);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
 
-            @Override
-            public void connectionFailed() {
-                progressBar.cancel();
-                Toast.makeText(ReviewActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
-            }
-        });
-        connection.execute(dailyPlanId + "", content, imagePath);
+        if (imagePath.equals("")) {
+            ReviewConnection connection = new ReviewConnection();
+            connection.setListener(new SimpleConnectionEventListener() {
+                @Override
+                public void connectionSuccess() {
+                    progressBar.cancel();
+                    Toast.makeText(ReviewActivity.this, "입력에 성공하였습니다", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.putExtra("image", localImagePath);
+                    intent.putExtra("review", content);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+
+                @Override
+                public void connectionFailed() {
+                    progressBar.cancel();
+                    Toast.makeText(ReviewActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                }
+            });
+            connection.execute(dailyPlanId + "", content, "");
+        } else {
+            ImgurConnection connection = new ImgurConnection();
+            connection.setListener(new ImageUploadListener() {
+                @Override
+                public void onSuccess(final String url) {
+                    ReviewConnection connection = new ReviewConnection();
+                    connection.setListener(new SimpleConnectionEventListener() {
+                        @Override
+                        public void connectionSuccess() {
+                            progressBar.cancel();
+                            Toast.makeText(ReviewActivity.this, "입력에 성공하였습니다", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent();
+                            intent.putExtra("image", url);
+                            intent.putExtra("review", content);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void connectionFailed() {
+                            progressBar.cancel();
+                            Toast.makeText(ReviewActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    connection.execute(dailyPlanId + "", content, url);
+                }
+
+                @Override
+                public void onFailed() {
+                    Toast.makeText(ReviewActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    progressBar.cancel();
+                }
+            });
+            connection.execute(imagePath);
+        }
     }
 }

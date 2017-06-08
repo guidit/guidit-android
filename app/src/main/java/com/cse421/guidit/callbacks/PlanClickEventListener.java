@@ -5,6 +5,6 @@ package com.cse421.guidit.callbacks;
  */
 
 public interface PlanClickEventListener {
-    void addDailyPlan (int position);
+    void changeDailyPlan(int position);
     void writeReview (int position);
 }

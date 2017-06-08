@@ -13,6 +13,7 @@ import com.cse421.guidit.R;
 import com.cse421.guidit.callbacks.PlanClickEventListener;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.vo.DailyPlanVo;
+import com.cse421.guidit.vo.SightVo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
             planViewHolder.dailyRecyclerView.setLayoutManager(layoutManager);
         }
 
-        if (mode == Mode.NEW || item.getPicture().equals("")) {
+        if (mode == Mode.NEW || item.getPicture() == null || item.getPicture().equals("null") || item.getPicture().equals("")) {
             planViewHolder.reviewImage.setVisibility(GONE);
         } else {
             planViewHolder.reviewImage.setVisibility(View.VISIBLE);
@@ -92,7 +93,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
                     .into(planViewHolder.reviewImage);
         }
 
-        if (mode == Mode.NEW || item.getReview().equals("")) {
+        if (mode == Mode.NEW || item.getReview() == null || item.getReview().equals("null") || item.getReview().equals("")) {
             planViewHolder.review.setVisibility(GONE);
         } else {
             planViewHolder.review.setText(item.getReview());
@@ -100,10 +101,10 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
         }
 
         if (mode != Mode.OTHER) {
-            planViewHolder.addDailyPlanButton.setOnClickListener(new View.OnClickListener() {
+            planViewHolder.changeDailyPlanButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.addDailyPlan(position);
+                    listener.changeDailyPlan(position);
                 }
             });
             planViewHolder.writeReviewButton.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +118,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
         if (mode == Mode.EXIST) {
             planViewHolder.writeReviewButton.setVisibility(View.VISIBLE);
         } else if (mode == Mode.OTHER) {
-            planViewHolder.addDailyPlanButton.setVisibility(GONE);
+            planViewHolder.changeDailyPlanButton.setVisibility(GONE);
             planViewHolder.writeReviewButton.setVisibility(GONE);
         } else {
             planViewHolder.writeReviewButton.setVisibility(GONE);
@@ -129,7 +130,8 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
         return list.size();
     }
 
-    public void notifyInnerAdapter (int position) {
+    public void changeInnerRecycler(int position, ArrayList<SightVo> sightList) {
+        adapterList.get(position).setSightList(sightList);
         adapterList.get(position).notifyDataSetChanged();
     }
 
@@ -139,7 +141,7 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
         @BindView(R.id.daily_plan_recycler) RecyclerView dailyRecyclerView;
         @BindView(R.id.review_image) ImageView reviewImage;
         @BindView(R.id.review) TextView review;
-        @BindView(R.id.add_daily_plan) TextView addDailyPlanButton;
+        @BindView(R.id.change_daily_plan) TextView changeDailyPlanButton;
         @BindView(R.id.write_review) TextView writeReviewButton;
 
         public PlanViewHolder(View itemView) {

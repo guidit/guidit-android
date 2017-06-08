@@ -87,6 +87,11 @@ public class FeedFragment extends Fragment {
                 progressBar.cancel();
                 Toast.makeText(getActivity(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void listIsEmpty() {
+                connectionFailed();
+            }
         };
     }
 

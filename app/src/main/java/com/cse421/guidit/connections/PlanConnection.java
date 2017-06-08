@@ -48,7 +48,7 @@ public class PlanConnection extends BaseConnection {
     }
 
     public enum modes {
-        MY_PLANS, ALL_PLANS, ADD_PLAN, GET_PLAN, MODIFY_PLAN
+        MY_PLANS, ALL_PLANS, ADD_PLAN, GET_PLAN, MODIFY_PLAN, ADD_COUNT
     }
 
     @Override
@@ -117,7 +117,7 @@ public class PlanConnection extends BaseConnection {
                         .build();
                 Timber.d("url:" + url + " / data:" + data);
                 break;
-            case MODIFY_PLAN:
+            case MODIFY_PLAN:   //// TODO: 2017-06-09 daily plan의 id 값도 보내기
                 try {
                     JSONArray list = new JSONArray();
                     for (int i = 0; i < dailyPlanList.size(); i++) {
@@ -150,13 +150,21 @@ public class PlanConnection extends BaseConnection {
                     e.printStackTrace();
                 }
                 break;
+            case ADD_COUNT:
+                data = "id=" + strings[0];
+                url = serverUrl + "/plan/addcount?";
+                request = new Request.Builder()
+                        .url(url + data)
+                        .build();
+                Timber.d("url:" + url + " / data:" + data);
+                break;
             default:
                 return "";
         }
 
         try {
             Response response = client.newCall(request).execute();
-            result = response.body().toString();
+            result = response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,6 +174,7 @@ public class PlanConnection extends BaseConnection {
 
     @Override
     protected void onPostExecute(String s) {
+        Timber.d("on post " + s);
         if (s.equals("")) {
             if (listener != null) {
                 listener.connectionFailed();
@@ -191,7 +200,11 @@ public class PlanConnection extends BaseConnection {
 
                         planVo.setId(object.getInt("id"));
                         planVo.setName(object.getString("name"));
-                        planVo.setPublic(object.getBoolean("is_public"));
+                        if (object.getInt("is_public") == 1) {
+                            planVo.setPublic(true);
+                        } else {
+                            planVo.setPublic(false);
+                        }
                         planVo.setViewCount(object.getInt("view_count"));
                         planList.add(planVo);
                     }
@@ -199,6 +212,7 @@ public class PlanConnection extends BaseConnection {
                     break;
                 case ADD_PLAN:
                 case MODIFY_PLAN:
+                case ADD_COUNT:
                     JSONObject object = new JSONObject(s);
                     if (object.has("isSuccess")) {
                         if (object.getBoolean("isSuccess"))
@@ -214,31 +228,40 @@ public class PlanConnection extends BaseConnection {
                     PlanVo planVo = new PlanVo();
                     planVo.setId(plan.getInt("id"));
                     planVo.setName(plan.getString("name"));
+                    if (plan.getInt("is_public") == 1) {
+                        planVo.setPublic(true);
+                    } else {
+                        planVo.setPublic(false);
+                    }
                     planVo.setViewCount(plan.getInt("view_count"));
 
                     ArrayList<DailyPlanVo> dailyPlanList = new ArrayList<>();
-                    JSONArray dailyPlanArray = plan.getJSONArray("daily_plan");
-                    for (int i = 0; i < dailyPlanArray.length(); i++) {
-                        DailyPlanVo dailyPlanVo = new DailyPlanVo();
-                        JSONObject dailyObject = dailyPlanArray.getJSONObject(i);
-                        dailyPlanVo.setId(dailyObject.getInt("id"));
-                        dailyPlanVo.setDayNum(dailyObject.getInt("day_num"));
-                        dailyPlanVo.setReview(dailyObject.getString("review"));
-                        dailyPlanVo.setPicture(dailyObject.getString("picture"));
+                    if (plan.has("daily_plan")) {
+                        JSONArray dailyPlanArray = plan.getJSONArray("daily_plan");
+                        for (int i = 0; i < dailyPlanArray.length(); i++) {
+                            DailyPlanVo dailyPlanVo = new DailyPlanVo();
+                            JSONObject dailyObject = dailyPlanArray.getJSONObject(i);
+                            dailyPlanVo.setId(dailyObject.getInt("id"));
+                            dailyPlanVo.setDayNum(dailyObject.getInt("day_num"));
+                            dailyPlanVo.setReview(dailyObject.getString("review"));
+                            dailyPlanVo.setPicture(dailyObject.getString("picture"));
 
-                        ArrayList<SightVo> sightList = new ArrayList<>();
-                        JSONArray sightArray = dailyObject.getJSONArray("sight_list");
-                        for (int j = 0; j < sightArray.length(); j++) {
-                            SightVo sightVo = new SightVo();
-                            JSONObject sightObject = sightArray.getJSONObject(j);
-                            sightVo.setId(sightObject.getInt("id"));
-                            sightVo.setName(sightObject.getString("name"));
+                            ArrayList<SightVo> sightList = new ArrayList<>();
+                            if (dailyObject.has("sight_list")) {
+                                JSONArray sightArray = dailyObject.getJSONArray("sight_list");
+                                for (int j = 0; j < sightArray.length(); j++) {
+                                    SightVo sightVo = new SightVo();
+                                    JSONObject sightObject = sightArray.getJSONObject(j);
+                                    sightVo.setId(sightObject.getInt("id"));
+                                    sightVo.setName(sightObject.getString("name"));
 
-                            sightList.add(sightVo);
+                                    sightList.add(sightVo);
+                                }
+                            }
+                            dailyPlanVo.setSightList(sightList);
+
+                            dailyPlanList.add(dailyPlanVo);
                         }
-                        dailyPlanVo.setSightList(sightList);
-
-                        dailyPlanList.add(dailyPlanVo);
                     }
                     planVo.setDailyPlanList(dailyPlanList);
 

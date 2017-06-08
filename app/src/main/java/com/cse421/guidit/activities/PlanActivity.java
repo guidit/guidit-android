@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,14 +18,12 @@ import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.PlanRecyclerAdapter;
 import com.cse421.guidit.callbacks.PlanClickEventListener;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
-import com.cse421.guidit.callbacks.SimpleListClickEventListener;
 import com.cse421.guidit.callbacks.SingleObjectConnectionListener;
 import com.cse421.guidit.connections.PlanConnection;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.DailyPlanVo;
 import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.SightVo;
-import com.cse421.guidit.vo.UserVo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -75,6 +74,8 @@ public class PlanActivity extends AppCompatActivity {
                 mode = OTHER;
             else
                 mode = EXIST;
+            planVo = new PlanVo();
+            planVo.setId(intent.getIntExtra("planId", 0));
             final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
             progressBar.show();
             PlanConnection connection = new PlanConnection(PlanConnection.modes.GET_PLAN);
@@ -101,6 +102,10 @@ public class PlanActivity extends AppCompatActivity {
                 }
             });
             connection.execute(intent.getIntExtra("planId", 0) + "");
+
+            if (mode == OTHER) {
+                addCount();
+            }
         } else {
             mode = NEW;
             dailyPlanList = new ArrayList<>();
@@ -112,8 +117,27 @@ public class PlanActivity extends AppCompatActivity {
         Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
         confirmButton.setTypeface(type);
         addDateButton.setTypeface(type);
+    }
 
+    private void addCount () {
+        final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
+        progressBar.show();
 
+        PlanConnection connection = new PlanConnection(PlanConnection.modes.ADD_COUNT);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                progressBar.cancel();
+                // do nothing
+            }
+
+            @Override
+            public void connectionFailed() {
+                progressBar.cancel();
+                Toast.makeText(PlanActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(planVo.getId() + "");
     }
 
     private void setViews () {
@@ -127,7 +151,7 @@ public class PlanActivity extends AppCompatActivity {
                 this,
                 new PlanClickEventListener() {
                     @Override
-                    public void addDailyPlan(int position) {
+                    public void changeDailyPlan(int position) {
                         selectedDate = position;
                         startActivityForResult(SelectSightActivity.getIntent(PlanActivity.this), REQUEST_SELECTED_SIGHT);
                     }
@@ -159,32 +183,29 @@ public class PlanActivity extends AppCompatActivity {
         planRecyclerView.setLayoutManager(layoutManager);
 
         if (isPublic) {
-            Picasso.with(this)
-                    .load(R.drawable.ic_lock_open)
-                    .into(lockButton);
+            lockButton.setImageResource(R.drawable.ic_lock_open);
         } else {
-            Picasso.with(this)
-                    .load(R.drawable.ic_lock)
-                    .into(lockButton);
+            lockButton.setImageResource(R.drawable.ic_lock);
         }
         lockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isPublic = !isPublic;
                 if (isPublic) {
-                    Picasso.with(PlanActivity.this)
-                            .load(R.drawable.ic_lock_open)
-                            .into(lockButton);
+                    lockButton.setImageResource(R.drawable.ic_lock_open);
                 } else {
-                    Picasso.with(PlanActivity.this)
-                            .load(R.drawable.ic_lock)
-                            .into(lockButton);
+                    lockButton.setImageResource(R.drawable.ic_lock);
                 }
             }
         });
 
         // 이 여행계획이 내꺼가 아닐 경우
         if (mode == OTHER) {
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
             nameInput.setEnabled(false);
             lockButton.setEnabled(false);
             addDateButton.setVisibility(View.GONE);
@@ -200,7 +221,7 @@ public class PlanActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 ArrayList<SightVo> selectedList = data.getParcelableArrayListExtra("list");
                 dailyPlanList.get(selectedDate).setSightList(selectedList);
-                adapter.notifyInnerAdapter(selectedDate);
+                adapter.changeInnerRecycler(selectedDate, selectedList);
             }
         }
         if (requestCode == REQUEST_WRITE_REVIEW) {
@@ -237,12 +258,16 @@ public class PlanActivity extends AppCompatActivity {
             connection = new PlanConnection(PlanConnection.modes.MODIFY_PLAN);
         } else if (mode == NEW){
             connection = new PlanConnection(PlanConnection.modes.ADD_PLAN);
+        } else {
+            return;
         }
         connection.setListener(new SimpleConnectionEventListener() {
             @Override
             public void connectionSuccess() {
                 progressBar.cancel();
                 Toast.makeText(PlanActivity.this, "일정이 저장되었습니다", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
             }
 
             @Override

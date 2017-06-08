@@ -74,6 +74,12 @@ public class SelectSightActivity extends AppCompatActivity {
                 progressBar.cancel();
                 Toast.makeText(SelectSightActivity.this, "인터넷 상태를 확인해주세요", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void listIsEmpty() {
+                progressBar.cancel();
+                Toast.makeText(SelectSightActivity.this, "찜목록이 비어있습니다", Toast.LENGTH_SHORT).show();
+            }
         });
         connection.execute();
     }

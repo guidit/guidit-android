@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.cse421.guidit.R;
 import com.cse421.guidit.callbacks.SimpleListClickEventListener;
+import com.cse421.guidit.util.CircleTransform;
 import com.cse421.guidit.vo.CommentVo;
 import com.cse421.guidit.vo.SightVo;
 import com.squareup.picasso.Picasso;
@@ -50,10 +51,13 @@ public class CommentListRecyclerViewAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final SightListViewHolder viewHolder = (SightListViewHolder) holder;
-        // TODO -- 썸네일 수정
-        Picasso.with(context)
-                .load(commentList.get(position).getUserProfile())
-                .into(viewHolder.profile);
+        if (!commentList.get(position).getUserProfile().equals("null"))
+            Picasso.with(context)
+                    .load(commentList.get(position).getUserProfile())
+                    .resize(800, 600)
+                    .centerCrop()
+                    .transform(new CircleTransform())
+                    .into(viewHolder.profile);
         viewHolder.userId.setText(commentList.get(position).getUserId());
         viewHolder.content.setText(commentList.get(position).getComment()+"");
         viewHolder.date.setText(commentList.get(position).getDate()+"");

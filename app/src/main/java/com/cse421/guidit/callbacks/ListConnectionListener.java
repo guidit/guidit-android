@@ -11,4 +11,5 @@ import java.util.ArrayList;
 public interface ListConnectionListener <T> {
     void setList(ArrayList<T> list);
     void connectionFailed();
+    void listIsEmpty();
 }
