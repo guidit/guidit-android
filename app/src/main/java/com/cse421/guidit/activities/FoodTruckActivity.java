@@ -2,6 +2,7 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +38,7 @@ public class FoodTruckActivity extends AppCompatActivity {
     @BindView(R.id.food_truck_name) EditText nameInput;
     @BindView(R.id.food_truck_location) EditText locationInput;
     @BindView(R.id.food_truck_description) EditText descriptionInput;
+    @BindView(R.id.food_truck_auth_btn) TextView authBtn;
 
     private String originImage, newImage;
     private SightVo foodTruck;
@@ -52,6 +54,9 @@ public class FoodTruckActivity extends AppCompatActivity {
         setContentView(R.layout.activity_food_truck);
 
         ButterKnife.bind(this);
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        imageText.setTypeface(type);
+        authBtn.setTypeface(type);
 
         originImage = newImage = "";
         getExistData();

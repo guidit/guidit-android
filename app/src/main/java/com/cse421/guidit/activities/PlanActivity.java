@@ -2,6 +2,7 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -42,8 +44,9 @@ public class PlanActivity extends AppCompatActivity {
     @BindView(R.id.plan_name) EditText nameInput;
     @BindView(R.id.plan_recycler) RecyclerView planRecyclerView;
     @BindView(R.id.public_btn) ImageView lockButton;
-    @BindView(R.id.add_date_btn) ImageView addDateButton;
-    @BindView(R.id.plan_confirm) ImageView confirmButton;
+    @BindView(R.id.add_date_btn) TextView addDateButton;
+    @BindView(R.id.plan_confirm) TextView confirmButton;
+
 
     private ArrayList<DailyPlanVo> dailyPlanList;
     private PlanRecyclerAdapter adapter;
@@ -105,6 +108,12 @@ public class PlanActivity extends AppCompatActivity {
             isPublic = true;
             setViews();
         }
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        confirmButton.setTypeface(type);
+        addDateButton.setTypeface(type);
+
+
     }
 
     private void setViews () {

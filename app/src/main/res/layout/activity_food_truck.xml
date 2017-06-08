@@ -136,7 +136,7 @@
         android:text="인증 요청하기"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:background="@color/colorMainBlue"
+        android:background="@color/colorMainOrange"
         android:gravity="center"
         android:layout_alignParentBottom="true"/>
 
