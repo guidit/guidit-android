@@ -47,7 +47,7 @@ public class FavoriteConnection extends BaseConnection {
         switch (mode) {
             case GET_LIST:
                 data = "id=" + UserVo.getInstance().getId();
-                url = serverUrl + "/favorite/list?";
+                url = serverUrl + "/sight/favoritelist?";
                 request = new Request.Builder()
                         .url(url + data)
                         .build();
@@ -99,12 +99,12 @@ public class FavoriteConnection extends BaseConnection {
                         JSONObject data = favoriteList.getJSONObject(i);
 
                         SightVo sightVo = new SightVo();
-                        sightVo.setId(data.getInt("id"));
+                        sightVo.setId(data.getInt("sight_id"));
                         sightVo.setName(data.getString("name"));
                         sightVo.setInformation(data.getString("information"));
                         sightVo.setPicture(data.getString("picture"));
-                        sightVo.setMapX(data.getDouble("x"));
-                        sightVo.setMapY(data.getDouble("y"));
+                        sightVo.setMapX(data.getDouble("locationX"));
+                        sightVo.setMapY(data.getDouble("locationY"));
                         sightVo.setFavorite(true);
                         favorites.add(sightVo);
                     }
@@ -112,12 +112,8 @@ public class FavoriteConnection extends BaseConnection {
                     break;
                 case DELETE:
                     JSONObject object = new JSONObject(s);
-                    if (object.has("isSuccess")) {
-                        if (object.getBoolean("isSuccess")) {
-                            listener.connectionSuccess();
-                        } else {
-                            listener.connectionFailed();
-                        }
+                    if (object.has("isSuccess") && object.getBoolean("isSuccess")) {
+                        listener.connectionSuccess();
                     } else {
                         listener.connectionFailed();
                     }

@@ -75,6 +75,7 @@ public class SelectSightActivity extends AppCompatActivity {
                 Toast.makeText(SelectSightActivity.this, "인터넷 상태를 확인해주세요", Toast.LENGTH_SHORT).show();
             }
         });
+        connection.execute();
     }
 
     @OnClick(R.id.select_sight_confirm)

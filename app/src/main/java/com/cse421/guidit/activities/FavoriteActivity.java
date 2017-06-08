@@ -115,5 +115,6 @@ public class FavoriteActivity extends AppCompatActivity {
                 Toast.makeText(FavoriteActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
             }
         });
+        connection.execute(favorites.get(position).getId() + "");
     }
 }
