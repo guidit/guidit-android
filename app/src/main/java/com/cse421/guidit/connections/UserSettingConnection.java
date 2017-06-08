@@ -27,20 +27,19 @@ public class UserSettingConnection extends BaseConnection {
         
         OkHttpClient client = new OkHttpClient();
         
-        String result = "";
+        String data, result = "";
 
-        MultipartBody.Builder builder = new MultipartBody.Builder();
-        builder.addFormDataPart("id", UserVo.getInstance().getId() + "");
-        builder.addFormDataPart("name", params[0]);
+        RequestBody body;
+        data = "id=" + UserVo.getInstance().getId()
+                + "&name=" + params[0];
         if (!params[1].equals("")) {
-            builder.addFormDataPart("password", params[2]);
+            data +="&password=" + params[1];
         }
         if (!params[2].equals("")) {
-            File file = new File(params[2]);
-            builder.addFormDataPart("file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, file));
+            data += "&file=" + params[2];
         }
-
-        RequestBody body = builder.build();
+        body = RequestBody.create(HTML, data);
+        Timber.d("body " + body.toString());
         
         String url = serverUrl + "/users/setting";
         Timber.d("url : " + url);

@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
 
 /**
  * Created by ho on 2017-06-05.
@@ -39,43 +40,44 @@ public class FoodTruckConnection extends BaseConnection {
     @Override
     protected String doInBackground(String... strings) {
         OkHttpClient client = new OkHttpClient();
-        String url, result = "";
+        String url, data, result = "";
         MultipartBody.Builder builder;
+        RequestBody body;
         Request request;
 
         switch (mode) {
             case CREATE:
                 //name, location, description, picture
+                data = "user_id=" + UserVo.getInstance().getId()
+                        + "&name=" + strings[0]
+                        + "&location=" + strings[1]
+                        + "&description=" + strings[2]
+                        + "&file=" + strings[3];
+                body = RequestBody.create(HTML, data);
                 url = serverUrl + "/sight/foodtruckcreate";
-                builder = new MultipartBody.Builder()
-                        .addFormDataPart("id", UserVo.getInstance().getId() + "")
-                        .addFormDataPart("name", strings[0])
-                        .addFormDataPart("location", strings[1])
-                        .addFormDataPart("description", strings[2]);
-                if (!strings[3].equals(""))
-                    builder.addFormDataPart("file", "foodtruck.png", RequestBody.create(MEDIA_TYPE_PNG, new File(strings[3])));
                 request = new Request.Builder()
                         .url(url)
-                        .post(builder.build())
+                        .post(body)
                         .build();
                 break;
             case UPDATE:
                 //foodtruck_id, name, location, description,picture
+                data = "id=" + strings[0]
+                        + "&name=" + strings[1]
+                        + "&location=" + strings[2]
+                        + "&description=" + strings[3];
+                if (!strings[4].equals("")) {
+                    data += "&file=" + strings[4];
+                }
+                body = RequestBody.create(HTML, data);
                 url = serverUrl + "/sight/foodtrucksetting";
-                builder = new MultipartBody.Builder()
-                        .addFormDataPart("id", strings[0])
-                        .addFormDataPart("name", strings[1])
-                        .addFormDataPart("location", strings[2])
-                        .addFormDataPart("description", strings[3]);
-                if (!strings[4].equals(""))
-                    builder.addFormDataPart("file", "foodtruck.png", RequestBody.create(MEDIA_TYPE_PNG, new File(strings[4])));
                 request = new Request.Builder()
                         .url(url)
-                        .post(builder.build())
+                        .post(body)
                         .build();
                 break;
             case GET:
-                String data = "id=" + UserVo.getInstance().getId();
+                data = "id=" + UserVo.getInstance().getId();
                 url = serverUrl + "/sight/foodtruck?";
                 request = new Request.Builder()
                         .url(url + data)
@@ -97,6 +99,7 @@ public class FoodTruckConnection extends BaseConnection {
 
     @Override
     protected void onPostExecute(String s) {
+        Timber.d("on post " + s);
         if (s.equals("")) {
             if (listener != null)
                 listener.connectionFailed();
@@ -120,10 +123,15 @@ public class FoodTruckConnection extends BaseConnection {
                     object = new JSONObject(s);
                     SightVo sightVo = new SightVo();
                     sightVo.setId(object.getInt("id"));
+                    if (sightVo.getId() == -1) {
+                        singleObjectConnectionListener.notExist();
+                        return;
+                    }
                     sightVo.setName(object.getString("name"));
                     sightVo.setLocation(object.getString("location"));
-                    sightVo.setInformation(object.getString("description"));
+                    sightVo.setInformation(object.getString("information"));
                     sightVo.setPicture(object.getString("picture"));
+//                    sightVo.setUserId(object.getString("user_id"));
                     singleObjectConnectionListener.connectionSuccess(sightVo);
                     break;
                 default:

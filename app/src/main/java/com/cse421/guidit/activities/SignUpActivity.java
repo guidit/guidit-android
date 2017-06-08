@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cse421.guidit.callbacks.ImageUploadListener;
+import com.cse421.guidit.connections.ImgurConnection;
 import com.cse421.guidit.connections.SignUpConnection;
 import com.cse421.guidit.R;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
@@ -99,9 +101,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     @OnClick(R.id.sign_up_confirm)
     public void submit (View view) {
-        String name = inputName.getText().toString();
-        String id = inputId.getText().toString();
-        String password = inputPassword.getText().toString();
+        final String name = inputName.getText().toString();
+        final String id = inputId.getText().toString();
+        final String password = inputPassword.getText().toString();
         String password2 = inputPassword2.getText().toString();
     
         // 길이 확인
@@ -126,22 +128,55 @@ public class SignUpActivity extends AppCompatActivity {
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
 
-        // params : name, id, password, image
-        SignUpConnection connection = new SignUpConnection();
-        connection.setListener(new SimpleConnectionEventListener() {
-            @Override
-            public void connectionSuccess() {
-                progressBar.cancel();
-                Toast.makeText(SignUpActivity.this, "가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-    
-            @Override
-            public void connectionFailed() {
-                progressBar.cancel();
-                Toast.makeText(SignUpActivity.this, "아이디가 중복됩니다", Toast.LENGTH_SHORT).show();
-            }
-        });
-        connection.execute(name, id, password, imagePath);
+        if (imagePath.equals("")) {
+            // params : name, id, password, image
+            SignUpConnection connection = new SignUpConnection();
+            connection.setListener(new SimpleConnectionEventListener() {
+                @Override
+                public void connectionSuccess() {
+                    progressBar.cancel();
+                    Toast.makeText(SignUpActivity.this, "가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void connectionFailed() {
+                    progressBar.cancel();
+                    Toast.makeText(SignUpActivity.this, "아이디가 중복됩니다", Toast.LENGTH_SHORT).show();
+                }
+            });
+            connection.execute(name, id, password, "");
+        } else {
+            ImgurConnection connection = new ImgurConnection();
+            connection.setListener(new ImageUploadListener() {
+                @Override
+                public void onSuccess(String url) {
+                    // params : name, id, password, image
+                    SignUpConnection connection = new SignUpConnection();
+                    connection.setListener(new SimpleConnectionEventListener() {
+                        @Override
+                        public void connectionSuccess() {
+                            progressBar.cancel();
+                            Toast.makeText(SignUpActivity.this, "가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void connectionFailed() {
+                            progressBar.cancel();
+                            Toast.makeText(SignUpActivity.this, "아이디가 중복됩니다", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    connection.execute(name, id, password, url);
+                }
+
+                @Override
+                public void onFailed() {
+                    Toast.makeText(SignUpActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    progressBar.cancel();
+                }
+            });
+            connection.execute(imagePath);
+        }
     }
 }

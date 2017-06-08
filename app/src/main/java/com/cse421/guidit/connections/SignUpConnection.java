@@ -30,26 +30,17 @@ public class SignUpConnection extends BaseConnection {
     
         OkHttpClient client = new OkHttpClient();
         
-        String result = "";
+        String data, result = "";
 
         RequestBody body;
-        if (params[3].equals("")) {
-            body = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("name", params[0])
-                    .addFormDataPart("id", params[1])
-                    .addFormDataPart("password", params[2])
-                    .build();
-        } else {
-            File file = new File(params[3]);
-            body = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("name", params[0])
-                    .addFormDataPart("id", params[1])
-                    .addFormDataPart("password", params[2])
-                    .addFormDataPart("file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, file))
-                    .build();
+        data = "name=" + params[0]
+                + "&id=" + params[1]
+                + "&password=" + params[2];
+        if (!params[3].equals("")) {
+            data += "&file=" + params[3];
         }
+        body = RequestBody.create(HTML, data);
+        Timber.d("body " + body.toString());
         
         String url = serverUrl + "/users/signup";
         Timber.d("url : " + url);

@@ -7,4 +7,5 @@ package com.cse421.guidit.callbacks;
 public interface SingleObjectConnectionListener {
     void connectionSuccess(Object object);
     void connectionFailed();
+    void notExist();
 }

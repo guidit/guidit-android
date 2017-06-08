@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,9 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.callbacks.ImageUploadListener;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
 import com.cse421.guidit.callbacks.SingleObjectConnectionListener;
 import com.cse421.guidit.connections.FoodTruckConnection;
+import com.cse421.guidit.connections.ImgurConnection;
 import com.cse421.guidit.util.ImageUtil;
 import com.cse421.guidit.util.ProgressBarDialogUtil;
 import com.cse421.guidit.vo.SightVo;
@@ -23,17 +26,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.view.View.GONE;
+
 public class FoodTruckActivity extends AppCompatActivity {
 
     private final int REQ_PICK_CODE = 8834;
 
     @BindView(R.id.food_truck_img) ImageView imageInput;
-    @BindView(R.id.food_truck_image_text) TextView imageText;
+    @BindView(R.id.food_truck_image_add) LinearLayout imageText;
     @BindView(R.id.food_truck_name) EditText nameInput;
     @BindView(R.id.food_truck_location) EditText locationInput;
     @BindView(R.id.food_truck_description) EditText descriptionInput;
 
-    private String imagePath;
+    private String originImage, newImage;
     private SightVo foodTruck;
     private boolean isUpdate;
 
@@ -48,7 +53,7 @@ public class FoodTruckActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        imagePath = "";
+        originImage = newImage = "";
         getExistData();
     }
 
@@ -61,6 +66,7 @@ public class FoodTruckActivity extends AppCompatActivity {
             public void connectionSuccess(Object object) {
                 progressBar.cancel();
                 foodTruck = (SightVo) object;
+                originImage = foodTruck.getPicture();
                 setViews();
                 isUpdate = true;
             }
@@ -70,23 +76,38 @@ public class FoodTruckActivity extends AppCompatActivity {
                 progressBar.cancel();
                 isUpdate = false;
             }
+
+            @Override
+            public void notExist() {
+                progressBar.cancel();
+            }
         });
         connection.execute();
     }
 
     private void setViews () {
         Picasso.with(this)
-                .load(foodTruck.getPicture())
+                .load(originImage)
                 .resize(800, 600)
                 .centerCrop()
                 .into(imageInput);
+        imageText.setVisibility(GONE);
         nameInput.setText(foodTruck.getName());
         locationInput.setText(foodTruck.getLocation());
         descriptionInput.setText(foodTruck.getInformation());
     }
 
+    @OnClick(R.id.food_truck_img)
+    public void imageClicked () {
+        addImage();
+    }
+
     @OnClick(R.id.food_truck_image_add)
-    public void addImage () {
+    public void textClicked () {
+        addImage();
+    }
+
+    private void addImage () {
         Intent pickerIntent = new Intent(Intent.ACTION_PICK);
         pickerIntent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         pickerIntent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -103,18 +124,19 @@ public class FoodTruckActivity extends AppCompatActivity {
             return;
         }
 
-        imagePath = ImageUtil.getRealPathFromURI(this, data.getData());
+        newImage = ImageUtil.getRealPathFromURI(this, data.getData());
 
         Picasso.with(this)
                 .load(data.getData().toString())
                 .resize(800, 600)
                 .centerCrop()
                 .into(imageInput);
+        imageText.setVisibility(GONE);
     }
 
     @OnClick(R.id.food_truck_auth_btn)
     public void auth () {
-        if (imagePath.equals("")) {
+        if (originImage.equals("") && newImage.equals("")) {
             Toast.makeText(this, "이미지를 넣어주세요", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -133,42 +155,87 @@ public class FoodTruckActivity extends AppCompatActivity {
 
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
-        FoodTruckConnection connection;
-        if (isUpdate) {
+
+        // 기존 이미지 사용
+        if (newImage.equals("")) {
+            FoodTruckConnection connection;
             connection = new FoodTruckConnection(FoodTruckConnection.Modes.UPDATE);
-        } else {
-            connection = new FoodTruckConnection(FoodTruckConnection.Modes.CREATE);
-        }
-        connection.setListener(new SimpleConnectionEventListener() {
-            @Override
-            public void connectionSuccess() {
-                progressBar.cancel();
-                Toast.makeText(FoodTruckActivity.this, "등록되었습니다", Toast.LENGTH_SHORT).show();
-                finish();
-            }
+            connection.setListener(new SimpleConnectionEventListener() {
+                @Override
+                public void connectionSuccess() {
+                    progressBar.cancel();
+                    Toast.makeText(FoodTruckActivity.this, "등록되었습니다", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
 
-            @Override
-            public void connectionFailed() {
-                progressBar.cancel();
-                Toast.makeText(FoodTruckActivity.this, "인터넷 상태를 확인해주세요", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void connectionFailed() {
+                    progressBar.cancel();
+                    Toast.makeText(FoodTruckActivity.this, "인터넷 상태를 확인해주세요", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-        if (isUpdate) {
             connection.execute(
                     foodTruck.getId() + "",
                     nameInput.getText().toString(),
                     locationInput.getText().toString(),
                     descriptionInput.getText().toString(),
-                    imagePath
+                    ""
             );
         } else {
-            connection.execute(
-                    nameInput.getText().toString(),
-                    locationInput.getText().toString(),
-                    descriptionInput.getText().toString(),
-                    imagePath
-            );
+            // 새 이미지 사용
+            ImgurConnection connection = new ImgurConnection();
+            connection.setListener(new ImageUploadListener() {
+                @Override
+                public void onSuccess(String url) {
+                    progressBar.cancel();
+
+                    FoodTruckConnection connection;
+                    if (isUpdate) {
+                        connection = new FoodTruckConnection(FoodTruckConnection.Modes.UPDATE);
+                    } else {
+                        connection = new FoodTruckConnection(FoodTruckConnection.Modes.CREATE);
+                    }
+                    connection.setListener(new SimpleConnectionEventListener() {
+                        @Override
+                        public void connectionSuccess() {
+                            progressBar.cancel();
+                            Toast.makeText(FoodTruckActivity.this, "등록되었습니다", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void connectionFailed() {
+                            progressBar.cancel();
+                            Toast.makeText(FoodTruckActivity.this, "인터넷 상태를 확인해주세요", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    if (isUpdate) {
+                        connection.execute(
+                                foodTruck.getId() + "",
+                                nameInput.getText().toString(),
+                                locationInput.getText().toString(),
+                                descriptionInput.getText().toString(),
+                                url
+                        );
+                    } else {
+                        connection.execute(
+                                nameInput.getText().toString(),
+                                locationInput.getText().toString(),
+                                descriptionInput.getText().toString(),
+                                url
+                        );
+                    }
+                }
+
+                @Override
+                public void onFailed() {
+                    Toast.makeText(FoodTruckActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    progressBar.cancel();
+                }
+            });
+            connection.execute(newImage);
         }
     }
 }

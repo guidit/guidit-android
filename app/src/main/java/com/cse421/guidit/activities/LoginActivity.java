@@ -1,10 +1,14 @@
 package com.cse421.guidit.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.name) TextView name;
     @BindView(R.id.made) TextView made;
 
+    String[] perms = {"android.permission.WRITE_EXTERNAL_STORAGE"};
+
     public static Intent getIntent (Context context) {
         return new Intent(context, LoginActivity.class);
     }
@@ -57,15 +63,10 @@ public class LoginActivity extends AppCompatActivity {
         made.setTypeface(type);
         name.setTypeface(type);
 
-        test();
-    }
-
-    public void test(){
-        String str = "%address=서울특별시 강남구 언주로133길 18%";
-        String[] result = str.split("%");
-        for(int i=0; i<result.length; i++){
-            Log.e("---->",i+"="+result[i]);
-        }
+        for (int i = 0; i < perms.length; i++)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(perms[i]) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(perms, 200);
+            }
     }
 
     @OnClick(R.id.login_btn)

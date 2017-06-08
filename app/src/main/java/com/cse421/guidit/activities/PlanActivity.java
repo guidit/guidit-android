@@ -91,6 +91,11 @@ public class PlanActivity extends AppCompatActivity {
                     Toast.makeText(PlanActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
                     finish();
                 }
+
+                @Override
+                public void notExist() {
+                    progressBar.cancel();
+                }
             });
             connection.execute(intent.getIntExtra("planId", 0) + "");
         } else {

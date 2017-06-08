@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
+import com.cse421.guidit.callbacks.ImageUploadListener;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
+import com.cse421.guidit.connections.ImgurConnection;
 import com.cse421.guidit.connections.SignUpConnection;
 import com.cse421.guidit.connections.UserSettingConnection;
 import com.cse421.guidit.util.CircleTransform;
@@ -53,7 +55,7 @@ public class UserSettingActivity extends AppCompatActivity {
     private void setViews () {
         UserVo userVo = UserVo.getInstance();
         
-        if (userVo.getProfile().equals("testprofile")) {
+        if (!userVo.getProfile().equals("testprofile")) {
             Picasso.with(this)
                     .load(userVo.getProfile())
                     .resize(800, 600)
@@ -100,7 +102,7 @@ public class UserSettingActivity extends AppCompatActivity {
     @OnClick(R.id.sign_up_confirm)
     public void submit (View view) {
         final String name = inputName.getText().toString();
-        String password = inputPassword.getText().toString();
+        final String password = inputPassword.getText().toString();
         String password2 = inputPassword2.getText().toString();
         
         // 길이 확인
@@ -118,23 +120,58 @@ public class UserSettingActivity extends AppCompatActivity {
         final ProgressBarDialogUtil progressBar = new ProgressBarDialogUtil(this);
         progressBar.show();
 
-        UserSettingConnection connection = new UserSettingConnection();
-        connection.setListener(new SimpleConnectionEventListener() {
-            @Override
-            public void connectionSuccess() {
-                progressBar.cancel();
-                Toast.makeText(UserSettingActivity.this, "수정이 완료되었습니다", Toast.LENGTH_SHORT).show();
-                UserVo userVo = UserVo.getInstance();
-                userVo.setName(name);
-                finish();
-            }
-            
-            @Override
-            public void connectionFailed() {
-                progressBar.cancel();
-                Toast.makeText(UserSettingActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
-            }
-        });
-        connection.execute(name, password, imagePath);
+        if (imagePath.equals("")) {
+            UserSettingConnection connection = new UserSettingConnection();
+            connection.setListener(new SimpleConnectionEventListener() {
+                @Override
+                public void connectionSuccess() {
+                    progressBar.cancel();
+                    Toast.makeText(UserSettingActivity.this, "수정이 완료되었습니다", Toast.LENGTH_SHORT).show();
+                    UserVo userVo = UserVo.getInstance();
+                    userVo.setName(name);
+                    finish();
+                }
+
+                @Override
+                public void connectionFailed() {
+                    progressBar.cancel();
+                    Toast.makeText(UserSettingActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                }
+            });
+            connection.execute(name, password, "");
+        } else {
+            ImgurConnection connection = new ImgurConnection();
+            connection.setListener(new ImageUploadListener() {
+                @Override
+                public void onSuccess(final String url) {
+                    UserSettingConnection connection = new UserSettingConnection();
+                    connection.setListener(new SimpleConnectionEventListener() {
+                        @Override
+                        public void connectionSuccess() {
+                            progressBar.cancel();
+                            Toast.makeText(UserSettingActivity.this, "수정이 완료되었습니다", Toast.LENGTH_SHORT).show();
+                            UserVo userVo = UserVo.getInstance();
+                            userVo.setName(name);
+                            userVo.setProfile(url);
+                            finish();
+                        }
+
+                        @Override
+                        public void connectionFailed() {
+                            progressBar.cancel();
+                            Toast.makeText(UserSettingActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    connection.execute(name, password, url);
+                }
+
+                @Override
+                public void onFailed() {
+                    Toast.makeText(UserSettingActivity.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    progressBar.cancel();
+                }
+            });
+            connection.execute(imagePath);
+        }
     }
 }
