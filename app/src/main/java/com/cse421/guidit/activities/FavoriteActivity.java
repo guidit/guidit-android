@@ -2,6 +2,7 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -29,6 +31,8 @@ import butterknife.ButterKnife;
 public class FavoriteActivity extends AppCompatActivity {
 
     @BindView(R.id.favorite_recycler) RecyclerView recyclerView;
+    @BindView(R.id.title)
+    TextView title;
 
     private ArrayList<SightVo> favorites;
     private FavoriteRecyclerViewAdapter adapter;
@@ -43,6 +47,9 @@ public class FavoriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorite);
 
         ButterKnife.bind(this);
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        title.setTypeface(type);
 
         setRecycler();
         getFavoriteList();

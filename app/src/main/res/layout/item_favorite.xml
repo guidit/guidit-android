@@ -17,7 +17,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_toRightOf="@id/sight_img"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp">
 
         <TextView
             android:id="@+id/sight_name"
@@ -27,12 +28,6 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"/>
 
-        <TextView
-            android:id="@+id/sight_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="관광지 주소"
-            android:layout_marginTop="5dp"/>
 
     </LinearLayout>
 

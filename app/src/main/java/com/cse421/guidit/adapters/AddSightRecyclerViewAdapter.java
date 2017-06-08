@@ -52,18 +52,13 @@ public class AddSightRecyclerViewAdapter extends RecyclerView.Adapter {
         if (sightVo.getPicture().equals("")) {
             Picasso.with(context)
                     .load(R.drawable.empty_image)
-                    .resize(500, 500)
-                    .centerInside()
                     .into(viewHolder.image);
         } else {
             Picasso.with(context)
                     .load(sightVo.getPicture())
-                    .resize(500, 500)
-                    .centerCrop()
                     .into(viewHolder.image);
         }
         viewHolder.name.setText(sightVo.getName());
-        viewHolder.information.setText(sightVo.getInformation());
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -81,7 +76,6 @@ public class AddSightRecyclerViewAdapter extends RecyclerView.Adapter {
 
         @BindView(R.id.sight_img) ImageView image;
         @BindView(R.id.sight_name) TextView name;
-        @BindView(R.id.sight_information) TextView information;
         @BindView(R.id.sight_check_box) AppCompatCheckBox checkBox;
 
         public AddSightViewHolder(View itemView) {

@@ -2,10 +2,12 @@ package com.cse421.guidit.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cse421.guidit.R;
@@ -24,6 +26,10 @@ import butterknife.OnClick;
 public class SelectSightActivity extends AppCompatActivity {
 
     @BindView(R.id.favorite_recycler) RecyclerView favoriteRecyclerView;
+    @BindView(R.id.select_sight_confirm)
+    TextView confirmBtn;
+    @BindView(R.id.tv)
+    TextView title;
 
     private ArrayList<SightVo> sightList;
     private AddSightRecyclerViewAdapter adapter;
@@ -38,6 +44,10 @@ public class SelectSightActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_sight);
 
         ButterKnife.bind(this);
+
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/BMJUA_ttf.ttf");
+        confirmBtn.setTypeface(type);
+        title.setTypeface(type);
 
         setViews();
         getFavoriteList();
