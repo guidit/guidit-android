@@ -79,6 +79,14 @@
         android:layout_marginRight="16dp"></RelativeLayout>
 
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="나의 여행"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:padding="10dp"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_plan_list"
         android:layout_width="match_parent"

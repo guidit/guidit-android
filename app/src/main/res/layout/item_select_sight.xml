@@ -16,7 +16,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp">
 
         <TextView
             android:id="@+id/sight_name"
@@ -25,15 +26,6 @@
             android:text="이름"
             android:textColor="@android:color/black"
             android:textSize="15sp"/>
-
-        <TextView
-            android:id="@+id/sight_information"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="관광지 설명"
-            android:layout_marginTop="5dp"
-            android:maxLines="2"
-            android:ellipsize="end"/>
 
     </LinearLayout>
 
