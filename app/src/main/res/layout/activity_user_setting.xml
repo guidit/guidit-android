@@ -97,7 +97,7 @@
             android:text="푸드트럭 등록하기"
             android:textSize="18sp"
             android:textColor="@android:color/white"
-            android:background="@color/colorMainBlue"
+            android:background="@color/colorMainOrange"
             android:layout_marginTop="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
@@ -113,7 +113,7 @@
         android:text="회원정보 변경하기"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:background="@color/colorMainBlue"
+        android:background="@color/colorMainOrange"
         android:gravity="center"
         android:layout_alignParentBottom="true"/>
 

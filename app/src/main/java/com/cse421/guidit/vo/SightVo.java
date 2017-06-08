@@ -15,6 +15,7 @@ public class SightVo implements Parcelable{
     String information;
     String picture;
     double score;
+    double myScore;
     double mapX;
     double mapY;
     boolean favorite;
@@ -109,8 +110,17 @@ public class SightVo implements Parcelable{
         this.checked = checked;
     }
 
+    public double getMyScore() {
+        return myScore;
+    }
+
+    public void setMyScore(double myScore) {
+        this.myScore = myScore;
+    }
+
     @Override
     public String toString() {
+
         return "SightVo{" +
                 "id=" + id +
                 ", name='" + name + '\'' +

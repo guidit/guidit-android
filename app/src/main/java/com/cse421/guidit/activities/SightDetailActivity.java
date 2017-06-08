@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -24,6 +25,7 @@ import com.cse421.guidit.R;
 import com.cse421.guidit.adapters.CommentListRecyclerViewAdapter;
 import com.cse421.guidit.adapters.MainPagerAdapter;
 import com.cse421.guidit.callbacks.SimpleConnectionEventListener;
+import com.cse421.guidit.connections.CommentConnection;
 import com.cse421.guidit.connections.SightDetailConnection;
 import com.cse421.guidit.fragments.MapFragment;
 import com.cse421.guidit.fragments.SightListFragment;
@@ -32,7 +34,9 @@ import com.cse421.guidit.vo.SightVo;
 import com.cse421.guidit.vo.UserVo;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +51,10 @@ public class SightDetailActivity extends AppCompatActivity {
     public SightVo sightVo;
     UserVo userVo;
     int sightId;
+    double myScore;
     boolean isFavorite=false;
+    String comment;
+    String date;
 
     @BindView(R.id.sight_image)
     ImageView image;
@@ -66,6 +73,8 @@ public class SightDetailActivity extends AppCompatActivity {
     LinearLayout wrapper;
     @BindView(R.id.comment_recyclerview)
     RecyclerView recyclerView;
+    @BindView(R.id.comment)
+    EditText commentEditText;
     ArrayList<CommentVo> commentList;
     CommentListRecyclerViewAdapter adapter;
 
@@ -89,8 +98,12 @@ public class SightDetailActivity extends AppCompatActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 Log.e("rating --->",rating+"");
+                myScore = (double)rating;
+                setMyScore();
             }
         });
+
+        //create comment
 
         //comment
         commentList = new ArrayList<>();
@@ -103,6 +116,17 @@ public class SightDetailActivity extends AppCompatActivity {
         isFavorite = !isFavorite;
         favorite.setSelected(isFavorite);
         setFavorite();
+    }
+
+    @OnClick(R.id.comment_new)
+    public void commentCreate(){
+        comment = commentEditText.getText().toString();
+        long now = System.currentTimeMillis();
+        Date tdate = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        date = sdf.format(tdate);
+
+        setComment();
     }
 
     public void loadData(){
@@ -134,7 +158,11 @@ public class SightDetailActivity extends AppCompatActivity {
                 score.setText(sightVo.getScore()+"");
                 favorite.setSelected(sightVo.isFavorite());
                 hashtag.setText("#"+sightVo.getName().replaceAll("\\s",""));
-
+                if(sightVo.getMyScore() == -1){
+                    ratingBar.setRating(0);
+                }else {
+                    ratingBar.setRating((float) sightVo.getMyScore());
+                }
                 isFavorite = sightVo.isFavorite();
                 hashtag.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -172,6 +200,44 @@ public class SightDetailActivity extends AppCompatActivity {
             }
         });
         connection.execute(userVo.getId()+"",sightId+"",isFavorite+"");
+    }
+
+    public void setMyScore(){
+        SightDetailConnection connection = new SightDetailConnection(3333);
+        connection.setActivity(this);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                //progressBar.cancel();
+                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void connectionFailed() {
+                //progressBar.cancel();
+                Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(userVo.getId()+"",sightId+"",myScore+"");
+    }
+
+    public void setComment(){
+        CommentConnection connection = new CommentConnection(2222);
+        connection.setListener(new SimpleConnectionEventListener() {
+            @Override
+            public void connectionSuccess() {
+                //progressBar.cancel();
+                Toast.makeText(getApplicationContext(), "인터넷 연결 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                commentEditText.setText("");
+            }
+
+            @Override
+            public void connectionFailed() {
+                //progressBar.cancel();
+                Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해 주세요", Toast.LENGTH_SHORT).show();
+            }
+        });
+        connection.execute(userVo.getId()+"",sightId+"",comment+"",date+"");
     }
 
     public void setRecyclerView(){
