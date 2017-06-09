@@ -67,7 +67,11 @@ public class PlanRecyclerAdapter extends RecyclerView.Adapter {
         planViewHolder.dateCount.setText((position + 1) + "일차");
 
         if (adapterList.size() <= position) {
-            final DailyPlanRecyclerViewAdapter adapter = new DailyPlanRecyclerViewAdapter(context, DailyPlanRecyclerViewAdapter.from.PlanActivity);
+            final DailyPlanRecyclerViewAdapter adapter;
+            if (mode == Mode.OTHER)
+                adapter = new DailyPlanRecyclerViewAdapter(context, DailyPlanRecyclerViewAdapter.From.PlanActivity, DailyPlanRecyclerViewAdapter.Mode.OTHER);
+            else
+                adapter = new DailyPlanRecyclerViewAdapter(context, DailyPlanRecyclerViewAdapter.From.PlanActivity, DailyPlanRecyclerViewAdapter.Mode.MY);
             adapter.setSightList(item.getSightList());
             adapter.setListener(new SimpleListClickEventListener() {
                 @Override

@@ -26,15 +26,21 @@ public class DailyPlanRecyclerViewAdapter extends RecyclerView.Adapter {
     private Context context;
     private ArrayList<SightVo> sightList;
     private SimpleListClickEventListener listener;
-    private from where;
+    private From where;
+    private Mode mode;
 
-    public enum from {
+    public enum From {
         PlanActivity, ReviewActivity
     }
 
-    public DailyPlanRecyclerViewAdapter(Context context, from where) {
+    public enum Mode {
+        MY, OTHER
+    }
+
+    public DailyPlanRecyclerViewAdapter(Context context, From where, Mode mode) {
         this.context = context;
         this.where = where;
+        this.mode = mode;
     }
 
     public void setListener(SimpleListClickEventListener listener) {
@@ -57,7 +63,7 @@ public class DailyPlanRecyclerViewAdapter extends RecyclerView.Adapter {
         SightVo sightVo = sightList.get(position);
 
         viewHolder.name.setText(sightVo.getName());
-        if (where == from.ReviewActivity) {
+        if (where == From.ReviewActivity) {
             viewHolder.deleteButton.setVisibility(View.GONE);
         } else {
             viewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +72,9 @@ public class DailyPlanRecyclerViewAdapter extends RecyclerView.Adapter {
                     listener.itemClicked(position);
                 }
             });
+        }
+        if (mode == Mode.OTHER) {
+            viewHolder.deleteButton.setVisibility(View.GONE);
         }
     }
 

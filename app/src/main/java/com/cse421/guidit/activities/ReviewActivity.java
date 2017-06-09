@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 public class ReviewActivity extends AppCompatActivity {
 
@@ -79,7 +77,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        adapter = new DailyPlanRecyclerViewAdapter(this, DailyPlanRecyclerViewAdapter.from.ReviewActivity);
+        adapter = new DailyPlanRecyclerViewAdapter(this, DailyPlanRecyclerViewAdapter.From.ReviewActivity, DailyPlanRecyclerViewAdapter.Mode.OTHER);
         adapter.setSightList(sightList);
         dailyPlanRecycler.setHasFixedSize(true);
         dailyPlanRecycler.setAdapter(adapter);

@@ -37,7 +37,7 @@ dependencies {
     // support library (호환성 관리)
     //2. Connection
     //3. Utils
-    //picasso: download images from url
+    //picasso: download images From url
     //4. For convenience
     // butterknife (cast resources(view, etc))
     // timber (log 남기기)
