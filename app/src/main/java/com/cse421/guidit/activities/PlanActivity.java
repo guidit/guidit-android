@@ -157,9 +157,9 @@ public class PlanActivity extends AppCompatActivity {
 
                     @Override
                     public void writeReview(int position) {
-                        selectedDate = position + 1;
+                        selectedDate = position;
                         Intent intent = ReviewActivity.getIntent(PlanActivity.this);
-                        intent.putExtra("date", selectedDate);
+                        intent.putExtra("date", selectedDate + 1);
                         intent.putExtra("dailyPlanId", dailyPlanList.get(position).getId());
                         intent.putExtra("sightList", dailyPlanList.get(position).getSightList());
                         intent.putExtra("picture", dailyPlanList.get(position).getPicture());

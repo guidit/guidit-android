@@ -60,6 +60,8 @@ public class MyPagePlanRecyclerAdapter extends RecyclerView.Adapter {
         planViewHolder.planName.setText(planVo.getName());
         if (planVo.isPublic()) {
             planViewHolder.lock.setVisibility(View.GONE);
+        } else {
+            planViewHolder.lock.setVisibility(View.VISIBLE);
         }
         
         planViewHolder.layout.setOnClickListener(new View.OnClickListener() {

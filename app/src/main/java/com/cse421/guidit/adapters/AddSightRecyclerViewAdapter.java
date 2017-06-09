@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by ho on 2017-06-04.
@@ -49,7 +50,7 @@ public class AddSightRecyclerViewAdapter extends RecyclerView.Adapter {
         AddSightViewHolder viewHolder = (AddSightViewHolder) holder;
         final SightVo sightVo = list.get(position);
 
-        if (sightVo.getPicture().equals("")) {
+        if (sightVo.getPicture().equals("") || sightVo.getPicture().equals("null")) {
             Picasso.with(context)
                     .load(R.drawable.empty_image)
                     .into(viewHolder.image);
@@ -59,9 +60,15 @@ public class AddSightRecyclerViewAdapter extends RecyclerView.Adapter {
                     .into(viewHolder.image);
         }
         viewHolder.name.setText(sightVo.getName());
+        if (sightVo.isChecked()) {
+            Timber.d("sight is checked");
+        }
+        viewHolder.checkBox.setOnCheckedChangeListener(null);
+        viewHolder.checkBox.setChecked(sightVo.isChecked());
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Timber.d("check button clicked " + b);
                 sightVo.setChecked(b);
             }
         });
