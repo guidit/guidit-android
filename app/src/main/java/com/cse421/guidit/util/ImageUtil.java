@@ -41,6 +41,12 @@ public class ImageUtil {
                 return R.drawable.june;
             case 7 :
                 return R.drawable.july;
+            case 8 :
+                return R.drawable.august;
+            case 9 :
+                return R.drawable.september;
+            case 10 :
+                return R.drawable.october;
             default:
                 return R.drawable.profile;
         }

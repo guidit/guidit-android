@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.cse421.guidit.R;
 import com.cse421.guidit.activities.FestivalActivity;
 import com.cse421.guidit.activities.MainActivity;
-import com.cse421.guidit.activities.OtherPlanActivity;
 import com.cse421.guidit.activities.PlanActivity;
 import com.cse421.guidit.activities.SightDetailActivity;
 import com.cse421.guidit.util.ImageUtil;
@@ -24,11 +23,8 @@ import com.cse421.guidit.vo.PlanVo;
 import com.cse421.guidit.vo.SightVo;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
 
-import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -38,10 +34,16 @@ import butterknife.OnClick;
 
 public class BrowseFragment extends Fragment {
     
-    @BindView(R.id.festival_present_image) ImageView festivalPresentImage;
-    @BindView(R.id.festival_present_month) TextView festivalPresentMonth;
-    @BindView(R.id.festival_future_image) ImageView festivalFutureImage;
-    @BindView(R.id.festival_future_month) TextView festivalFutureMonth;
+    @BindView(R.id.festival_1_image) ImageView festival1Image;
+    @BindView(R.id.festival_1_month) TextView festival1Month;
+    @BindView(R.id.festival_2_image) ImageView festival2Image;
+    @BindView(R.id.festival_2_month) TextView festival2Month;
+    @BindView(R.id.festival_3_image) ImageView festival3Image;
+    @BindView(R.id.festival_3_month) TextView festival3Month;
+    @BindView(R.id.festival_4_image) ImageView festival4Image;
+    @BindView(R.id.festival_4_month) TextView festival4Month;
+    @BindView(R.id.festival_5_image) ImageView festival5Image;
+    @BindView(R.id.festival_5_month) TextView festival5Month;
     @BindView(R.id.hot_plan_name) TextView hotPlanName;
     @BindView(R.id.hot_plan_picture) ImageView hotPlanPicture;
     @BindView(R.id.hot_sight_name) TextView hotSightName;
@@ -75,14 +77,26 @@ public class BrowseFragment extends Fragment {
     private void setViews () {
         Calendar calendar = Calendar.getInstance();
         currentMonth = calendar.get(Calendar.MONTH) + 1;
-        festivalPresentMonth.setText(currentMonth + "월");
+        festival1Month.setText(currentMonth + "월");
         Picasso.with(getActivity())
                 .load(ImageUtil.getFestivalImage(currentMonth))
-                .into(festivalPresentImage);
-        festivalFutureMonth.setText(currentMonth + 1 + "월");
+                .into(festival1Image);
+        festival2Month.setText(currentMonth + 1 + "월");
         Picasso.with(getActivity())
                 .load(ImageUtil.getFestivalImage(currentMonth + 1))
-                .into(festivalFutureImage);
+                .into(festival2Image);
+        festival3Month.setText(currentMonth + 2+ "월");
+        Picasso.with(getActivity())
+                .load(ImageUtil.getFestivalImage(currentMonth + 2))
+                .into(festival3Image);
+        festival4Month.setText(currentMonth + 3 + "월");
+        Picasso.with(getActivity())
+                .load(ImageUtil.getFestivalImage(currentMonth + 3))
+                .into(festival4Image);
+        festival5Month.setText(currentMonth + 4 + "월");
+        Picasso.with(getActivity())
+                .load(ImageUtil.getFestivalImage(currentMonth + 4))
+                .into(festival5Image);
         
         MainActivity activity = (MainActivity) getActivity();
         hotPlan = activity.hotPlan;
@@ -102,16 +116,28 @@ public class BrowseFragment extends Fragment {
                     .into(hotSightPicture);
     }
     
-    @OnClick({R.id.festival_present, R.id.festival_future})
+    @OnClick({R.id.festival_1, R.id.festival_2, R.id.festival_3, R.id.festival_4, R.id.festival_5})
     public void festivalClick (View view)  {
         Intent intent = FestivalActivity.getIntent(getActivity());
         switch (view.getId()) {
-            case R.id.festival_present :
+            case R.id.festival_1 :
                 intent.putExtra("month", currentMonth);
                 startActivity(intent);
                 break;
-            case R.id.festival_future :
+            case R.id.festival_2 :
                 intent.putExtra("month", currentMonth + 1);
+                startActivity(intent);
+                break;
+            case R.id.festival_3 :
+                intent.putExtra("month", currentMonth + 2);
+                startActivity(intent);
+                break;
+            case R.id.festival_4 :
+                intent.putExtra("month", currentMonth + 3);
+                startActivity(intent);
+                break;
+            case R.id.festival_5 :
+                intent.putExtra("month", currentMonth + 4);
                 startActivity(intent);
                 break;
             default:
